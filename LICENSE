@@ -1,0 +1,33 @@
+Copyright (c) 2026 Nikita Reshetnikov. All rights reserved.
+
+WordDeck — proprietary software.
+
+This repository and everything in it — source code, user interface design,
+texts, translations, prompts, images and illustrations (including the WordDeck
+beaver character), and all other materials — are the exclusive property of the
+copyright holder.
+
+The source code is publicly visible only so that the application can be hosted.
+Visibility does not grant any license. Without prior written permission from
+the copyright holder, you may NOT:
+
+  - copy, reproduce or download the code or materials for reuse;
+  - modify, adapt, translate or create derivative works;
+  - distribute, publish, sublicense, sell or rent any part of this work;
+  - use the code, design, prompts or characters in other projects,
+    commercial or non-commercial;
+  - use the name "WordDeck" or the beaver character to identify another
+    product or service.
+
+You may use the application as an end user at its official address.
+
+Third-party components loaded by the application (for example supabase-js
+and pdf.js) are not part of this work and remain under their own licenses.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+For permission requests:
+  Email:    resetnikovnikita975@gmail.com
+  Telegram: @thinkisnik
