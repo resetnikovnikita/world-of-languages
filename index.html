@@ -549,82 +549,65 @@ html[dir=rtl] .toggle.on i{transform:translateX(-20px)}
 .kindBtn.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
 
 /* ---------- путь: «река» уровня ---------- */
-.lvlSeg{display:flex;gap:6px;padding:18px 20px 0;overflow-x:auto;scrollbar-width:none}
-.lvlSeg::-webkit-scrollbar{display:none}
-.lvlSeg button{flex:1;min-width:52px;height:32px;border-radius:999px;border:0;background:var(--surf-2);color:var(--ink-3);
-  font:700 12.5px/1 var(--f);cursor:pointer;white-space:nowrap}
-.lvlSeg button.done{background:var(--sage-soft);color:var(--sage)}
-.lvlSeg button.cur{background:var(--gold);color:var(--gold-ink);font-weight:800}
-.lvlSeg button.view{outline:2px solid var(--ink);outline-offset:1px}
-.lvlHead{padding:16px 20px 0;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.lvlHead .k{font:700 11px/1 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
-.lvlHead span{font:600 12.5px/1 var(--f);color:var(--ink-2)}
-.river{position:relative;margin:8px 0 0}
-/* только сама линия реки; иконки в узлах — обычные svg внутри кнопок */
-.river>svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.rNode svg,.rGate svg,.rMark svg{display:block;flex:none}
-.rNode{position:absolute;width:56px;height:56px;border-radius:99px;display:flex;align-items:center;justify-content:center;border:0;padding:0;cursor:pointer;
-  background:var(--gold);color:var(--gold-ink);
-  box-shadow:0 0 0 5px var(--bg),0 0 0 7px rgba(227,184,113,.35),0 14px 26px -10px rgba(0,0,0,.45)}
-.rNode.cur{width:68px;height:68px;background:var(--gold-soft);border:3px solid var(--gold);overflow:hidden;align-items:flex-start;
-  box-shadow:0 0 0 5px var(--bg),0 0 0 11px rgba(227,184,113,.2),0 16px 30px -10px rgba(0,0,0,.45)}
-.rNode.cur img{width:56px;margin-top:4px}
-.rNode.lock{width:52px;height:52px;background:var(--surf-2);border:2px solid var(--line-2);color:var(--ink-2);box-shadow:0 0 0 5px var(--bg)}
-/* подпись темы — матовое стекло с хвостиком к узлу, как в макете */
-.rLabel{position:absolute;padding:10px 16px;border-radius:16px;text-align:start;cursor:pointer;color:var(--ink);
-  background:var(--surf-2);
-  background:linear-gradient(135deg,var(--glass1),var(--glass2));
-  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
-  border:1px solid var(--glassB);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 24px -14px rgba(0,0,0,.6)}
-.rLabel::before{content:'';position:absolute;top:50%;margin-top:-11px;width:0;height:0;
-  border-top:11px solid transparent;border-bottom:11px solid transparent}
-.rLabel:not(.r)::before{left:-14px;border-right:14px solid var(--glassTail)}
-.rLabel.r::before{right:-14px;border-left:14px solid var(--glassTail)}
-.rLabel.r{text-align:start}
-/* отметка уровня на реке и финиш */
-.rMark{position:absolute;left:50%;transform:translateX(-50%);height:44px;padding:0 18px;border-radius:999px;display:flex;align-items:center;
-  justify-content:center;gap:10px;white-space:nowrap;border:1.5px dashed var(--line-2);background:var(--bg);color:var(--ink-2);
-  font:500 12.5px/1 var(--f);cursor:pointer}
-.rMark b{font:800 13.5px/1 var(--f);color:var(--ink)}
-.rMark.done{border:0;background:var(--sage-soft);color:var(--sage)}
-.rMark.done b{color:var(--sage)}
-.rMark.cur{border:0;background:var(--gold);color:var(--gold-ink)}
-.rMark.cur b{color:var(--gold-ink)}
-.rMark.fin{border-style:solid;border-color:var(--gold);background:var(--gold-soft);color:var(--ink);height:52px;padding:0 22px}
-.rMark.fin b{font-size:15px}
-.rLabel b{display:block;font:700 15px/1.2 var(--f);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.rLabel small{display:block;font:500 12px/1.3 var(--f);color:var(--ink-2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rLabel.now small{color:var(--gold-text)}
-.rLabel.dim b{color:var(--ink-2)}
-.rGate{position:absolute;left:14%;right:14%;height:44px;border-radius:999px;border:1.5px dashed var(--line-2);background:var(--bg);
-  display:flex;align-items:center;justify-content:center;gap:10px;color:var(--ink-2);font:500 12.5px/1 var(--f);cursor:pointer}
-.rGate b{font:700 13.5px/1 var(--f);color:var(--ink)}
-.rGate.open{border-style:solid;border-color:var(--gold);background:var(--gold-soft);color:var(--ink)}
-/* плашка «Сейчас» в пути: обёртка держит место над таб-баром и крестик,
-   который выступает за правый верхний угол; закрытая плашка не
-   появляется, пока не сменится текущая тема */
-#pathNowBox{position:absolute;left:12px;right:12px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:4;height:76px;display:none}
-#pathNowBox.on{display:block}
-#pathNowX{position:absolute;top:-9px;right:-5px;z-index:1;width:26px;height:26px;border-radius:50%;padding:0;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:var(--ink-2);background:var(--surf-3);border:1px solid var(--line-2);
-  box-shadow:0 4px 10px -4px rgba(0,0,0,.5)}
-#pathNowX::after{content:'';position:absolute;inset:-9px}
-#pathNow{
-  position:absolute;inset:0;width:100%;height:100%;border-radius:22px;overflow:hidden;
-  display:flex;align-items:center;gap:12px;padding:0 12px 0 11px;cursor:pointer;color:var(--ink);text-align:start;
-  background:var(--surf-2);
-  background:linear-gradient(120deg,color-mix(in oklch,var(--tint,var(--r7)) 50%,var(--bg)),color-mix(in oklch,var(--tint,var(--r7)) 22%,var(--bg)));
-  border:1px solid var(--line);box-shadow:var(--shadow)
+/* ---------- путь: карусель тем ----------
+   Одна тема — один постер. Соседние выглядывают по краям (d = ±1),
+   дальние скрыты. Позицию задаёт JS через transform; во время свайпа
+   переход выключается классом .drag, после отпускания карточки
+   доводятся той же кривой. Постер всегда тёмный: светлый текст на нём
+   читается в обеих темах, а верх градиента притемнён, чтобы подпись
+   «Тема N из M» держала контраст и на самых светлых ступенях. */
+.pHead{padding:6px 20px 0;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.pHead .pSub{font:500 13px/1.2 var(--f);color:var(--ink-2)}
+.pHead .pTitle{font:800 30px/1.05 var(--f);letter-spacing:-.035em;margin-top:8px;color:var(--ink)}
+.pRight{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex:none}
+.pRight .chip{min-height:32px;height:32px;padding:0 13px;font-size:12.5px}
+#pathPos{font:700 13px/1 var(--f);color:var(--gold-text);padding-bottom:4px;white-space:nowrap}
+.pLevels{display:flex;gap:6px;padding:16px 20px 0}
+.pLevels button{flex:1;min-width:0;height:34px;border-radius:999px;border:0;padding:0;cursor:pointer;
+  background:var(--surf-2);color:var(--ink-3);font:700 13px/1 var(--f)}
+.pLevels button.cur{background:var(--gold);color:var(--gold-ink);font-weight:800}
+.pLevels button.lock{opacity:.7}
+.pCar{position:relative;height:452px;margin-top:20px;overflow:hidden;touch-action:pan-y;outline:none;
+  -webkit-user-select:none;user-select:none}
+.pCar:focus-visible{box-shadow:inset 0 0 0 2px var(--gold);border-radius:20px}
+.pCard{position:absolute;left:calc(50% - 150px);top:0;width:300px;height:446px;border-radius:32px;overflow:hidden;padding:22px;
+  display:flex;flex-direction:column;color:#F7EFE0;text-align:start;cursor:pointer;
+  background:linear-gradient(180deg,rgba(20,17,14,.2),transparent 34%),
+    linear-gradient(165deg,color-mix(in oklch,var(--pc) 70%,#14110E),color-mix(in oklch,var(--pc) 25%,#14110E));
+  border:1px solid var(--line);box-shadow:0 30px 50px -28px rgba(0,0,0,.75);
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;will-change:transform}
+.pCar.drag .pCard{transition:none}
+.pCard .pTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pCard .pNo{font:700 11px/1.2 var(--f);letter-spacing:.14em;text-transform:uppercase;min-width:0}
+.pCard .pBadge{height:26px;padding:0 10px;border-radius:999px;background:rgba(20,17,14,.38);display:flex;align-items:center;
+  font:700 11.5px/1 var(--f);white-space:nowrap;flex:none}
+.pCard .pArt{height:196px;margin-top:16px;display:flex;justify-content:center;align-items:flex-start;flex:none}
+.pCard .pArt img{height:196px;max-width:100%;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(0,0,0,.35));pointer-events:none;-webkit-user-drag:none}
+.pCard .pT{margin-top:auto;font:800 25px/1.08 var(--f);letter-spacing:-.03em;text-wrap:pretty;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.pCard .pS{font:500 13px/1.4 var(--f);margin-top:8px;opacity:.92;text-wrap:pretty;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.pTicks{display:flex;gap:5px;padding:12px 32px 0}
+.pTicks button{flex:1;min-width:0;height:22px;border:0;padding:0;background:transparent;cursor:pointer;display:flex;align-items:center}
+.pTicks button::before{content:'';display:block;width:100%;height:4px;border-radius:999px;background:var(--tc,var(--surf-3));transition:height .2s}
+.pTicks button.on::before{height:8px;background:var(--ink)}
+.pCtl{display:flex;gap:10px;padding:14px 20px 0}
+.pArrow{width:52px;height:52px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--ink);flex:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.pArrow:disabled{opacity:.35;cursor:default}
+.pCta{flex:1;min-width:0;height:52px;border-radius:999px;border:0;padding:0 16px;cursor:pointer;
+  background:var(--gold);color:var(--gold-ink);font:800 15px/1.15 var(--f);overflow:hidden;text-wrap:balance}
+/* «Откроется после темы N» длиннее остальных — на узком экране в две строки */
+.pCta[aria-disabled="true"]{background:var(--surf-2);color:var(--ink-3);cursor:default;font-size:13.5px}
+.pArrow,.pCta,.pLevels button,.pTicks button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  transition:transform .18s cubic-bezier(.3,1.5,.5,1),background-color .18s ease,color .18s ease,opacity .18s ease}
+.pArrow:not(:disabled):active{transform:scale(.92)}
+.pCta:not([aria-disabled="true"]):active,.pLevels button:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){
+  .pCard{transition:opacity .15s}
 }
-#pathNow .th{width:54px;height:54px;border-radius:16px;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;flex:none;
-  background:rgba(127,127,127,.2)}
-#pathNow .th img{width:50px;margin-top:3px}
-#pathNow .tx{flex:1;min-width:0}
-#pathNow .tx span{display:block;font:700 10.5px/1.1 var(--f);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pathNow .tx b{display:block;font:800 16px/1.15 var(--f);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pathNow .tx small{display:block;font:500 12px/1.2 var(--f);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pathNow .go{height:44px;padding:0 16px;border-radius:999px;background:var(--btn);color:var(--btn-ink);display:flex;align-items:center;font:700 13.5px/1 var(--f);flex:none}
+/* на десктопе шкала и кнопки не тянутся на всю колонку */
+@media (min-width:900px){ .pTicks,.pCtl{max-width:600px;margin-left:auto;margin-right:auto} }
 
 /* ---------- профиль ---------- */
 .profTop{display:flex;align-items:center;gap:18px;padding:6px 20px 0}
@@ -840,17 +823,17 @@ html[dir=rtl] .toggle.on i{transform:translateX(-20px)}
 /* ---------- отклик нажатия: упругое сжатие 0.95 за 180 мс ---------- */
 .btn,.btnGhost,.btnGold,.chip,.pickCell,.iconBtn,.spkBtn,.linkBtn,.tabItem,.settingsRow,.optionBtn,.pairBtn,.deckRow,
 .avCell,.genRow .del,.kindBtn,.asmTile,.tourBtn,#tourSkipBtn,#tourNextBtn,.perfPick,.story,.dueCard,.topicCard,.matCard,.matAdd,
-.heart,.playRow,.rNode,.rLabel,.seg>button,.lvlSeg button,.twoBtns button,.medal,.lbRow,.accDot,.slowBtn,.codeCard button,
-.addCode button,.reqRow button,#miniPlayer,#pathNow,.rankCard,.toggleRow,.inputPill button,.propCard button,.streakChip{
+.heart,.playRow,.seg>button,.twoBtns button,.medal,.lbRow,.accDot,.slowBtn,.codeCard button,
+.addCode button,.reqRow button,#miniPlayer,.rankCard,.toggleRow,.inputPill button,.propCard button,.streakChip{
   touch-action:manipulation;-webkit-tap-highlight-color:transparent;
   transition:transform .18s cubic-bezier(.3,1.5,.5,1),background-color .18s ease,border-color .18s ease,opacity .18s ease,color .18s ease;
 }
 .btn:not(:disabled):active,.btnGold:not(:disabled):active,.btnGhost:not(:disabled):active,.chip:active,.pickCell:active,.optionBtn:not(:disabled):active,
 .pairBtn:not(.matched):active,.deckRow:active,.avCell:active,.kindBtn:active,.asmTile:active,.tourBtn:active,#tourNextBtn:active,.perfPick:active,
-.story:active,.dueCard:active,.topicCard:active,.matCard:active,.matAdd:active,.playRow:active,.seg>button:active,.lvlSeg button:active,
+.story:active,.dueCard:active,.topicCard:active,.matCard:active,.matAdd:active,.playRow:active,.seg>button:active,
 .twoBtns button:active,.medal:active,.lbRow:active,.slowBtn:active,.codeCard button:active,.addCode button:active,.reqRow button:active,
-#miniPlayer:active,#pathNow:active,.rankCard:active,.toggleRow:active,.propCard button:active,.streakChip:active,.rLabel:active{transform:scale(.95)}
-.iconBtn:active,.spkBtn:active,.genRow .del:active,.heart:active,.rNode:active,.accDot:active,.inputPill button:active{transform:scale(.9)}
+#miniPlayer:active,.rankCard:active,.toggleRow:active,.propCard button:active,.streakChip:active{transform:scale(.95)}
+.iconBtn:active,.spkBtn:active,.genRow .del:active,.heart:active,.accDot:active,.inputPill button:active{transform:scale(.9)}
 .tabItem:active{transform:scale(.92)}
 .settingsRow:active{opacity:.55}
 .linkBtn:active,#tourSkipBtn:active{opacity:.45}
@@ -918,11 +901,11 @@ html.lite #tourSpot{box-shadow:0 0 0 9999px rgba(10,8,6,.62)!important}
 html.lite img,html.lite svg{filter:none!important}
 html.lite #tabbar::before,html.lite .tabItem.mid::before{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surf)}
 html.lite .glow{display:none}
-html.lite .rLabel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--surf-2)}
+
 html.lite *,html.lite *::before,html.lite *::after{animation:none!important;
   transition-property:background-color,border-color,color,opacity!important;transition-duration:.12s!important}
 html.lite *:active{transform:none!important}
-html.lite button:active,html.lite .story:active,html.lite .rLabel:active{opacity:.62}
+html.lite button:active,html.lite .story:active{opacity:.62}
 html.lite .confetti{display:none}
 html.lite .tabItem.sel svg{transform:none}
 
@@ -966,8 +949,7 @@ html.lite .tabItem.sel svg{transform:none}
   #railUser small{display:block;font:500 12px/1.2 var(--f);color:var(--ink-2);margin-top:2px}
   #miniPlayer{left:calc(var(--railW) + max(16px,(100% - var(--railW) - var(--content)) / 2));
     right:max(16px,calc((100% - var(--railW) - var(--content)) / 2));bottom:16px;height:72px;border-radius:20px}
-  #pathNowBox{left:calc(var(--railW) + max(16px,(100% - var(--railW) - var(--content)) / 2));
-    right:max(16px,calc((100% - var(--railW) - var(--content)) / 2));bottom:16px}
+
   .chatDock{padding-bottom:20px}
   .hero{min-height:270px;margin:26px 0 0}
   .hero .t{font-size:40px}
@@ -1204,17 +1186,29 @@ html.lite .tabItem.sel svg{transform:none}
   <!-- ============================= ПУТЬ ============================= -->
   <section class="screen" id="s-path">
     <div class="scroll hasTabs" id="pathScroll">
-      <div style="padding:8px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+      <div class="pHead">
         <div style="min-width:0">
-          <div class="h1" id="pathTitle"></div>
-          <div class="sub" id="pathHead" style="margin-top:7px"></div>
+          <div class="pSub" id="pathHead"></div>
+          <div class="pTitle" id="pathTitle"></div>
         </div>
-        <button class="chip hidden" id="planActions" onclick="openPlanChangeSheet()" style="flex:none;margin-top:2px"><span id="btnPlanChange" data-i18n="planChange"></span></button>
+        <div class="pRight">
+          <button class="chip hidden" id="planActions" onclick="openPlanChangeSheet()"><span id="btnPlanChange" data-i18n="planChange"></span></button>
+          <span id="pathPos" class="hidden"></span>
+        </div>
       </div>
 
-      <div class="lvlSeg hidden" id="pathLevels"></div>
-      <div class="lvlHead hidden" id="pathLvlHead"><span class="k" id="pathLvlName"></span><span id="pathLvlCount"></span></div>
-      <div class="river" id="pathRiver"></div>
+      <div class="pLevels hidden" id="pathLevels"></div>
+      <div class="pCar hidden" id="pathCar" role="region" tabindex="0"><div id="pathTrack"></div></div>
+      <div class="pTicks hidden" id="pathTicks"></div>
+      <div class="pCtl hidden" id="pathCtl">
+        <button class="pArrow" id="pathPrev" type="button" onclick="pathStep(-1)" data-aria="pathPrev">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+        </button>
+        <button class="pCta" id="pathCta" type="button" onclick="pathCtaAction()"></button>
+        <button class="pArrow" id="pathNext" type="button" onclick="pathStep(1)" data-aria="pathNext">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
 
       <div id="pathEmptyBox" class="hidden" style="text-align:center;padding:30px 30px 0">
         <img src="assets/beaver-backpack.png" alt="" style="width:150px">
@@ -1224,17 +1218,6 @@ html.lite .tabItem.sel svg{transform:none}
         <p class="dim" id="pathMsg" style="text-align:center"></p>
         <button class="btn" id="btnGenPath" onclick="generateSyllabus()" style="margin-top:16px"></button>
       </div>
-      <div style="height:90px"></div>
-    </div>
-    <div id="pathNowBox">
-      <button id="pathNow" onclick="pathNowAction()">
-        <span class="th"><img src="assets/beaver-thumbsup.png" alt=""></span>
-        <span class="tx"><span id="pathNowK"></span><b id="pathNowT"></b><small id="pathNowS"></small></span>
-        <span class="go" data-i18n="homeContinue"></span>
-      </button>
-      <button id="pathNowX" type="button" onclick="closePathNow()" data-aria="ariaClose">
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-      </button>
     </div>
   </section>
 
@@ -1832,6 +1815,24 @@ const SESSION_MIN = 10, SESSION_MAX = 20, SESSION_DEFAULT = 20;
 
 const KINDS = ['word','phrase'];
 function normKind(k){ return k === 'phrase' ? 'phrase' : 'word'; }
+/*
+   Одна карточка — одна форма. Gemini иногда кладёт в карточку пару
+   вариантов («say yes \ say no», «сказать да / сказать нет»): такую не
+   собрать из плиток и не набрать, и она возвращается в очередь снова и
+   снова. Оставляем первый вариант. Слэш без пробелов внутри одного слова
+   (and/or, 24/7) — это не пара вариантов, его не трогаем.
+*/
+function oneVariant(s){
+  s = String(s || '').trim();
+  if(!/[\/\\|]/.test(s)) return s;
+  const parts = s.split(/\s*[\/\\|]\s*/).map(p => p.trim());
+  const pair = /[\\|]/.test(s) || /\s\/|\/\s/.test(s) || parts.some(p => /\s/.test(p));
+  if(!pair) return s;
+  return parts.find(p => /\p{L}/u.test(p)) || s;
+}
+function oneVariantItem(w){
+  return Object.assign({}, w, { word: oneVariant(w && w.word), translation: oneVariant(w && w.translation) });
+}
 
 /*
    Размер сессии. Источник истины — Supabase (настройка должна переезжать
@@ -2166,6 +2167,22 @@ ar:{tabFriends:"الأصدقاء",tabRanks:"الرتب",settingsTitle:"الإع�
 tr:{tabFriends:"Arkadaşlar",tabRanks:"Rütbeler",settingsTitle:"Ayarlar",railTrainerSub:"ne istersen sor",streakChip:"{n} gün",streakDoneToday:"Bugün sayıldı — seri devam ediyor.",homeStart:"Başla",shelfDue:"Bugün tekrar",shelfFriends:"Arkadaşların çalıştı",showAll:"Tümünü gör",showAllFriends:"Tümü",dueLate:"gecikti",dueToday:"bugün",topicN:"Konu {n}",matText:"METİN",matSubs:"ALTYAZI",materialAddCard:"Materyal ekle",miniSteps:"{total} adımdan {n}.",storyYou:"Sen",storyInvite:"Davet et",agoMin:"{n} dk",agoH:"{n} sa",agoD:"{n} g",actTopic:"“{topic}” · %{n}",actLesson:"ders · %{n}",inboxTitle:"Bildirimler",inboxEmpty:"Yeni bir şey yok. Arkadaşlık istekleri ve ders davetleri burada görünür.",nudgeFrom:"{name} seni derse çağırıyor",pathGoalTo:"hedef {lvl}",pathLvlCount:"{total} konudan {done}",pathNowK:"Şimdi · konu {n}",pathNowLbl:"şimdi",masteryPct:"öğrenildi %{n}",pathGateLeft:"seviyeye {n} konu kaldı",pathGateOpen:"açık — görmek için dokun",pathGateFinish:"bitiş · {n} konu kaldı",pathGateDone:"plan tamamlandı",today:"Bugün",yesterday:"Dün",propTitle:"Öğretmenin önerisi",propPlan:"Bu istek için plan değişikliği hazırlansın mı?",propOpen:"Hazırla",wordsAdded:"Tekrara {n} kelime eklendi",wordsUndone:"Desteden {n} kelime çıkarıldı",undo:"Geri al",chatPlusTitle:"Hızlı işlemler",btnTest:"Test",materialLessonChip:"Kendi materyalimle",trainerInfo:"{lang} öğretmeni, seviye {level}, günde yaklaşık {min} dakika. Yolunu, derslerini ve tekrarlayan hatalarını hatırlar.",slowSpeak:"Yavaş · 0.7×",wordsCount:"{n} kelime",statWordsLbl:"kelime",loading:"Yükleniyor…",copy:"Kopyala",copied:"Kopyalandı",share:"Paylaş",ariaInbox:"Bildirimler",ariaChatPlus:"Hızlı işlemler",ariaMic:"Sesle yaz",ariaTrainerInfo:"Öğretmen hakkında",ariaAddFriend:"Arkadaş ekle",ariaRankInfo:"Rütbeler nasıl işler",ariaMore:"Daha fazla",ariaLike:"Beğen",achTitle:"Başarılar",achLocked:"henüz değil",topicsTab:"Konular · {n}",topicsNone:"Henüz tamamlanan konu yok — ilki hemen önünde.",friendsBtn:"Arkadaşlar · {n}",rankToNext:"“{name}” için {n} XP",rankToTop:"en üst lige {n} XP",rankMaxed:"en üst rütbe — efsane",rankYour:"Rütben · {n}. basamak",rankDiv:"Lig {d} / III",rankDivShort:"{d} / III",rankDivUp:"Lig {d} · {name}",rankPassedAll:"I · II · III ligleri geçildi",rankDone:"Geçildi",rankFrom:"{n} XP'den",ranksAll:"Tüm basamaklar",rankInfoBody:"XP gerçek çalışmadan gelir: kartlardaki her doğru cevap için 2, biten her çalışma için bonus, dersteki kelimeler için 20 ve öğretmenle sohbet için günde en fazla 100. On beş basamak, her birinde üç lig, sonuncusu 100.000 XP’de; parkur sadece isimleri değiştirir.",rankNew:"Yeni rütbe!",rankStep:"{total} basamaktan {n}. · lig I",ruFrame:"“{name}” renginde avatar çerçevesi",ruVisible:"Arkadaşların yeni amblemi görür",ruShareText:"WordDeck'te “{name}” rütbesine ulaştım!",myCode:"Kodum",myCodeHint:"Arkadaşın kodu girer — ve birbirinizin ilerlemesini görürsünüz.",friendCodePh:"Arkadaş kodu, ör. LEYA-1093",addFriend:"Ekle",inviteText:"WordDeck'te birlikte dil öğrenelim! Arkadaş kodum: {code}",friendsNameHint:"Arkadaşların profildeki adını görür — bir ad belirle",reqTitle:"İstekler",reqWaiting:"Yanıt bekleniyor",reqWants:"birlikte öğrenmek istiyor",reqPending:"istek gönderildi",reqAccept:"Kabul et",reqDecline:"Reddet",reqCancel:"İsteği iptal et",weekTop:"Haftanın sıralaması",weekReset:"pazartesi sıfırlanır",friendsEmpty:"Henüz arkadaşın yok. Kodunu paylaş — birlikte öğrenmek daha kolay.",friendNoName:"İsimsiz kunduz",frSent:"İstek gönderildi — arkadaşının kabul etmesi bekleniyor",frAccepted:"Artık arkadaşsınız",frNotFound:"Bu kod yok — kontrol et",frSelf:"Bu senin kendi kodun",frAlready:"Zaten bir istek veya arkadaşlık var",frHigher:"senden {n} basamak yukarıda",frLower:"senden {n} basamak aşağıda",frSame:"seninle aynı basamakta",youAreFriends:"Arkadaşsınız",nudge:"Derse çağır",nudgeSent:"{name} davetini görecek",nudgeWait:"Kısa süre önce zaten çağırdın — sonra tekrar dene",friendLessons:"Dersler",dblTapHint:"çift dokun — kalp",friendNoLessons:"Henüz ders yok.",friendGone:"Bu profil kullanılamıyor — artık arkadaş olmayabilirsiniz.",frRemove:"Arkadaşlardan çıkar",frRemoveConfirm:"Çıkarmak için tekrar dokun",frRemoved:"Arkadaşlardan çıkarıldı",themeSystem:"Sistem gibi",accentTitle:"Vurgu rengi",previewTitle:"Önizleme",previewLesson:"Kafe · ders 3",previewProgress:"12'de 7 · +40 XP",previewTest:"Test",grainTitle:"Arka plan dokusu",onbT5lang:"{lang} neden lazım?",onbEstimate:"günde {min} dakikayla ≈ {n} ay",acc_gold:"Altın",acc_copper:"Bakır",acc_sage:"Adaçayı",acc_wave:"Dalga",acc_dusk:"Alacakaranlık",acc_plum:"Erik",acc_berry:"Kızılcık",track_classic:"Klasik",track_anime:"Anime",track_music:"Müzik",rank_classic:"Yonga|Dal|Yosun|Dere|Nehir|Gölet|Baraj|Kehribar|Koruyucu|Efsane|Bilge|Yaşlı|Reis|Titan|Ölümsüz",rank_anime:"Dünyalı|Usta Roshi’nin öğrencisi|Turnuva Dövüşçüsü|Z Savaşçısı|Kaioken|Süper Saiyan|Süper Saiyan 2|Süper Saiyan 3|Süper Saiyan Tanrı|Süper Saiyan Mavi|Ultra İçgüdü İşareti|Ultra İçgüdü|Ultra Ego|Yıkım Tanrısı|Melek",rank_music:"Demo|Prova|Single|EP|Albüm|Turne|Manşet sanatçı|Altın plak|Platin|Şöhretler Salonu|Elmas plak|Stadyum turnesi|İkon|Yaşayan efsane|Ölümsüz hit",ach_streak3:"Üst üste 3 gün",ach_streak7:"Üst üste 7 gün",ach_streak30:"Üst üste 30 gün",ach_words100:"100 kelime",ach_words500:"500 kelime",ach_lesson1:"İlk ders",ach_lessons10:"10 ders",ach_lessons50:"50 ders",ach_test:"Seviye testi",ach_friend:"İlk arkadaş",ach_night:"Gece kuşu",ach_audio50:"50 dinleme",ach_material:"Kendi materyalin",ach_level:"Seviye geçildi",goalHint_work:"görüşmeler, e-postalar",goalHint_travel:"istasyon, otel, kafe",goalHint_relocation:"ev, belgeler, doktor",goalHint_exam:"format ve strateji",goalHint_media:"gerçek konuşma",goalHint_communication:"sohbet, tanışma",goalHint_study:"dersler, sınavlar",acc_custom:"Özel",accCustomTitle:"Kendi rengin",accCustomHint:"Çemberin üzerinde sürükle: çevresi ton, merkezden uzaklık doygunluk.",genCustomTopicPh:"Ya da kendi konun — ör. futbol, girişimler",getKeyAiStudio:"Google AI Studio’dan ücretsiz anahtar al",supportTitle:"Destek ve geliştirici",supportBody:"Bir hata mı buldun ya da fikrin mi var? WordDeck’in geliştiricisine Telegram’dan yaz — her mesaj okunur.",supportWrite:"Telegram’dan yaz",supportId:"Telegram ID: {id}",statWordsCol:"Kelimeler",statLessonsCol:"Dersler"}
 };
 Object.keys(I18N_EXT13).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT13[code]); });
+// путь — карусель тем
+const I18N_EXT14 = {
+en:{"pathOf":"topic {n} of {total}","pathBadgeDone":"Done","pathBadgeNow":"Now","pathBadgeMin":"{n} min","pathStateLocked":"locked","pathReview":"Review topic","pathOpensAfter":"Opens after topic {n}","pathLvlOpensAfter":"Opens after {lvl}","pathPrev":"Previous topic","pathNext":"Next topic","pathCarousel":"carousel","pathSlide":"topic","pathCarouselLbl":"Topics of level {lvl}","pathTickLbl":"Topic {n}","pathCardLbl":"Topic {n} of {total}: {title}, {state}"},
+ru:{"pathOf":"тема {n} из {total}","pathBadgeDone":"Пройдена","pathBadgeNow":"Сейчас","pathBadgeMin":"{n} мин","pathStateLocked":"закрыта","pathReview":"Повторить тему","pathOpensAfter":"Откроется после темы {n}","pathLvlOpensAfter":"Откроется после {lvl}","pathPrev":"Предыдущая тема","pathNext":"Следующая тема","pathCarousel":"карусель","pathSlide":"тема","pathCarouselLbl":"Темы уровня {lvl}","pathTickLbl":"Тема {n}","pathCardLbl":"Тема {n} из {total}: {title}, {state}"},
+es:{"pathOf":"tema {n} de {total}","pathBadgeDone":"Superado","pathBadgeNow":"Ahora","pathBadgeMin":"{n} min","pathStateLocked":"bloqueado","pathReview":"Repasar el tema","pathOpensAfter":"Se abre tras el tema {n}","pathLvlOpensAfter":"Se abre tras {lvl}","pathPrev":"Tema anterior","pathNext":"Tema siguiente","pathCarousel":"carrusel","pathSlide":"tema","pathCarouselLbl":"Temas del nivel {lvl}","pathTickLbl":"Tema {n}","pathCardLbl":"Tema {n} de {total}: {title}, {state}"},
+fr:{"pathOf":"thème {n} sur {total}","pathBadgeDone":"Validé","pathBadgeNow":"En cours","pathBadgeMin":"{n} min","pathStateLocked":"verrouillé","pathReview":"Revoir le thème","pathOpensAfter":"S’ouvre après le thème {n}","pathLvlOpensAfter":"S’ouvre après {lvl}","pathPrev":"Thème précédent","pathNext":"Thème suivant","pathCarousel":"carrousel","pathSlide":"thème","pathCarouselLbl":"Thèmes du niveau {lvl}","pathTickLbl":"Thème {n}","pathCardLbl":"Thème {n} sur {total} : {title}, {state}"},
+de:{"pathOf":"Thema {n} von {total}","pathBadgeDone":"Geschafft","pathBadgeNow":"Jetzt","pathBadgeMin":"{n} Min.","pathStateLocked":"gesperrt","pathReview":"Thema wiederholen","pathOpensAfter":"Öffnet nach Thema {n}","pathLvlOpensAfter":"Öffnet nach {lvl}","pathPrev":"Vorheriges Thema","pathNext":"Nächstes Thema","pathCarousel":"Karussell","pathSlide":"Thema","pathCarouselLbl":"Themen der Stufe {lvl}","pathTickLbl":"Thema {n}","pathCardLbl":"Thema {n} von {total}: {title}, {state}"},
+it:{"pathOf":"tema {n} di {total}","pathBadgeDone":"Superato","pathBadgeNow":"Adesso","pathBadgeMin":"{n} min","pathStateLocked":"bloccato","pathReview":"Ripassa il tema","pathOpensAfter":"Si apre dopo il tema {n}","pathLvlOpensAfter":"Si apre dopo {lvl}","pathPrev":"Tema precedente","pathNext":"Tema successivo","pathCarousel":"carosello","pathSlide":"tema","pathCarouselLbl":"Temi del livello {lvl}","pathTickLbl":"Tema {n}","pathCardLbl":"Tema {n} di {total}: {title}, {state}"},
+pt:{"pathOf":"tema {n} de {total}","pathBadgeDone":"Concluído","pathBadgeNow":"Agora","pathBadgeMin":"{n} min","pathStateLocked":"bloqueado","pathReview":"Revisar o tema","pathOpensAfter":"Abre após o tema {n}","pathLvlOpensAfter":"Abre após {lvl}","pathPrev":"Tema anterior","pathNext":"Próximo tema","pathCarousel":"carrossel","pathSlide":"tema","pathCarouselLbl":"Temas do nível {lvl}","pathTickLbl":"Tema {n}","pathCardLbl":"Tema {n} de {total}: {title}, {state}"},
+zh:{"pathOf":"第 {n} / {total} 个主题","pathBadgeDone":"已完成","pathBadgeNow":"进行中","pathBadgeMin":"{n} 分钟","pathStateLocked":"未解锁","pathReview":"复习主题","pathOpensAfter":"完成第 {n} 个主题后解锁","pathLvlOpensAfter":"完成 {lvl} 后解锁","pathPrev":"上一个主题","pathNext":"下一个主题","pathCarousel":"轮播","pathSlide":"主题","pathCarouselLbl":"{lvl} 级主题","pathTickLbl":"主题 {n}","pathCardLbl":"第 {n} / {total} 个主题：{title}，{state}"},
+ja:{"pathOf":"トピック {n} / {total}","pathBadgeDone":"クリア","pathBadgeNow":"いまここ","pathBadgeMin":"{n} 分","pathStateLocked":"ロック中","pathReview":"トピックを復習","pathOpensAfter":"トピック {n} のあとに解放","pathLvlOpensAfter":"{lvl} のあとに解放","pathPrev":"前のトピック","pathNext":"次のトピック","pathCarousel":"カルーセル","pathSlide":"トピック","pathCarouselLbl":"{lvl} レベルのトピック","pathTickLbl":"トピック {n}","pathCardLbl":"トピック {n} / {total}：{title}、{state}"},
+ko:{"pathOf":"주제 {n} / {total}","pathBadgeDone":"완료","pathBadgeNow":"진행 중","pathBadgeMin":"{n}분","pathStateLocked":"잠김","pathReview":"주제 복습하기","pathOpensAfter":"주제 {n} 다음에 열려요","pathLvlOpensAfter":"{lvl} 다음에 열려요","pathPrev":"이전 주제","pathNext":"다음 주제","pathCarousel":"캐러셀","pathSlide":"주제","pathCarouselLbl":"{lvl} 레벨 주제","pathTickLbl":"주제 {n}","pathCardLbl":"주제 {n} / {total}: {title}, {state}"},
+ar:{"pathOf":"الموضوع {n} من {total}","pathBadgeDone":"مكتمل","pathBadgeNow":"الآن","pathBadgeMin":"{n} د","pathStateLocked":"مغلق","pathReview":"راجع الموضوع","pathOpensAfter":"يُفتح بعد الموضوع {n}","pathLvlOpensAfter":"يُفتح بعد {lvl}","pathPrev":"الموضوع السابق","pathNext":"الموضوع التالي","pathCarousel":"عرض دوّار","pathSlide":"موضوع","pathCarouselLbl":"مواضيع المستوى {lvl}","pathTickLbl":"الموضوع {n}","pathCardLbl":"الموضوع {n} من {total}: {title}، {state}"},
+tr:{"pathOf":"konu {n} / {total}","pathBadgeDone":"Tamamlandı","pathBadgeNow":"Şimdi","pathBadgeMin":"{n} dk","pathStateLocked":"kilitli","pathReview":"Konuyu tekrar et","pathOpensAfter":"{n}. konudan sonra açılır","pathLvlOpensAfter":"{lvl} sonrasında açılır","pathPrev":"Önceki konu","pathNext":"Sonraki konu","pathCarousel":"karusel","pathSlide":"konu","pathCarouselLbl":"{lvl} seviyesi konuları","pathTickLbl":"Konu {n}","pathCardLbl":"Konu {n} / {total}: {title}, {state}"}
+};
+Object.keys(I18N_EXT14).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT14[code]); });
 
 // приветствие на главной вынесено отдельно — в нём подставляется имя
 const I18N_HELLO = {
@@ -2809,7 +2826,7 @@ function markTab(name){
 let navStack = [];
 function renderScreen(name){
   if(name === 'home')    renderHome();
-  if(name === 'path'){ pathScrollToCur = true; renderPath(); }
+  if(name === 'path'){ pathCarReset = true; renderPath(); }
   if(name === 'cards' && !gs) loadCards();
   if(name === 'profile') renderProfile();
   if(name === 'teacher'){
@@ -4924,7 +4941,7 @@ async function onbNext(){
    Режим запоминается и выключается параметром ?debug=0.
 */
 // метка сборки — по ней в консоли видно, какая версия файла реально открыта
-const APP_BUILD = '2026-10-11o WordDeck 2.0';
+const APP_BUILD = '2026-10-18b WordDeck 2.0';
 console.info('[worddeck] build', APP_BUILD);
 
 let DEBUG = false;
@@ -6391,6 +6408,7 @@ async function askTrainer(userText, echo, fromUser){
 
     bumpLessonState();
     if(parsed.words.length){
+      parsed.words = parsed.words.map(oneVariantItem);
       // какие слова в колоде новые — только их можно «отменить»: уже
       // знакомые тренер повторяет намеренно, и удалять их нельзя
       const known = await deckWordSet();
@@ -6551,7 +6569,14 @@ async function applyPathResult(path){
 
 async function applyLessonResult(lesson, words){
   const uid = session.user.id;
-  const cur = currentTopic();
+  /*
+     Повтор пройденной темы (кнопка «Повторить тему» в пути) двигать путь
+     не должен: иначе итог повтора засчитывался текущей теме и закрывал
+     её, хотя урок был про другое. Тему урока помнит lessonState.
+  */
+  const studied = lessonState && lessonState.idx != null ? syllabus.find(x => x.idx === lessonState.idx) : null;
+  const review = !!(studied && studied.status === 'done');
+  const cur = review ? studied : currentTopic();
   const mastery = Math.max(0, Math.min(100, parseInt(lesson.mastery, 10) || 0));
   // урок закрыт — мини-плеер больше не нужен; поздний урок — медаль «Ночная сова»
   endLessonState();
@@ -6577,7 +6602,11 @@ async function applyLessonResult(lesson, words){
     }
   }
 
-  if(cur){
+  if(review){
+    const best = Math.max(cur.mastery || 0, mastery);
+    if(best !== (cur.mastery || 0)) await sbTry(sb.from('syllabus').update({ mastery: best }).eq('id', cur.id));
+    pushMsg('sysOk', t('pathReview') + ' · ' + mastery + '/100');
+  }else if(cur){
     if(mastery >= 70){
       await sbTry(sb.from('syllabus').update({ status:'done', mastery }).eq('id', cur.id));
       const next = syllabus.find(x=>x.idx === cur.idx + 1);
@@ -7164,212 +7193,183 @@ async function applyLevelChange(to){
   if(ok) planNotChangedToast(t('planLevelPrefill', { level: to }));
 }
 
+/*
+   «Путь» — карусель постеров по уровню: одна тема — одна карточка.
+   Модель экрана (pathLevelsView / pathCardsView) собирается из плана
+   отдельно от разметки: поза бобра и цвет постера — данные темы.
+   В базе их нет, поэтому они выводятся из названия детерминированно —
+   одна и та же тема всегда выглядит одинаково.
+*/
+const PATH_POSES = ['wave','laptop','thumbsup','backpack','arms-crossed','thinking','pencil','cheer','pointing'];
+const PATH_STEP = 268;                 // шаг между карточками, px
+let pathView = { level:null, i:0 };    // уровень в переключателе и активная карточка
+let pathCarReset = true;               // при входе на вкладку встаём на текущую тему
+
+function pathHash(s){
+  let h = 0; const str = String(s || '');
+  for(let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+function pathLevelsView(){
+  const order = [];
+  syllabus.forEach(n => { if(order.indexOf(n.level) < 0) order.push(n.level); });
+  const cur = currentTopic();
+  const curLvl = cur ? cur.level : order[order.length - 1];
+  const curAt = order.indexOf(curLvl);
+  return order.map((code, k) => ({
+    code,
+    topics: syllabus.filter(n => n.level === code),
+    // уровень после текущего ещё закрыт: смотреть его темы рано
+    locked: k > curAt && syllabus.every(n => n.level !== code || n.status === 'locked')
+  }));
+}
+function pathCardsView(level){
+  const list = level.topics;
+  return list.map((n, k) => ({
+    idx: n.idx, index: k + 1, total: list.length,
+    title: n.title, canDo: n.goal || '',
+    durationMin: settings.minutes || 30,
+    state: n.status === 'done' ? 'done' : n.status === 'current' ? 'current' : 'locked',
+    illustration: n.pose || PATH_POSES[pathHash(n.title) % PATH_POSES.length],
+    color: tintOf(n.title)
+  }));
+}
+// куда встать на уровне: текущая тема, иначе последняя
+function pathDefaultIndex(cards){
+  const c = cards.findIndex(x => x.state === 'current');
+  return c >= 0 ? c : Math.max(0, cards.length - 1);
+}
+
 function renderPath(){
   if(!session) return;
-  const river = $('pathRiver');
-  const empty = $('pathEmptyBox');
-  const btn = $('btnGenPath');
+  const has = syllabus.length > 0;
   $('pathTitle').textContent = t('pathTitle');
-  $('pathLvlHead').classList.add('hidden');
-
-  if(!syllabus.length){
-    $('pathHead').textContent = settings.target_lang
-      ? langLabel(settings.target_lang) + ' · ' + t('pathGoalTo', { lvl: settings.target_level || 'C1' }) : '';
-    river.innerHTML = ''; river.style.height = '0';
-    empty.classList.remove('hidden');
-    btn.classList.remove('hidden');
-    $('planActions').classList.add('hidden');
-    $('pathLevels').classList.add('hidden');
-    $('pathNowBox').classList.remove('on');
-    return;
-  }
-  empty.classList.add('hidden');
-  btn.classList.add('hidden');
+  $('pathHead').textContent = settings.target_lang
+    ? langLabel(settings.target_lang) + ' · ' + t('pathGoalTo', { lvl: settings.target_level || 'C1' })
+    : t('pathGoalTo', { lvl: settings.target_level || 'C1' });
+  ['pathLevels','pathCar','pathTicks','pathCtl','pathPos'].forEach(id => $(id).classList.toggle('hidden', !has));
+  $('pathEmptyBox').classList.toggle('hidden', has);
+  $('btnGenPath').classList.toggle('hidden', has);
   // без миграции 06 версий плана нет — менять его нечем
-  $('planActions').classList.toggle('hidden', !dbCaps.plans);
+  $('planActions').classList.toggle('hidden', !has || !dbCaps.plans);
+  if(!has){ $('pathTrack').innerHTML = ''; return; }
 
-  const cur = currentTopic();
-  const doneCount = syllabus.filter(n => n.status === 'done').length;
-  $('pathHead').textContent = (settings.target_lang ? langLabel(settings.target_lang) + ' · ' : '')
-    + t('pathGoalTo', { lvl: settings.target_level || 'C1' }) + ' · ' + t('pathLvlCount', { done: doneCount, total: syllabus.length });
+  const levels = pathLevelsView();
+  let lvl = levels.find(l => l.code === pathView.level && !l.locked);
+  if(pathCarReset || !lvl){
+    const cur = currentTopic();
+    lvl = levels.find(l => cur && l.code === cur.level) || levels.filter(l => !l.locked).pop() || levels[0];
+    pathView.level = lvl.code;
+    pathView.i = pathDefaultIndex(pathCardsView(lvl));
+    pathCarReset = false;
+  }
 
-  const levels = [];
-  syllabus.forEach(n => { if(levels.indexOf(n.level) < 0) levels.push(n.level); });
-  const curLevel = cur ? cur.level : levels[levels.length - 1];
-  const done = levels.filter(l => syllabus.every(n => n.level !== l || n.status === 'done'));
-
-  // чипы уровней — быстрый переход к своему участку реки
-  const seg = $('pathLevels'); seg.innerHTML = ''; seg.classList.remove('hidden');
-  levels.forEach(l=>{
+  // переключатель уровней
+  const seg = $('pathLevels'); seg.innerHTML = '';
+  levels.forEach((l, k)=>{
     const b = document.createElement('button');
     b.type = 'button';
-    const isDone = done.indexOf(l) >= 0;
-    b.className = isDone ? 'done' : l === curLevel ? 'cur' : '';
-    b.textContent = l + (isDone ? ' ✓' : '');
-    b.onclick = ()=>scrollRiverTo('lvl-' + l);
+    b.className = (l.code === lvl.code ? 'cur' : '') + (l.locked ? ' lock' : '');
+    b.textContent = l.code;
+    if(l.code === lvl.code) b.setAttribute('aria-pressed', 'true');
+    b.onclick = ()=>{
+      if(l.locked){ toast(t('pathLvlOpensAfter', { lvl: levels[k - 1] ? levels[k - 1].code : l.code })); return; }
+      if(l.code === pathView.level) return;
+      pathView.level = l.code;
+      pathView.i = pathDefaultIndex(pathCardsView(l));
+      renderPath();
+    };
     seg.appendChild(b);
   });
 
-  drawRiver(river, syllabus, levels, curLevel, done);
+  const cards = pathCardsView(lvl);
+  pathView.i = Math.max(0, Math.min(cards.length - 1, pathView.i));
+  const car = $('pathCar');
+  car.setAttribute('aria-label', t('pathCarouselLbl', { lvl: lvl.code }));
+  car.setAttribute('aria-roledescription', t('pathCarousel'));
 
-  // плашка текущего урока над таб-баром
-  const now = $('pathNow');
-  if(cur && pathNowClosed() !== pathNowKey(cur)){
-    $('pathNowBox').classList.add('on');
-    now.style.setProperty('--tint', tintOf(cur.title));
-    $('pathNowK').textContent = t('pathNowK', { n: cur.idx + 1 });
-    $('pathNowT').textContent = cur.title;
-    $('pathNowS').textContent = t('homeHeroSub', { n: settings.minutes });
-  }else $('pathNowBox').classList.remove('on');
+  const track = $('pathTrack'); track.innerHTML = '';
+  cards.forEach((c, k)=>{
+    const el = document.createElement('div');
+    el.className = 'pCard';
+    el.dataset.k = k;
+    el.setAttribute('role', 'group');
+    el.setAttribute('aria-roledescription', t('pathSlide'));
+    el.style.setProperty('--pc', c.color);
+    el.innerHTML = '<span class="pTop"><span class="pNo"></span><span class="pBadge"></span></span>' +
+      '<span class="pArt"><img alt="" draggable="false"></span><span class="pT"></span><span class="pS"></span>';
+    el.querySelector('.pNo').textContent = t('pathTopicNo', { n: c.index, total: c.total });
+    el.querySelector('.pBadge').textContent = pathBadge(c);
+    el.querySelector('img').src = poseSrc(c.illustration);
+    el.querySelector('.pT').textContent = c.title;
+    el.querySelector('.pS').textContent = c.canDo;
+    el.setAttribute('aria-label', t('pathCardLbl', { n: c.index, total: c.total, title: c.title, state: pathStateWord(c) }));
+    track.appendChild(el);
+  });
 
-  if(pathScrollToCur){
-    pathScrollToCur = false;
-    requestAnimationFrame(()=>scrollRiverTo(cur ? 'topic-' + cur.idx : 'finish'));
-  }
+  const ticks = $('pathTicks'); ticks.innerHTML = '';
+  cards.forEach((c, k)=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.setProperty('--tc', c.state === 'locked' ? 'var(--surf-3)' : 'var(--gold)');
+    b.setAttribute('aria-label', t('pathTickLbl', { n: c.index }));
+    b.onclick = ()=>pathGo(k);
+    ticks.appendChild(b);
+  });
+
+  pathCards = cards;
+  pathLayout();
+}
+let pathCards = [];
+
+function pathBadge(c){
+  return c.state === 'done' ? t('pathBadgeDone') : c.state === 'current' ? t('pathBadgeNow') : t('pathBadgeMin', { n: c.durationMin });
+}
+function pathStateWord(c){
+  return c.state === 'locked' ? t('pathStateLocked') : pathBadge(c).toLowerCase();
 }
 
-/*
-   «Река» уровня: темы стоят змейкой, слева и справа по очереди.
-   Пройденный участок горит акцентом с мягким свечением, впереди —
-   пунктир из бусин, под всем — широкая полупрозрачная полоса воды.
-   Внизу — «ворота» следующего уровня. Координаты считаются от ширины
-   контейнера, поэтому картинка одна и та же на телефоне и десктопе.
-*/
-let pathViewLevel = null;
-function drawRiver(box, topics, levels, curLevel, doneLevels){
-  box.innerHTML = '';
-  const W = Math.max(300, box.clientWidth || (box.parentElement && box.parentElement.clientWidth) || 390);
-  /*
-     Шаг между темами. На телефоне — так, чтобы на экране помещалось
-     не больше четырёх тем: высота видимой части (без шапки и плашки
-     урока снизу) делится на четыре. На десктопе экран длиннее и шире —
-     шаг плотнее, видно больше.
-  */
-  const sc = $('pathScroll');
-  const vh = (sc && sc.clientHeight) || window.innerHeight || 800;
-  const STEP = isDesktop() ? 104 : Math.max(112, Math.min(170, Math.round((vh - 200) / 4)));
-  const MARK = 76, TOP = 40;
-  const xL = Math.round(W * (isDesktop() ? 0.24 : 0.2)), xR = W - xL, xC = Math.round(W / 2);
-
-  // ряды: отметка уровня → его темы → … → финиш
-  const rows = [];
-  let y = TOP, k = 0;
-  levels.forEach((lvl, li)=>{
-    rows.push({ type:'level', level:lvl, li, x:xC, y });
-    y += MARK;
-    topics.filter(n => n.level === lvl).forEach(n=>{
-      rows.push({ type:'topic', n, x: k % 2 ? xR : xL, y, left: !(k % 2) });
-      k++; y += STEP;
-    });
-    y += 6;
+// раскладка карточек под активную; dx — смещение пальца во время свайпа
+function pathLayout(dx){
+  const i = pathView.i, cards = pathCards;
+  dx = dx || 0;
+  $('pathTrack').querySelectorAll('.pCard').forEach(el=>{
+    const d = +el.dataset.k - i, a = Math.abs(d);
+    el.style.transform = 'translateX(' + (d * PATH_STEP + dx) + 'px) scale(' + (d === 0 ? 1 : 0.86) + ')';
+    el.style.opacity = d === 0 ? '1' : a === 1 ? '0.5' : '0';
+    el.style.zIndex = String(10 - a);
+    el.style.pointerEvents = a > 1 ? 'none' : '';
+    if(a > 1) el.setAttribute('aria-hidden', 'true'); else el.removeAttribute('aria-hidden');
   });
-  rows.push({ type:'finish', x:xC, y: y + 4 });
-  const H = y + 70;
-  box.style.height = H + 'px';
-
-  const seg = (a, b) => {
-    const dy = (b.y - a.y) / 2;
-    return ' C' + a.x + ' ' + (a.y + dy) + ' ' + b.x + ' ' + (b.y - dy) + ' ' + b.x + ' ' + b.y;
-  };
-  const pathOf = (from, to) => {
-    let d = '';
-    for(let i = from; i <= to && i < rows.length; i++) d += i === from ? 'M' + rows[i].x + ' ' + rows[i].y : seg(rows[i - 1], rows[i]);
-    return d;
-  };
-  // до какой точки путь пройден: текущая тема, а если план закрыт — до финиша
-  let lit = 0;
-  rows.forEach((r, i) => { if(r.type === 'topic' && (r.n.status === 'done' || r.n.status === 'current')) lit = i; });
-  const allDone = topics.every(n => n.status === 'done');
-  if(allDone) lit = rows.length - 1;
-  const last = rows.length - 1;
-
-  box.insertAdjacentHTML('beforeend',
-    '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" aria-hidden="true">' +
-    '<path d="' + pathOf(0, last) + '" stroke="var(--gold)" stroke-opacity=".08" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"></path>' +
-    (lit < last ? '<path d="' + pathOf(lit, last) + '" stroke="var(--ink)" stroke-opacity=".42" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 15"></path>' : '') +
-    (lit > 0 ? '<path d="' + pathOf(0, lit) + '" stroke="var(--gold)" stroke-opacity=".26" stroke-width="18" stroke-linecap="round"></path>' +
-               '<path d="' + pathOf(0, lit) + '" stroke="var(--gold)" stroke-width="7" stroke-linecap="round"></path>' : '') +
-    '</svg>');
-
-  const nodeW = 68;
-  rows.forEach((r, i)=>{
-    if(r.type === 'level' || r.type === 'finish'){
-      const m = document.createElement('button');
-      m.type = 'button';
-      m.style.top = (r.y - (r.type === 'finish' ? 26 : 22)) + 'px';
-      if(r.type === 'level'){
-        m.id = 'lvl-' + r.level;
-        const isDone = doneLevels.indexOf(r.level) >= 0;
-        const isCur = r.level === curLevel;
-        m.className = 'rMark' + (isDone ? ' done' : isCur ? ' cur' : '');
-        // закрытый уровень: сколько тем осталось до него
-        const before = topics.filter(n => levels.indexOf(n.level) < r.li && n.status !== 'done').length;
-        // у пройденного и текущего уровня подписи нет — пустой элемент сдвигал текст с центра
-        const locked = !isDone && !isCur;
-        m.innerHTML = (locked ? ICON.lock(15) : '') + '<b></b>' + (isDone ? ICON.check('currentColor', 14, 3) : '') + (locked ? '<span></span>' : '');
-        m.querySelector('b').textContent = r.level;
-        if(locked) m.querySelector('span').textContent = t('pathGateLeft', { n: before });
-        m.onclick = ()=>{ if(!isDone && !isCur) toast(t('pathGateLeft', { n: before })); };
-      }else{
-        m.id = 'finish';
-        m.className = 'rMark fin';
-        const left = topics.filter(n => n.status !== 'done').length;
-        m.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg><b></b><span></span>';
-        m.querySelector('b').textContent = settings.target_level || 'C1';
-        m.querySelector('span').textContent = allDone ? t('pathGateDone') : t('pathGateFinish', { n: left });
-      }
-      box.appendChild(m);
-      return;
-    }
-    const n = r.n;
-    const node = document.createElement('button');
-    node.type = 'button';
-    node.id = 'topic-' + n.idx;
-    let size = 56;
-    if(n.status === 'current'){
-      node.className = 'rNode cur'; size = 68;
-      node.innerHTML = '<img src="assets/beaver-thumbsup.png" alt="">';
-    }else if(n.status === 'done'){
-      node.className = 'rNode';
-      node.innerHTML = ICON.check('var(--gold-ink)', 22, 3.2);
-    }else{
-      node.className = 'rNode lock'; size = 52;
-      node.innerHTML = ICON.lock(18);
-    }
-    node.style.left = (r.x - size / 2) + 'px';
-    node.style.top = (r.y - size / 2) + 'px';
-    node.setAttribute('aria-label', n.title);
-    node.onclick = ()=>openTopicSheet(n.idx);
-    box.appendChild(node);
-
-    const lab = document.createElement('button');
-    lab.type = 'button';
-    lab.className = 'rLabel' + (r.left ? '' : ' r') + (n.status === 'current' ? ' now' : n.status === 'locked' ? ' dim' : '');
-    // подпись не подходит к краю экрана ближе 12 px
-    const gap = size / 2 + 22;
-    const room = r.left ? W - 12 - (r.x + gap) : (r.x - gap) - 12;
-    lab.style.maxWidth = Math.max(120, Math.min(340, room)) + 'px';
-    if(r.left) lab.style.left = (r.x + gap) + 'px';
-    else lab.style.right = (W - r.x + gap) + 'px';
-    lab.innerHTML = '<b></b><small></small>';
-    lab.querySelector('b').textContent = n.title;
-    lab.querySelector('small').textContent = n.status === 'done'
-      ? t('masteryPct', { n: n.mastery || 0 })
-      : n.status === 'current' ? t('pathNowLbl') + (n.goal ? ' · ' + n.goal : '') : (n.goal || '');
-    lab.onclick = ()=>openTopicSheet(n.idx);
-    box.appendChild(lab);
-    // подпись по центру узла — её высота известна только после вставки
-    lab.style.top = (r.y - lab.offsetHeight / 2) + 'px';
+  $('pathTicks').querySelectorAll('button').forEach((b, k)=>{
+    b.classList.toggle('on', k === i);
+    if(k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
   });
+  const c = cards[i];
+  if(!c) return;
+  $('pathPos').textContent = t('pathOf', { n: c.index, total: c.total });
+  $('pathPrev').disabled = i === 0;
+  $('pathNext').disabled = i === cards.length - 1;
+  const cta = $('pathCta');
+  cta.textContent = c.state === 'done' ? t('pathReview')
+    : c.state === 'current' ? t('homeContinue')
+    : t('pathOpensAfter', { n: c.index - 1 });
+  if(c.state === 'locked') cta.setAttribute('aria-disabled', 'true'); else cta.removeAttribute('aria-disabled');
 }
+function pathGo(k){
+  const n = Math.max(0, Math.min(pathCards.length - 1, k));
+  if(n === pathView.i){ pathLayout(); return; }
+  pathView.i = n;
+  pathLayout();
+}
+function pathStep(dir){ pathGo(pathView.i + dir); }
 
-// закрытая плашка помнит тему, на которой её закрыли
-function pathNowKey(cur){ return (settings.target_lang || '') + ':' + cur.idx + ':' + cur.title; }
-function pathNowClosed(){ try{ return localStorage.getItem('worddeck_pathnow_x') || ''; }catch(e){ return ''; } }
-function closePathNow(){
-  const cur = currentTopic();
-  if(cur){ try{ localStorage.setItem('worddeck_pathnow_x', pathNowKey(cur)); }catch(e){} }
-  $('pathNowBox').classList.remove('on');
+// основная кнопка и нажатие на активный постер
+function pathCtaAction(){
+  const c = pathCards[pathView.i];
+  if(!c || c.state === 'locked') return;
+  if(c.state === 'done'){ startTopic(c.idx, true); return; }
+  pathNowAction();
 }
 function pathNowAction(){
   const cur = currentTopic();
@@ -7377,14 +7377,83 @@ function pathNowAction(){
   if(lessonState && lessonState.idx === cur.idx){ resumeLesson(); return; }
   startTopic(cur.idx);
 }
-// прокрутка реки к узлу или отметке уровня — по центру видимой части
-let pathScrollToCur = false;
-function scrollRiverTo(id){
-  const el = $(id), sc = $('pathScroll');
-  if(!el || !sc) return;
-  const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
-  sc.scrollTo({ top: Math.max(0, top - sc.clientHeight * 0.35), behavior: isLite() ? 'auto' : 'smooth' });
-}
+
+/*
+   Свайп. Карточки идут за пальцем, на краях — резиновое сопротивление.
+   Сдвиг больше 50 px или быстрый взмах листает на одну тему. Короткое
+   касание без сдвига — это нажатие: по соседней карточке — выбрать её,
+   по активной — основное действие. Долгое нажатие на постер открывает
+   ручное управление темой (пройти, сделать текущей): автоматика пути
+   зависит от того, пришлёт ли модель итог урока.
+*/
+(function initPathCarousel(){
+  const car = $('pathCar');
+  if(!car) return;
+  let x0 = 0, y0 = 0, t0 = 0, dx = 0, id = null, horiz = null, longT = null, longFired = false;
+  const cardAt = el => el && el.closest ? el.closest('.pCard') : null;
+  car.addEventListener('pointerdown', e=>{
+    if(e.button > 0) return;
+    id = e.pointerId; x0 = e.clientX; y0 = e.clientY; t0 = performance.now(); dx = 0; horiz = null; longFired = false;
+    const card = cardAt(e.target);
+    clearTimeout(longT);
+    if(card && +card.dataset.k === pathView.i){
+      longT = setTimeout(()=>{
+        if(horiz) return;
+        longFired = true;
+        const c = pathCards[pathView.i];
+        if(c) openTopicSheet(c.idx);
+      }, 550);
+    }
+  });
+  car.addEventListener('pointermove', e=>{
+    if(e.pointerId !== id) return;
+    const mx = e.clientX - x0, my = e.clientY - y0;
+    if(horiz === null && (Math.abs(mx) > 8 || Math.abs(my) > 8)){
+      horiz = Math.abs(mx) > Math.abs(my);
+      clearTimeout(longT);
+      if(horiz){ car.classList.add('drag'); try{ car.setPointerCapture(id); }catch(err){} }
+    }
+    if(!horiz) return;
+    const edge = (mx > 0 && pathView.i === 0) || (mx < 0 && pathView.i === pathCards.length - 1);
+    dx = edge ? mx * 0.3 : mx;
+    pathLayout(dx);
+  });
+  const end = e=>{
+    if(e.pointerId !== id) return;
+    id = null;
+    clearTimeout(longT);
+    car.classList.remove('drag');
+    if(horiz){
+      const v = Math.abs(dx) / Math.max(1, performance.now() - t0);   // px/мс
+      if(dx < -50 || (dx < -12 && v > 0.5)) pathStep(1);
+      else if(dx > 50 || (dx > 12 && v > 0.5)) pathStep(-1);
+      else pathLayout();
+      horiz = null;
+      return;
+    }
+    if(e.type === 'pointercancel' || longFired) return;
+    const card = cardAt(e.target);
+    if(!card) return;
+    const k = +card.dataset.k;
+    if(k === pathView.i) pathCtaAction(); else pathGo(k);
+  };
+  car.addEventListener('pointerup', end);
+  car.addEventListener('pointercancel', end);
+  car.addEventListener('contextmenu', e=>{ if(cardAt(e.target)) e.preventDefault(); });
+  car.addEventListener('keydown', e=>{
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); pathStep(-1); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); pathStep(1); }
+    else if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pathCtaAction(); }
+  });
+  // стрелки клавиатуры работают, пока фокус где-то в блоке карусели
+  ['pathTicks','pathCtl'].forEach(bid=>{
+    const box = $(bid);
+    if(box) box.addEventListener('keydown', e=>{
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); pathStep(-1); }
+      else if(e.key === 'ArrowRight'){ e.preventDefault(); pathStep(1); }
+    });
+  });
+})();
 
 let pathResizeTimer = null;
 window.addEventListener('resize', ()=>{
@@ -7436,13 +7505,16 @@ function openTopicSheet(idx){
   });
 }
 
-function startTopic(idx){
+// review=true — повтор уже пройденной темы с экрана пути
+function startTopic(idx, review){
   const node = syllabus.find(x=>x.idx === idx);
   if(!node) return;
   switchTab('teacher');
-  pushMsg('sys', t('pathLesson') + ': ' + node.title);
+  pushMsg('sys', (review ? t('pathReview') : t('pathLesson')) + ': ' + node.title);
   startLessonState(node.title, node.idx);
-  askTrainer('Start a lesson on the topic "' + node.title + '"'
+  askTrainer((review
+      ? 'Run a review lesson on the topic "' + node.title + '" that I have already passed: recap it briefly and spend most of the time on practice'
+      : 'Start a lesson on the topic "' + node.title + '"')
     + (node.goal ? ' (goal: ' + node.goal + ')' : '')
     + '. Begin with Step 1 only, then wait for my answer.', false);
 }
@@ -7493,7 +7565,7 @@ function setCardsMode(m){
 async function saveWords(words, limit, ignoreDup){
   const today = todayISO();
   const seen = new Set();
-  const payload = words.slice(0, limit || 40).map(w=>({
+  const payload = words.slice(0, limit || 40).map(oneVariantItem).map(w=>({
     user_id: session.user.id,
     target_lang: settings.target_lang,
     word: String(w.word || '').trim().slice(0,120),
@@ -7674,6 +7746,8 @@ async function loadCards(){
     renderSessionSizeControl();
     return;
   }
+  // старые карточки с парой вариантов в одной (до правила в промтах)
+  list = list.map(oneVariantItem);
   gs = { words:list, batches:makeBatches(list, BATCH_SIZE), bi:0, stage:0, queue:[], qi:0, mistakes:{}, correct:0 };
   $('cardsEmptyBox').classList.add('hidden');
   $('cardsReady').classList.remove('hidden');
@@ -8037,7 +8111,7 @@ function renderType(card){
     const i = $('typeInput');
     const val = norm(i.value);
     if(!val) return;
-    const variants = card.word.split(/[,/]/).map(norm).filter(Boolean);
+    const variants = card.word.split(/[,\/\\|]/).map(norm).filter(Boolean);
     if(variants.includes(val)) markRight(); else markWrong(card, card.word);
     i.disabled = true;
     // ответ уже дан — открываем слово и даём его послушать
@@ -8247,8 +8321,8 @@ async function saveWordEdit(id){
   const w = deckAll.find(x=>x.id === id);
   if(!w) return;
   const patch = {
-    word: $('deckW').value.trim().slice(0,120),
-    translation: $('deckT').value.trim().slice(0,240),
+    word: oneVariant($('deckW').value).slice(0,120),
+    translation: oneVariant($('deckT').value).slice(0,240),
     example: $('deckE').value.trim().slice(0,400)
   };
   // без миграции колонки нет — с ней не прошла бы вся правка целиком
@@ -8513,7 +8587,10 @@ function phraseCriteriaPrompt(){
     + 'speech, texting friends and everyday conversation. Its meaning as a whole does not follow '
     + 'mechanically from translating the words one by one. It must fit a ' + settings.level + ' learner. '
     + 'Never produce: full sentences, bookish or literary turns, formal or bureaucratic wording, '
-    + 'proverbs and sayings, grammar drill templates with blanks, archaic vocabulary, vulgarity.';
+    + 'proverbs and sayings, grammar drill templates with blanks, archaic vocabulary, vulgarity. '
+    + 'Each item holds exactly one word or one phrase, and its translation exactly one equivalent: never '
+    + 'put two variants or a pair of opposites into one item, never join forms with "/", "\\", "|" or "or" '
+    + '(not "say yes / say no") — make them separate items or keep one.';
 }
 
 /*
