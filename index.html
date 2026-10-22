@@ -805,6 +805,14 @@ html[dir=rtl] .toggle.on i{transform:translateX(-20px)}
 .spkBtn.big{width:52px;height:52px;background:var(--gold);color:var(--gold-ink)}
 .spkBtn.big svg{width:22px;height:22px}
 .spkBtn.playing{background:var(--gold);color:var(--gold-ink);box-shadow:0 0 0 4px var(--gold-soft)}
+/* живой голос тренера: кнопка у ответа, автоозвучка в шапке, «Послушать» в настройках */
+.msgWrap .voiceBtn{margin-bottom:2px}
+@keyframes voicePulse{from{opacity:1}to{opacity:.38}}
+.spkBtn.loading,.voicePrev.loading{animation:voicePulse .8s ease-in-out infinite alternate}
+html.lite .spkBtn.loading,html.lite .voicePrev.loading{opacity:.55}
+.tHead .voiceAutoBtn.on{background:var(--gold);color:var(--gold-ink)}
+.voicePrev{display:flex;align-items:center;justify-content:center;gap:8px}
+.voicePrev.playing{border-color:var(--gold);color:var(--gold)}
 
 /* ---------- колода ---------- */
 .deckRow{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:8px;text-align:start;padding:12px 14px;border-radius:18px;
@@ -1230,6 +1238,9 @@ html.lite .tabItem.sel svg{transform:none}
         <span><i></i><span data-i18n="teacherStatus"></span></span>
       </span>
       <span class="countChip" id="teacherBadge"></span>
+      <button class="iconBtn voiceAutoBtn" id="voiceAutoBtn" onclick="toggleVoiceAuto()" data-aria="ariaVoiceAuto" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3l4 3.5v-12l-4 3.5H4z"></path><path d="M15.3 9.2a4 4 0 0 1 0 5.6"></path><path d="M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg>
+      </button>
       <button class="iconBtn" onclick="openTrainerInfo()" data-aria="ariaTrainerInfo">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 11v5.5"></path><path d="M12 7.6v.1"></path></svg>
       </button>
@@ -1437,6 +1448,7 @@ html.lite .tabItem.sel svg{transform:none}
           <button class="settingsRow" onclick="openGoalsSheet()"><b data-i18n="goalsTitle"></b><i id="rowGoals"></i><i class="arrowR"></i></button>
           <button class="settingsRow" onclick="openMaterialsSheet()"><b data-i18n="materials"></b><i id="rowMaterials"></i><i class="arrowR"></i></button>
           <button class="settingsRow" onclick="openIfaceSheet()"><b data-i18n="profIface"></b><i id="rowIface"></i><i class="arrowR"></i></button>
+          <button class="settingsRow" onclick="openVoiceSheet()"><b data-i18n="voiceTitle"></b><i id="rowVoice"></i><i class="arrowR"></i></button>
           <button class="settingsRow" onclick="openPerfSheet()"><b data-i18n="perfRow"></b><i id="rowPerf"></i><i class="arrowR"></i></button>
           <button class="settingsRow" onclick="openKeySheet()"><b data-i18n="profKey"></b><i id="rowKey"></i><i class="arrowR"></i></button>
           <button class="settingsRow" onclick="openAccountSheet()"><b data-i18n="accountTitle"></b><i id="rowAccount"></i><i class="arrowR"></i></button>
@@ -1755,6 +1767,8 @@ function pickModel(){
   return candidates[0] || null;
 }
 let candidates = [];
+// голосовые модели (*-tts*) — отдельно от текстовых, только для озвучки тренера
+let ttsCandidates = [];
 let genLangCode = 'en';
 let chatHistory = [];
 let currentTab = 'home';
@@ -2167,6 +2181,23 @@ ar:{tabFriends:"الأصدقاء",tabRanks:"الرتب",settingsTitle:"الإع�
 tr:{tabFriends:"Arkadaşlar",tabRanks:"Rütbeler",settingsTitle:"Ayarlar",railTrainerSub:"ne istersen sor",streakChip:"{n} gün",streakDoneToday:"Bugün sayıldı — seri devam ediyor.",homeStart:"Başla",shelfDue:"Bugün tekrar",shelfFriends:"Arkadaşların çalıştı",showAll:"Tümünü gör",showAllFriends:"Tümü",dueLate:"gecikti",dueToday:"bugün",topicN:"Konu {n}",matText:"METİN",matSubs:"ALTYAZI",materialAddCard:"Materyal ekle",miniSteps:"{total} adımdan {n}.",storyYou:"Sen",storyInvite:"Davet et",agoMin:"{n} dk",agoH:"{n} sa",agoD:"{n} g",actTopic:"“{topic}” · %{n}",actLesson:"ders · %{n}",inboxTitle:"Bildirimler",inboxEmpty:"Yeni bir şey yok. Arkadaşlık istekleri ve ders davetleri burada görünür.",nudgeFrom:"{name} seni derse çağırıyor",pathGoalTo:"hedef {lvl}",pathLvlCount:"{total} konudan {done}",pathNowK:"Şimdi · konu {n}",pathNowLbl:"şimdi",masteryPct:"öğrenildi %{n}",pathGateLeft:"seviyeye {n} konu kaldı",pathGateOpen:"açık — görmek için dokun",pathGateFinish:"bitiş · {n} konu kaldı",pathGateDone:"plan tamamlandı",today:"Bugün",yesterday:"Dün",propTitle:"Öğretmenin önerisi",propPlan:"Bu istek için plan değişikliği hazırlansın mı?",propOpen:"Hazırla",wordsAdded:"Tekrara {n} kelime eklendi",wordsUndone:"Desteden {n} kelime çıkarıldı",undo:"Geri al",chatPlusTitle:"Hızlı işlemler",btnTest:"Test",materialLessonChip:"Kendi materyalimle",trainerInfo:"{lang} öğretmeni, seviye {level}, günde yaklaşık {min} dakika. Yolunu, derslerini ve tekrarlayan hatalarını hatırlar.",slowSpeak:"Yavaş · 0.7×",wordsCount:"{n} kelime",statWordsLbl:"kelime",loading:"Yükleniyor…",copy:"Kopyala",copied:"Kopyalandı",share:"Paylaş",ariaInbox:"Bildirimler",ariaChatPlus:"Hızlı işlemler",ariaMic:"Sesle yaz",ariaTrainerInfo:"Öğretmen hakkında",ariaAddFriend:"Arkadaş ekle",ariaRankInfo:"Rütbeler nasıl işler",ariaMore:"Daha fazla",ariaLike:"Beğen",achTitle:"Başarılar",achLocked:"henüz değil",topicsTab:"Konular · {n}",topicsNone:"Henüz tamamlanan konu yok — ilki hemen önünde.",friendsBtn:"Arkadaşlar · {n}",rankToNext:"“{name}” için {n} XP",rankToTop:"en üst lige {n} XP",rankMaxed:"en üst rütbe — efsane",rankYour:"Rütben · {n}. basamak",rankDiv:"Lig {d} / III",rankDivShort:"{d} / III",rankDivUp:"Lig {d} · {name}",rankPassedAll:"I · II · III ligleri geçildi",rankDone:"Geçildi",rankFrom:"{n} XP'den",ranksAll:"Tüm basamaklar",rankInfoBody:"XP gerçek çalışmadan gelir: kartlardaki her doğru cevap için 2, biten her çalışma için bonus, dersteki kelimeler için 20 ve öğretmenle sohbet için günde en fazla 100. On beş basamak, her birinde üç lig, sonuncusu 100.000 XP’de; parkur sadece isimleri değiştirir.",rankNew:"Yeni rütbe!",rankStep:"{total} basamaktan {n}. · lig I",ruFrame:"“{name}” renginde avatar çerçevesi",ruVisible:"Arkadaşların yeni amblemi görür",ruShareText:"WordDeck'te “{name}” rütbesine ulaştım!",myCode:"Kodum",myCodeHint:"Arkadaşın kodu girer — ve birbirinizin ilerlemesini görürsünüz.",friendCodePh:"Arkadaş kodu, ör. LEYA-1093",addFriend:"Ekle",inviteText:"WordDeck'te birlikte dil öğrenelim! Arkadaş kodum: {code}",friendsNameHint:"Arkadaşların profildeki adını görür — bir ad belirle",reqTitle:"İstekler",reqWaiting:"Yanıt bekleniyor",reqWants:"birlikte öğrenmek istiyor",reqPending:"istek gönderildi",reqAccept:"Kabul et",reqDecline:"Reddet",reqCancel:"İsteği iptal et",weekTop:"Haftanın sıralaması",weekReset:"pazartesi sıfırlanır",friendsEmpty:"Henüz arkadaşın yok. Kodunu paylaş — birlikte öğrenmek daha kolay.",friendNoName:"İsimsiz kunduz",frSent:"İstek gönderildi — arkadaşının kabul etmesi bekleniyor",frAccepted:"Artık arkadaşsınız",frNotFound:"Bu kod yok — kontrol et",frSelf:"Bu senin kendi kodun",frAlready:"Zaten bir istek veya arkadaşlık var",frHigher:"senden {n} basamak yukarıda",frLower:"senden {n} basamak aşağıda",frSame:"seninle aynı basamakta",youAreFriends:"Arkadaşsınız",nudge:"Derse çağır",nudgeSent:"{name} davetini görecek",nudgeWait:"Kısa süre önce zaten çağırdın — sonra tekrar dene",friendLessons:"Dersler",dblTapHint:"çift dokun — kalp",friendNoLessons:"Henüz ders yok.",friendGone:"Bu profil kullanılamıyor — artık arkadaş olmayabilirsiniz.",frRemove:"Arkadaşlardan çıkar",frRemoveConfirm:"Çıkarmak için tekrar dokun",frRemoved:"Arkadaşlardan çıkarıldı",themeSystem:"Sistem gibi",accentTitle:"Vurgu rengi",previewTitle:"Önizleme",previewLesson:"Kafe · ders 3",previewProgress:"12'de 7 · +40 XP",previewTest:"Test",grainTitle:"Arka plan dokusu",onbT5lang:"{lang} neden lazım?",onbEstimate:"günde {min} dakikayla ≈ {n} ay",acc_gold:"Altın",acc_copper:"Bakır",acc_sage:"Adaçayı",acc_wave:"Dalga",acc_dusk:"Alacakaranlık",acc_plum:"Erik",acc_berry:"Kızılcık",track_classic:"Klasik",track_anime:"Anime",track_music:"Müzik",rank_classic:"Yonga|Dal|Yosun|Dere|Nehir|Gölet|Baraj|Kehribar|Koruyucu|Efsane|Bilge|Yaşlı|Reis|Titan|Ölümsüz",rank_anime:"Dünyalı|Usta Roshi’nin öğrencisi|Turnuva Dövüşçüsü|Z Savaşçısı|Kaioken|Süper Saiyan|Süper Saiyan 2|Süper Saiyan 3|Süper Saiyan Tanrı|Süper Saiyan Mavi|Ultra İçgüdü İşareti|Ultra İçgüdü|Ultra Ego|Yıkım Tanrısı|Melek",rank_music:"Demo|Prova|Single|EP|Albüm|Turne|Manşet sanatçı|Altın plak|Platin|Şöhretler Salonu|Elmas plak|Stadyum turnesi|İkon|Yaşayan efsane|Ölümsüz hit",ach_streak3:"Üst üste 3 gün",ach_streak7:"Üst üste 7 gün",ach_streak30:"Üst üste 30 gün",ach_words100:"100 kelime",ach_words500:"500 kelime",ach_lesson1:"İlk ders",ach_lessons10:"10 ders",ach_lessons50:"50 ders",ach_test:"Seviye testi",ach_friend:"İlk arkadaş",ach_night:"Gece kuşu",ach_audio50:"50 dinleme",ach_material:"Kendi materyalin",ach_level:"Seviye geçildi",goalHint_work:"görüşmeler, e-postalar",goalHint_travel:"istasyon, otel, kafe",goalHint_relocation:"ev, belgeler, doktor",goalHint_exam:"format ve strateji",goalHint_media:"gerçek konuşma",goalHint_communication:"sohbet, tanışma",goalHint_study:"dersler, sınavlar",acc_custom:"Özel",accCustomTitle:"Kendi rengin",accCustomHint:"Çemberin üzerinde sürükle: çevresi ton, merkezden uzaklık doygunluk.",genCustomTopicPh:"Ya da kendi konun — ör. futbol, girişimler",getKeyAiStudio:"Google AI Studio’dan ücretsiz anahtar al",supportTitle:"Destek ve geliştirici",supportBody:"Bir hata mı buldun ya da fikrin mi var? WordDeck’in geliştiricisine Telegram’dan yaz — her mesaj okunur.",supportWrite:"Telegram’dan yaz",supportId:"Telegram ID: {id}",statWordsCol:"Kelimeler",statLessonsCol:"Dersler"}
 };
 Object.keys(I18N_EXT13).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT13[code]); });
+
+/* Пакет 5 — живой голос тренера (Gemini TTS). I18N_EXT14 уже занят каруселью пути */
+const I18N_EXT15 = {
+en:{voiceTitle:"Tutor's voice",voiceAuto:"Read replies aloud automatically",voicePick:"Voice",voicePreview:"Listen",voiceSample:"Hi! I'm your tutor — let's learn a few new words together today.",voiceNote:"The live voice runs on your Gemini key and counts toward its limits.",voiceOn:"on",voiceOff:"off",voiceFallback:"The live voice isn't available right now — reading with the browser voice",voiceNoModel:"Your key doesn't give access to voice models — reading with the browser voice",ariaVoicePlay:"Listen to the reply",ariaVoiceStop:"Stop",ariaVoiceAuto:"Read replies aloud"},
+ru:{voiceTitle:"Голос тренера",voiceAuto:"Озвучивать ответы автоматически",voicePick:"Голос",voicePreview:"Послушать",voiceSample:"Привет! Я твой тренер — давай сегодня выучим пару новых слов.",voiceNote:"Живой голос работает через твой ключ Gemini и расходует его лимиты.",voiceOn:"вкл",voiceOff:"выкл",voiceFallback:"Живой голос сейчас недоступен — читаю голосом браузера",voiceNoModel:"Твой ключ не даёт доступа к голосовым моделям — читаю голосом браузера",ariaVoicePlay:"Прослушать ответ",ariaVoiceStop:"Остановить",ariaVoiceAuto:"Автоозвучка ответов"},
+es:{voiceTitle:"Voz del profesor",voiceAuto:"Leer las respuestas en voz alta",voicePick:"Voz",voicePreview:"Escuchar",voiceSample:"¡Hola! Soy tu profesor: hoy vamos a aprender juntos algunas palabras nuevas.",voiceNote:"La voz real funciona con tu clave de Gemini y cuenta para sus límites.",voiceOn:"sí",voiceOff:"no",voiceFallback:"La voz real no está disponible ahora: leo con la voz del navegador",voiceNoModel:"Tu clave no da acceso a los modelos de voz: leo con la voz del navegador",ariaVoicePlay:"Escuchar la respuesta",ariaVoiceStop:"Detener",ariaVoiceAuto:"Lectura automática de respuestas"},
+fr:{voiceTitle:"Voix du coach",voiceAuto:"Lire les réponses à voix haute",voicePick:"Voix",voicePreview:"Écouter",voiceSample:"Salut ! Je suis ton coach — apprenons ensemble quelques mots nouveaux aujourd'hui.",voiceNote:"La voix réelle passe par ta clé Gemini et compte dans ses limites.",voiceOn:"activée",voiceOff:"désactivée",voiceFallback:"La voix réelle n'est pas disponible pour l'instant — je lis avec la voix du navigateur",voiceNoModel:"Ta clé ne donne pas accès aux modèles vocaux — je lis avec la voix du navigateur",ariaVoicePlay:"Écouter la réponse",ariaVoiceStop:"Arrêter",ariaVoiceAuto:"Lecture automatique des réponses"},
+de:{voiceTitle:"Stimme des Trainers",voiceAuto:"Antworten automatisch vorlesen",voicePick:"Stimme",voicePreview:"Anhören",voiceSample:"Hallo! Ich bin dein Trainer — lass uns heute ein paar neue Wörter lernen.",voiceNote:"Die echte Stimme läuft über deinen Gemini-Schlüssel und zählt zu dessen Limits.",voiceOn:"an",voiceOff:"aus",voiceFallback:"Die echte Stimme ist gerade nicht verfügbar — ich lese mit der Browserstimme",voiceNoModel:"Dein Schlüssel hat keinen Zugriff auf Sprachmodelle — ich lese mit der Browserstimme",ariaVoicePlay:"Antwort anhören",ariaVoiceStop:"Stoppen",ariaVoiceAuto:"Antworten automatisch vorlesen"},
+it:{voiceTitle:"Voce dell'insegnante",voiceAuto:"Leggi le risposte ad alta voce",voicePick:"Voce",voicePreview:"Ascolta",voiceSample:"Ciao! Sono il tuo insegnante: oggi impariamo insieme qualche parola nuova.",voiceNote:"La voce reale usa la tua chiave Gemini e consuma i suoi limiti.",voiceOn:"sì",voiceOff:"no",voiceFallback:"La voce reale ora non è disponibile: leggo con la voce del browser",voiceNoModel:"La tua chiave non dà accesso ai modelli vocali: leggo con la voce del browser",ariaVoicePlay:"Ascolta la risposta",ariaVoiceStop:"Ferma",ariaVoiceAuto:"Lettura automatica delle risposte"},
+pt:{voiceTitle:"Voz do treinador",voiceAuto:"Ler as respostas em voz alta",voicePick:"Voz",voicePreview:"Ouvir",voiceSample:"Oi! Sou seu treinador — vamos aprender algumas palavras novas juntos hoje.",voiceNote:"A voz real funciona pela sua chave do Gemini e conta nos limites dela.",voiceOn:"lig.",voiceOff:"desl.",voiceFallback:"A voz real não está disponível agora — leio com a voz do navegador",voiceNoModel:"Sua chave não dá acesso aos modelos de voz — leio com a voz do navegador",ariaVoicePlay:"Ouvir a resposta",ariaVoiceStop:"Parar",ariaVoiceAuto:"Leitura automática das respostas"},
+zh:{voiceTitle:"老师的声音",voiceAuto:"自动朗读回复",voicePick:"声音",voicePreview:"试听",voiceSample:"你好！我是你的老师，今天一起学几个新单词吧。",voiceNote:"真人般的声音通过你的 Gemini 密钥运行，会占用它的额度。",voiceOn:"开",voiceOff:"关",voiceFallback:"真人声音暂时不可用，改用浏览器的声音朗读",voiceNoModel:"你的密钥无法使用语音模型，改用浏览器的声音朗读",ariaVoicePlay:"收听回复",ariaVoiceStop:"停止",ariaVoiceAuto:"自动朗读回复"},
+ja:{voiceTitle:"先生の声",voiceAuto:"返信を自動で読み上げる",voicePick:"声",voicePreview:"試聴",voiceSample:"こんにちは！先生です。今日はいっしょに新しい単語をいくつか覚えましょう。",voiceNote:"リアルな声はあなたの Gemini キーで動き、その利用枠を消費します。",voiceOn:"オン",voiceOff:"オフ",voiceFallback:"リアルな声は今使えません — ブラウザの音声で読み上げます",voiceNoModel:"このキーでは音声モデルを使えません — ブラウザの音声で読み上げます",ariaVoicePlay:"返信を聞く",ariaVoiceStop:"停止",ariaVoiceAuto:"返信の自動読み上げ"},
+ko:{voiceTitle:"선생님 목소리",voiceAuto:"답변을 자동으로 읽어 주기",voicePick:"목소리",voicePreview:"들어 보기",voiceSample:"안녕하세요! 선생님이에요. 오늘은 새 단어 몇 개를 함께 배워 봐요.",voiceNote:"실제 목소리는 등록한 Gemini 키로 작동하고 그 한도를 사용해요.",voiceOn:"켬",voiceOff:"끔",voiceFallback:"지금은 실제 목소리를 쓸 수 없어요 — 브라우저 음성으로 읽을게요",voiceNoModel:"이 키로는 음성 모델을 쓸 수 없어요 — 브라우저 음성으로 읽을게요",ariaVoicePlay:"답변 듣기",ariaVoiceStop:"정지",ariaVoiceAuto:"답변 자동 읽기"},
+ar:{voiceTitle:"صوت المعلّم",voiceAuto:"قراءة الردود بصوت عالٍ تلقائيًا",voicePick:"الصوت",voicePreview:"استمع",voiceSample:"مرحبًا! أنا معلّمك — هيا نتعلّم اليوم بعض الكلمات الجديدة معًا.",voiceNote:"الصوت الحي يعمل عبر مفتاح Gemini الخاص بك ويُحتسب من حدوده.",voiceOn:"مفعّل",voiceOff:"متوقف",voiceFallback:"الصوت الحي غير متاح الآن — أقرأ بصوت المتصفح",voiceNoModel:"مفتاحك لا يتيح الوصول إلى نماذج الصوت — أقرأ بصوت المتصفح",ariaVoicePlay:"استمع إلى الرد",ariaVoiceStop:"إيقاف",ariaVoiceAuto:"القراءة التلقائية للردود"},
+tr:{voiceTitle:"Öğretmenin sesi",voiceAuto:"Yanıtları otomatik sesli oku",voicePick:"Ses",voicePreview:"Dinle",voiceSample:"Merhaba! Ben öğretmeninim — bugün birlikte birkaç yeni kelime öğrenelim.",voiceNote:"Canlı ses Gemini anahtarınla çalışır ve onun limitlerinden düşer.",voiceOn:"açık",voiceOff:"kapalı",voiceFallback:"Canlı ses şu an kullanılamıyor — tarayıcı sesiyle okuyorum",voiceNoModel:"Anahtarın ses modellerine erişim vermiyor — tarayıcı sesiyle okuyorum",ariaVoicePlay:"Yanıtı dinle",ariaVoiceStop:"Durdur",ariaVoiceAuto:"Yanıtları otomatik okuma"}
+};
+Object.keys(I18N_EXT15).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT15[code]); });
 // путь — карусель тем
 const I18N_EXT14 = {
 en:{"pathOf":"topic {n} of {total}","pathBadgeDone":"Done","pathBadgeNow":"Now","pathBadgeMin":"{n} min","pathStateLocked":"locked","pathReview":"Review topic","pathOpensAfter":"Opens after topic {n}","pathLvlOpensAfter":"Opens after {lvl}","pathPrev":"Previous topic","pathNext":"Next topic","pathCarousel":"carousel","pathSlide":"topic","pathCarouselLbl":"Topics of level {lvl}","pathTickLbl":"Topic {n}","pathCardLbl":"Topic {n} of {total}: {title}, {state}"},
@@ -2433,6 +2464,466 @@ function speakBtn(text, langCode, opts){
   if(!canSpeak() || !text) b.classList.add('hidden');
   return b;
 }
+
+/* =========================================================================
+   Живой голос тренера (Gemini TTS)
+
+   Ответы тренера читает голосовая модель Gemini (*-tts*), а не голос
+   браузера. Карточки и игры по-прежнему озвучивает speak() — это
+   отдельная история. Свой запрос, не aiRun/geminiSend: те ждут текст
+   и добавляют thinkingConfig, а здесь в ответе звук.
+
+   Ответ — сырой PCM (16 бит, little-endian, моно). Длинный текст режется
+   на куски: первый короткий, чтобы звук начался быстро; пока играет
+   кусок N, синтезируется кусок N+1 — опережение ровно на один.
+   ========================================================================= */
+const TTS_VOICES = ['Kore','Aoede','Leda','Zephyr','Puck','Charon','Fenrir','Orus'];
+/*
+   Подводки к тексту нет намеренно. Новые TTS-модели (с 3.x) читают
+   присланный текст дословно, как сценарий: указание «читай тёплым
+   голосом…» звучало бы вслух перед каждым куском ответа. Манеру чтения
+   эти модели берут из отдельного поля стиля, а не из текста; пока его
+   нет, голос нейтральный, но читает ровно ответ тренера.
+*/
+const TTS_STYLE = '';
+const TTS_TIMEOUT_MS = 30e3;
+const VOICE_MAX_CHARS = 2000;     // на один ответ; остальное не озвучивается
+const VOICE_FIRST_CHUNK = 180;
+const VOICE_CHUNK = 350;
+const VOICE_CACHE_MAX = 40;
+
+let voiceName = 'Kore', voiceAuto = false;
+try{
+  voiceName = localStorage.getItem('worddeck_voice') || 'Kore';
+  voiceAuto = localStorage.getItem('worddeck_voice_auto') === '1';
+}catch(e){}
+if(TTS_VOICES.indexOf(voiceName) < 0) voiceName = 'Kore';
+
+/*
+   Пауза голосовых моделей — своя и только в памяти. noteModelOk/Fail
+   не годятся: они выставили бы workingModel = TTS-модель, и текстовый
+   тренер начал бы ходить в неё. «Модели нет» — до перезагрузки.
+*/
+const ttsCooldown = {};
+const TTS_COOLDOWN = { quota: 5 * 60e3, busy: 60e3, notfound: Infinity };
+function ttsResting(m){ return (ttsCooldown[m] || 0) > Date.now(); }
+
+// текст → { data: base64 PCM, rate }
+async function ttsSynthesize(text, voice){
+  const models = ttsCandidates.filter(m => !ttsResting(m)).slice(0, 2);
+  if(!models.length) throw aiError('nomodel');
+  const body = JSON.stringify({
+    contents: [{ role:'user', parts:[{ text: TTS_STYLE + text }] }],
+    generationConfig: {
+      responseModalities: ['AUDIO'],
+      speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } }
+    }
+  });
+  let last = null;
+  for(const model of models){
+    const ctl = new AbortController();
+    const timer = setTimeout(()=>{ try{ ctl.abort(); }catch(e){} }, TTS_TIMEOUT_MS);
+    try{
+      let r;
+      try{
+        r = await fetch(GEMINI_API + '/' + model + ':generateContent', {
+          method: 'POST',
+          headers: Object.assign({ 'Content-Type':'application/json' }, geminiHeaders(getKey())),
+          body, signal: ctl.signal
+        });
+      }catch(e){
+        throw (e && e.name === 'AbortError') ? aiError('timeout') : aiError('network', 0, e && e.message);
+      }
+      let data = null;
+      try{ data = await r.json(); }catch(e){
+        if(e && e.name === 'AbortError') throw aiError('timeout');
+      }
+      if(!r.ok || !data || data.error){
+        const msg = (data && data.error && data.error.message) || '';
+        throw aiError(classifyAi(r.status, msg), r.status, msg);
+      }
+      const parts = (data.candidates && data.candidates[0] && data.candidates[0].content
+                     && data.candidates[0].content.parts) || [];
+      const audio = parts.filter(p => p && p.inlineData && p.inlineData.data);
+      if(!audio.length) throw aiError('empty', r.status, model);
+      const mt = String(audio[0].inlineData.mimeType || '');
+      const rm = mt.match(/rate=(\d+)/i);
+      return {
+        data: audio.map(p => p.inlineData.data),
+        rate: rm ? parseInt(rm[1], 10) : 24000
+      };
+    }catch(e){
+      last = e;
+      dlog('voice ' + model + ':', e);
+      // лимит, перегруз, «модели нет», пустой ответ — пробуем вторую модель
+      if(TTS_COOLDOWN[e.code]){ ttsCooldown[model] = Date.now() + TTS_COOLDOWN[e.code]; continue; }
+      if(e.code === 'empty') continue;
+      throw e;
+    }finally{ clearTimeout(timer); }
+  }
+  throw last || aiError('nomodel');
+}
+
+/* ---- воспроизведение ---- */
+let voiceCtx = null;
+/*
+   Контекст создаётся и «будится» внутри жеста пользователя. На iOS Safari
+   и части Android иначе звук после асинхронного ответа не заиграет.
+*/
+function unlockAudio(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  try{
+    // iOS 16.4+: Web Audio не глушится переключателем «без звука»
+    if(navigator.audioSession) navigator.audioSession.type = 'playback';
+  }catch(e){}
+  try{
+    if(!voiceCtx){
+      voiceCtx = new AC();
+      // пустой сэмпл — старым iOS этого нужно, чтобы контекст ожил
+      const s = voiceCtx.createBufferSource();
+      s.buffer = voiceCtx.createBuffer(1, 1, 22050);
+      s.connect(voiceCtx.destination);
+      s.start(0);
+    }
+    if(voiceCtx.state === 'suspended') voiceCtx.resume().catch(()=>{});
+  }catch(e){ dlog('voice ctx:', e); return null; }
+  return voiceCtx;
+}
+
+/*
+   Старые TTS-модели присылают голый PCM (audio/L16), новые по умолчанию —
+   WAV: тот же PCM, но с заголовком RIFF впереди. Заголовок, прочитанный
+   как звук, давал щелчок в начале каждого куска. Если он есть — берём
+   из него частоту и читаем только чанк «data».
+*/
+function wavData(bytes, dv){
+  const tag = o => String.fromCharCode(bytes[o], bytes[o + 1], bytes[o + 2], bytes[o + 3]);
+  if(bytes.length < 12 || tag(0) !== 'RIFF' || tag(8) !== 'WAVE') return null;
+  let o = 12, rate = 0;
+  while(o + 8 <= bytes.length){
+    const id = tag(o), size = dv.getUint32(o + 4, true);
+    if(id === 'fmt ' && o + 16 <= bytes.length) rate = dv.getUint32(o + 12, true);
+    // в потоковом WAV размер data бывает «бесконечным» — обрезаем по факту
+    if(id === 'data') return { start: o + 8, end: Math.min(bytes.length, o + 8 + size), rate };
+    o += 8 + size + (size & 1);
+  }
+  return null;
+}
+
+// куски base64 (PCM16 LE или WAV) → AudioBuffer
+function pcmToBuffer(chunks, rate){
+  const parts = chunks.map(b64=>{
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const dv = new DataView(bytes.buffer);
+    const wav = wavData(bytes, dv);
+    if(wav && wav.rate) rate = wav.rate;
+    const from = wav ? wav.start : 0, to = wav ? wav.end : bytes.length;
+    const n = (to - from) >> 1;
+    const pcm = new Int16Array(n);
+    for(let i = 0; i < n; i++) pcm[i] = dv.getInt16(from + i * 2, true);
+    return pcm;
+  });
+  const total = parts.reduce((s, p) => s + p.length, 0);
+  const buf = voiceCtx.createBuffer(1, Math.max(1, total), rate);
+  const out = buf.getChannelData(0);
+  let o = 0;
+  parts.forEach(p=>{ for(let i = 0; i < p.length; i++) out[o++] = p[i] / 32768; });
+  return buf;
+}
+
+// ответ тренера → то, что можно прочитать вслух: без разметки и маркеров
+function speakableText(text){
+  const d = document.createElement('div');
+  d.innerHTML = richText(text);
+  return String(d.textContent || '')
+    .replace(/•/g, ' ')
+    .replace(/[ \t ]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .replace(/\n{2,}/g, '\n')
+    .trim();
+}
+
+/*
+   Нарезка по абзацам и предложениям. Без lookbehind в регэкспах:
+   старый Safari на нём падает целиком при разборе скрипта.
+*/
+function voiceChunks(text){
+  let src = String(text || '');
+  if(src.length > VOICE_MAX_CHARS){
+    const cut = src.slice(0, VOICE_MAX_CHARS);
+    const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '), cut.lastIndexOf('\n'));
+    src = end > VOICE_MAX_CHARS / 2 ? cut.slice(0, end + 1) : cut;
+  }
+  const pieces = [];
+  src.split('\n').forEach(par=>{
+    const sent = par.match(/[^.!?…。！？]+(?:[.!?…。！？]+[)"»”'’]*|$)\s*/g) || [];
+    sent.forEach(s=>{
+      s = s.trim();
+      // слишком длинное предложение — по запятым, а в крайнем случае по пробелам
+      while(s.length > VOICE_CHUNK){
+        let at = s.lastIndexOf(', ', VOICE_CHUNK);
+        if(at < VOICE_CHUNK / 3) at = s.lastIndexOf(' ', VOICE_CHUNK);
+        if(at < VOICE_CHUNK / 3) at = VOICE_CHUNK;
+        pieces.push(s.slice(0, at + 1).trim());
+        s = s.slice(at + 1).trim();
+      }
+      if(s) pieces.push(s);
+    });
+  });
+  const out = [];
+  let cur = '';
+  pieces.forEach(p=>{
+    const lim = out.length ? VOICE_CHUNK : VOICE_FIRST_CHUNK;
+    if(cur && (cur.length + 1 + p.length) > lim){ out.push(cur); cur = p; }
+    else cur = cur ? cur + ' ' + p : p;
+  });
+  if(cur) out.push(cur);
+  return out;
+}
+
+// кэш «голос|кусок» → AudioBuffer: повторное прослушивание не ходит в сеть
+const voiceCache = new Map();
+function voiceChunk(text, voice){
+  const key = voice + '|' + text;
+  if(voiceCache.has(key)){
+    const b = voiceCache.get(key);
+    voiceCache.delete(key); voiceCache.set(key, b);
+    return Promise.resolve(b);
+  }
+  return ttsSynthesize(text, voice).then(r=>{
+    const buf = pcmToBuffer(r.data, r.rate);
+    voiceCache.set(key, buf);
+    while(voiceCache.size > VOICE_CACHE_MAX) voiceCache.delete(voiceCache.keys().next().value);
+    return buf;
+  });
+}
+
+/*
+   Одновременно звучит одно сообщение. voiceToken — номер текущего
+   воспроизведения: stopVoice() его меняет, и все ждущие куски старого
+   прослушивания, проснувшись, видят чужой номер и молча выходят.
+*/
+let voiceToken = 0;
+let voiceSources = [];
+let voiceBtn = null;
+let voiceFallbackOn = false;
+let voiceFallbackBtn = null;
+const voiceToasted = {};
+
+function paintVoiceBtn(btn, state){
+  if(!btn) return;
+  btn.classList.toggle('loading', state === 'loading');
+  btn.classList.toggle('playing', state === 'playing');
+  if(btn.classList.contains('spkBtn'))
+    btn.setAttribute('aria-label', t(state ? 'ariaVoiceStop' : 'ariaVoicePlay'));
+}
+
+function stopVoice(){
+  voiceToken++;
+  voiceSources.forEach(s=>{ s.onended = null; try{ s.stop(); }catch(e){} });
+  voiceSources = [];
+  if(voiceFallbackOn){
+    voiceFallbackOn = false;
+    try{ window.speechSynthesis.cancel(); }catch(e){}
+    // onend у прерванной фразы приходит не во всех браузерах
+    if(voiceFallbackBtn) paintVoiceBtn(voiceFallbackBtn, '');
+    voiceFallbackBtn = null;
+  }
+  if(voiceBtn){ paintVoiceBtn(voiceBtn, ''); voiceBtn = null; }
+}
+
+// повторное нажатие на играющее сообщение — стоп; на другое — переключение
+function toggleVoice(btn, text, lang){
+  if(btn.classList.contains('playing') || btn.classList.contains('loading')){ stopVoice(); return; }
+  playVoice(text, btn, lang);
+}
+
+// живого голоса нет — читаем голосом браузера, тост один раз за сессию
+function voiceFallback(plain, btn, lang, why){
+  paintVoiceBtn(btn, '');
+  voiceBtn = null;
+  if(!voiceToasted[why]){ voiceToasted[why] = true; toast(t(why)); }
+  if(!canSpeak()) return;
+  voiceFallbackOn = true;
+  voiceFallbackBtn = btn;
+  speak(plain, lang || settings.native_lang, btn);
+}
+
+function voiceFail(e, plain, btn, lang){
+  dlog('voice:', e);
+  if(e && (e.code === 'network' || e.code === 'timeout' || e.code === 'busy' || isNetworkError(e))){
+    paintVoiceBtn(btn, ''); voiceBtn = null;
+    toast(t(friendlyError(e)));
+    return;
+  }
+  // key / quota / notfound / region / nomodel и прочее — голос браузера
+  voiceFallback(plain, btn, lang, ttsCandidates.length ? 'voiceFallback' : 'voiceNoModel');
+}
+
+function waitCtxTime(ctx, when){
+  const ms = (when - ctx.currentTime) * 1000;
+  return ms > 0 ? new Promise(res => setTimeout(res, ms)) : Promise.resolve();
+}
+
+async function playVoice(text, btn, lang){
+  stopVoice();
+  const my = voiceToken;
+  const plain = speakableText(text);
+  const chunks = voiceChunks(plain);
+  if(!chunks.length) return;
+  voiceBtn = btn;
+  if(!ttsCandidates.length){ voiceFallback(plain, btn, lang, 'voiceNoModel'); return; }
+  const ctx = unlockAudio();
+  if(!ctx){ voiceFallback(plain, btn, lang, 'voiceFallback'); return; }
+  paintVoiceBtn(btn, 'loading');
+  const voice = voiceName;
+  let queued = false;
+  const finish = ()=>{
+    if(my !== voiceToken || !queued || voiceSources.length) return;
+    paintVoiceBtn(btn, '');
+    if(voiceBtn === btn) voiceBtn = null;
+  };
+  let next = voiceChunk(chunks[0], voice);
+  let endAt = 0;
+  for(let i = 0; i < chunks.length; i++){
+    let buf;
+    try{ buf = await next; }
+    catch(e){
+      if(my !== voiceToken) return;
+      if(i === 0){ voiceFail(e, plain, btn, lang); return; }
+      // сбой посреди ответа: уже звучащее доигрывает, остальное — нет
+      dlog('voice chunk ' + i + ':', e);
+      break;
+    }
+    if(my !== voiceToken) return;
+    if(ctx.state === 'suspended'){ try{ await ctx.resume(); }catch(e){} }
+    if(my !== voiceToken) return;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    // следующий кусок встаёт ровно в конец предыдущего — без паузы
+    const startAt = Math.max(ctx.currentTime + 0.02, endAt);
+    src.onended = ()=>{
+      voiceSources = voiceSources.filter(s => s !== src);
+      finish();
+    };
+    src.start(startAt);
+    voiceSources.push(src);
+    endAt = startAt + buf.duration;
+    paintVoiceBtn(btn, 'playing');
+    if(i + 1 < chunks.length){
+      // опережение ровно на один: следующий просим, когда этот зазвучал
+      await waitCtxTime(ctx, startAt);
+      if(my !== voiceToken) return;
+      next = voiceChunk(chunks[i + 1], voice);
+    }
+  }
+  queued = true;
+  finish();
+}
+
+// кнопка «Прослушать» у ответа тренера
+function voiceBtnFor(text){
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'spkBtn voiceBtn';
+  b.innerHTML = SPK_SVG;
+  b.setAttribute('aria-label', t('ariaVoicePlay'));
+  b.onclick = e=>{
+    e.stopPropagation();
+    unlockAudio();
+    toggleVoice(b, text, settings.native_lang);
+  };
+  return b;
+}
+
+/* ---- автоозвучка и настройки ---- */
+function paintVoiceAuto(){
+  const b = $('voiceAutoBtn');
+  if(b){ b.classList.toggle('on', voiceAuto); b.setAttribute('aria-pressed', voiceAuto ? 'true' : 'false'); }
+  const r = $('rowVoice');
+  if(r) r.textContent = voiceName + ' · ' + t(voiceAuto ? 'voiceOn' : 'voiceOff');
+}
+function setVoiceAuto(on){
+  voiceAuto = !!on;
+  try{ localStorage.setItem('worddeck_voice_auto', voiceAuto ? '1' : '0'); }catch(e){}
+  if(voiceAuto) unlockAudio(); else stopVoice();
+  paintVoiceAuto();
+}
+function toggleVoiceAuto(){ setVoiceAuto(!voiceAuto); }
+function setVoiceName(v){
+  if(TTS_VOICES.indexOf(v) < 0) return;
+  voiceName = v;
+  try{ localStorage.setItem('worddeck_voice', v); }catch(e){}
+  paintVoiceAuto();
+}
+
+function openVoiceSheet(){
+  openSheet(t('voiceTitle'), box=>{
+    const tg = document.createElement('button');
+    tg.type = 'button';
+    tg.className = 'toggleRow';
+    tg.style.cssText = 'margin:0;width:100%';
+    tg.innerHTML = '<b></b><span class="toggle"><i></i></span>';
+    tg.querySelector('b').textContent = t('voiceAuto');
+    const paintTg = ()=>{
+      tg.querySelector('.toggle').classList.toggle('on', voiceAuto);
+      tg.setAttribute('aria-pressed', voiceAuto ? 'true' : 'false');
+    };
+    tg.onclick = ()=>{ setVoiceAuto(!voiceAuto); paintTg(); };
+    paintTg();
+    box.appendChild(tg);
+
+    const lb = document.createElement('div');
+    lb.className = 'eyebrow';
+    lb.style.margin = '20px 0 10px';
+    lb.textContent = t('voicePick');
+    box.appendChild(lb);
+    const row = document.createElement('div');
+    row.className = 'chipRow';
+    const paintChips = ()=> row.querySelectorAll('.chip').forEach(c=>{
+      const on = c.dataset.v === voiceName;
+      c.classList.toggle('sel', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    TTS_VOICES.forEach(v=>{
+      const c = document.createElement('button');
+      c.type = 'button';
+      c.className = 'chip';
+      c.dataset.v = v;
+      c.textContent = v;
+      c.onclick = ()=>{ if(v !== voiceName){ stopVoice(); setVoiceName(v); paintChips(); } };
+      row.appendChild(c);
+    });
+    paintChips();
+    box.appendChild(row);
+
+    const pv = sheetButton(box, '', null, 'btnGhost voicePrev');
+    pv.style.marginTop = '18px';
+    pv.innerHTML = SPK_SVG + '<span></span>';
+    pv.querySelector('span').textContent = t('voicePreview');
+    pv.onclick = ()=>{ unlockAudio(); toggleVoice(pv, t('voiceSample'), ifaceLang); };
+
+    const note = document.createElement('p');
+    note.className = 'dim';
+    note.style.margin = '12px 0 0';
+    note.textContent = t('voiceNote');
+    box.appendChild(note);
+    sheetButton(box, t('sheetClose'), ()=>{ stopVoice(); closeSheet(); }, 'btn').style.marginTop = '14px';
+  });
+}
+
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) stopVoice(); });
+window.addEventListener('pagehide', ()=>stopVoice());
+/*
+   С автоозвучкой ответ приходит не в жесте пользователя, а позже. Будим
+   контекст на любом касании — тогда звук заиграет и на iPhone, даже если
+   вопрос задан не через поле ввода, а кнопкой урока или чипом.
+*/
+document.addEventListener('pointerdown', ()=>{ if(voiceAuto) unlockAudio(); }, true);
 
 /* =========================================================================
    Тема оформления
@@ -2797,6 +3288,8 @@ function isDesktop(){ return !!(desktopMq && desktopMq.matches); }
 
 let currentScreen = '';
 function show(id){
+  // ушли с тренера (вкладкой, вложенным экраном, «назад») — голос замолкает
+  if(currentScreen === 's-teacher' && id !== 's-teacher') stopVoice();
   currentScreen = id;
   SCREENS.forEach(s=>{ const el = $(s); if(el) el.classList.toggle('on', s === id); });
   const tabbed = TABBED.indexOf(id) >= 0 || (isDesktop() && SUBS.indexOf(id) >= 0);
@@ -3470,6 +3963,7 @@ async function applyNewPass(){
 }
 
 async function signOut(){
+  stopVoice();
   await flushXp();
   await flushChat();          // последние реплики не должны пропасть
   await sb.auth.signOut();
@@ -3815,6 +4309,7 @@ function renderProfile(){
   $('rowMaterials').textContent = materialsList.length ? String(materialsList.length) : '—';
   $('rowIface').textContent = langByCode(ifaceLang).name;
   $('rowPerf').textContent = isLite() ? t('perfLiteShort') : t('perfFullShort');
+  paintVoiceAuto();
   const ra = $('rowAccount');
   if(ra) ra.textContent = (session.user.email || '').slice(0, 22);
   const rk = $('rowKey');
@@ -4941,7 +5436,7 @@ async function onbNext(){
    Режим запоминается и выключается параметром ?debug=0.
 */
 // метка сборки — по ней в консоли видно, какая версия файла реально открыта
-const APP_BUILD = '2026-10-18b WordDeck 2.0';
+const APP_BUILD = '2026-10-18c WordDeck 2.0';
 console.info('[worddeck] build', APP_BUILD);
 
 let DEBUG = false;
@@ -5087,7 +5582,8 @@ function saveModelCache(names){
     provider: aiProviderId,
     list: names || prev.list || [],
     meta: names ? modelMeta : (prev.meta || {}),
-    caps: modelCaps
+    caps: modelCaps,
+    tts: names ? ttsCandidates : (prev.tts || [])
   };
   try{ localStorage.setItem('worddeck_models', JSON.stringify(c)); }catch(e){}
 }
@@ -5346,6 +5842,12 @@ function modelSort(a, b){
 
 async function listModels(key){
   const all = await aiProvider().listModels(key);
+  /*
+     Голосовые модели нужны отдельно — для живого голоса тренера. Имена
+     не вписываем в код: Google их часто меняет, берём то, что дал ключ.
+     Из текстового списка они по-прежнему отсекаются фильтром ниже.
+  */
+  ttsCandidates = all.filter(m => /tts/i.test(m.name)).map(m => m.name).sort(modelSort);
   const usable = all
     .filter(m => !/embedding|image|imagen|tts|audio|veo|vision|native-audio|live/i.test(m.name))
     /*
@@ -5367,7 +5869,7 @@ async function listModels(key){
 async function ensureModels(key){
   if(candidates.length) return;
   const c = readModelCache();
-  if(c && Array.isArray(c.list) && c.list.length) candidates = c.list.slice();
+  if(c && Array.isArray(c.list) && c.list.length){ candidates = c.list.slice(); ttsCandidates = c.tts || []; }
   else candidates = await listModels(key);
   workingModel = pickModel();
 }
@@ -5964,6 +6466,8 @@ function appendMsg(role, text, silent, actions, at){
     b.className = 'msg msgAi';
     b.innerHTML = richText(text);      // текст экранируется внутри richText
     node.appendChild(b);
+    // «Прослушать» — только у готовых ответов: живой пузырь стриминга пустой
+    if(text) node.appendChild(voiceBtnFor(text));
   }
   box.appendChild(node);
   box.scrollTop = box.scrollHeight;
@@ -6036,6 +6540,7 @@ function paintSendBtn(){
 function toggleDictation(){
   if(!SpeechRec) return;
   if(dictation){ try{ dictation.stop(); }catch(e){} return; }
+  stopVoice();          // микрофон не должен слышать голос тренера
   const rec = new SpeechRec();
   rec.lang = localeOf(settings.target_lang || 'en');
   rec.interimResults = false;
@@ -6403,7 +6908,12 @@ async function askTrainer(userText, echo, fromUser){
     if(live){ live.remove(); live = null; }
 
     const parsed = parseTrainerBlocks(answer);
-    pushMsg('model', parsed.clean);
+    const answerNode = pushMsg('model', parsed.clean);
+    // автоозвучка — через кнопку ответа, чтобы она показала состояние
+    if(voiceAuto && currentScreen === 's-teacher' && !document.hidden){
+      const vb = answerNode && answerNode.querySelector('.voiceBtn');
+      if(vb) vb.click();
+    }
     await addChatXp(5);
 
     bumpLessonState();
@@ -6633,6 +7143,8 @@ function sendChat(){
   const v = el.value.trim();
   if(!v) return;
   el.value = '';
+  stopVoice();
+  unlockAudio();        // в жесте пользователя — иначе автоозвучка на iOS промолчит
   askTrainer(v);
 }
 
@@ -7197,8 +7709,8 @@ async function applyLevelChange(to){
    «Путь» — карусель постеров по уровню: одна тема — одна карточка.
    Модель экрана (pathLevelsView / pathCardsView) собирается из плана
    отдельно от разметки: поза бобра и цвет постера — данные темы.
-   В базе их нет, поэтому они выводятся из названия детерминированно —
-   одна и та же тема всегда выглядит одинаково.
+   В базе их нет, поэтому они выводятся из плана детерминированно —
+   одна и та же тема всегда выглядит одинаково (см. pathColors).
 */
 const PATH_POSES = ['wave','laptop','thumbsup','backpack','arms-crossed','thinking','pencil','cheer','pointing'];
 const PATH_STEP = 268;                 // шаг между карточками, px
@@ -7223,15 +7735,38 @@ function pathLevelsView(){
     locked: k > curAt && syllabus.every(n => n.level !== code || n.status === 'locked')
   }));
 }
+/*
+   Цвета постеров уровня. Ступенчатых --r* всего шесть подходящих, и на
+   восьми темах они повторялись. Оттенок теперь свой у каждой темы:
+   начальный угол случайный, но зависит от плана (тот же план — те же
+   цвета при каждом открытии), а дальше шаг «золотого угла» 137.5° —
+   оттенки не совпадают ни при каком числе тем, и соседние карточки
+   всегда заметно разные. Светлота и насыщенность держатся в узком
+   приглушённом коридоре, как у прежних ступеней, — постер остаётся
+   слегка тёмным, и светлый текст на нём читается.
+*/
+function pathColors(level){
+  const list = level.topics;
+  const seed = pathHash(level.code + '|' + list.map(n => n.title).join('|'));
+  const start = seed % 360;
+  return list.map((n, k) => {
+    const h = pathHash(n.title);
+    const hue = Math.round((start + k * 137.508) % 360);
+    const l = (0.56 + (h % 7) / 100).toFixed(2);            // 0.56…0.62
+    const c = (0.075 + (h % 4) * 0.008).toFixed(3);         // 0.075…0.099
+    return 'oklch(' + l + ' ' + c + ' ' + hue + ')';
+  });
+}
 function pathCardsView(level){
   const list = level.topics;
+  const colors = pathColors(level);
   return list.map((n, k) => ({
     idx: n.idx, index: k + 1, total: list.length,
     title: n.title, canDo: n.goal || '',
     durationMin: settings.minutes || 30,
     state: n.status === 'done' ? 'done' : n.status === 'current' ? 'current' : 'locked',
     illustration: n.pose || PATH_POSES[pathHash(n.title) % PATH_POSES.length],
-    color: tintOf(n.title)
+    color: n.color || colors[k]
   }));
 }
 // куда встать на уровне: текущая тема, иначе последняя
@@ -9468,6 +10003,7 @@ async function route(){
     const cache = readModelCache();
     if(e && e.code !== 'key' && cache && Array.isArray(cache.list) && cache.list.length){
       candidates = cache.list.slice();
+      ttsCandidates = cache.tts || [];
     }else{
       $('keystatus').textContent = t(friendlyError(e)); $('keystatus').className = 'dim bad';
       show('s-gate');
@@ -9502,6 +10038,7 @@ async function route(){
   paintAvatars();
   buildTopicChips();
   setCardsMode('review');
+  paintVoiceAuto();
 })();
 
 if(sb){
