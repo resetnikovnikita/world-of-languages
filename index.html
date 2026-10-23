@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
 <title>WordDeck — изучение языков</title>
-<meta name="theme-color" content="#F7F0E4">
+<meta name="theme-color" content="#1B1815">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -15,6 +15,19 @@
 /* облегчённый режим ставится до первой отрисовки — иначе слабый телефон
    успеет нарисовать тяжёлый вариант и только потом переключится */
 try{ if(localStorage.getItem('worddeck_perf') === 'lite') document.documentElement.classList.add('lite'); }catch(e){}
+/* тема — тоже до первой отрисовки. Телефон берёт цвет системных зон
+   (полоса под таб-баром у «домой», строка состояния) с первого кадра
+   и потом его не перечитывает: пока тема включалась скриптом в конце
+   страницы, внизу оставалась светлая полоса от светлой темы по умолчанию */
+(function(){
+  let v = 'dark';
+  try{ v = localStorage.getItem('worddeck_theme') || 'dark'; }catch(e){}
+  if(v === 'system') v = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  if(v !== 'light') v = 'dark';
+  document.documentElement.setAttribute('data-theme', v);
+  const m = document.querySelector('meta[name=theme-color]');
+  if(m) m.setAttribute('content', v === 'dark' ? '#1B1815' : '#FAF6EF');
+})();
 </script>
 <style>
 /* ===================================================================
@@ -68,6 +81,8 @@ html[data-theme=dark]{
 
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+/* фон и у корня: им закрашиваются зоны за пределами #app — под «домой» и при оттяжке */
+html{background:var(--bg)}
 body{
   background:var(--bg);font-family:var(--f);-webkit-font-smoothing:antialiased;
   color:var(--ink);overscroll-behavior:none;
@@ -1237,7 +1252,6 @@ html.lite .tabItem.sel svg{transform:none}
         <b data-i18n="teacherTitle"></b>
         <span><i></i><span data-i18n="teacherStatus"></span></span>
       </span>
-      <span class="countChip" id="teacherBadge"></span>
       <button class="iconBtn voiceAutoBtn" id="voiceAutoBtn" onclick="toggleVoiceAuto()" data-aria="ariaVoiceAuto" aria-pressed="false">
         <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3l4 3.5v-12l-4 3.5H4z"></path><path d="M15.3 9.2a4 4 0 0 1 0 5.6"></path><path d="M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg>
       </button>
@@ -6615,10 +6629,6 @@ function resetChat(){
 }
 
 function renderTeacherHeader(){
-  const b = $('teacherBadge');
-  if(b) b.textContent = settings.target_lang
-    ? (settings.level + ' · ' + langLabel(settings.target_lang))
-    : settings.level;
   const chips = $('teacherChips');
   if(!chips) return;
   chips.innerHTML = '';
