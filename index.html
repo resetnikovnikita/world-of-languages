@@ -87,6 +87,16 @@ body{
   background:var(--bg);font-family:var(--f);-webkit-font-smoothing:antialiased;
   color:var(--ink);overscroll-behavior:none;
 }
+/*
+   Фикс светлой полосы под таб-баром на iPhone. Safari красит зону
+   у полоски «домой» (и при оттяжке) по фиксированному элементу у края
+   экрана; без такого элемента там оставался чужой светлый цвет.
+   Подложка на весь экран того же цвета, что тема (как на сайте-портфолио).
+*/
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:var(--bg);pointer-events:none;
+}
 input,button,select,textarea{font-family:inherit;color:inherit}
 button{-webkit-tap-highlight-color:transparent}
 a{color:var(--gold-text);text-decoration:none}
