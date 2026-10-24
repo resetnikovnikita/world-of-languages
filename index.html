@@ -639,14 +639,74 @@ button.vmRing{cursor:pointer}
 .vmSteps i.wait{border:2px solid var(--ink-3);opacity:.5}
 @keyframes vmSpin{to{transform:rotate(360deg)}}
 
-/* 3d: субтитры подсвечивают слово, которое звучит */
+/* 3d: субтитры — одно предложение, в нём подсвечено слово, которое звучит.
+   Под ними стрелка: рамка с полным ответом (караоке), фон позади размыт.
+   Субтитры, стрелка и рамка стоят над слоем размытия (z-index 4 > 3). */
 .vmSpeakTop{flex:none;display:flex;justify-content:center;padding-top:26px}
-.vmSubs{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:0 26px;text-align:center;overflow:hidden;
-  font:600 21px/1.42 var(--f);letter-spacing:-.01em;text-wrap:balance;color:var(--ink-3)}
-.vmSubs.long{font-size:17px}
-.vmSubs>div{max-height:100%}
+.vmSpeak .vmBtns{margin-top:auto}
+.vmSubsBox{flex:none;position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:24px}
+.vmSubs{width:100%;height:56px;padding:0 30px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  font:600 20px/1.4 var(--f);letter-spacing:-.01em;color:var(--ink-3)}
+.vmSubs>div{text-wrap:balance;max-width:100%}
 .vmSubs .w.done{color:var(--ink)}
 .vmSubs .w.now{color:var(--gold-text);text-decoration:underline 2px var(--gold);text-underline-offset:5px}
+.vmTxtWrap{position:relative;display:flex;justify-content:center}
+.vmTxtWrap.off{visibility:hidden}
+.vmTxtBtn{width:44px;height:44px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer}
+.vmTxtBtn>span{display:flex;animation:vmHint 1.6s ease-in-out infinite}
+.vmTxtBtn svg{transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+.vm.txtOn .vmTxtBtn>span{animation:none}
+.vm.txtOn .vmTxtBtn svg{transform:rotate(180deg)}
+@keyframes vmHint{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.vmVeil{position:absolute;inset:0;z-index:3;background:rgba(20,17,14,.38);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;transition:opacity .4s ease}
+.vm.txtOn .vmVeil{opacity:1;pointer-events:auto}
+.vmTxt{position:absolute;top:calc(100% + 10px);left:50%;width:min(328px,calc(100vw - 32px));height:0;opacity:0;visibility:hidden;
+  transform:translate(-50%,-10px);overflow:hidden;border-radius:24px;background:rgba(36,32,28,.62);border:1px solid var(--tg-line);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 24px 50px -24px rgba(0,0,0,.85);
+  transition:height .5s cubic-bezier(.2,.8,.2,1),opacity .3s ease,transform .5s cubic-bezier(.2,.8,.2,1),visibility 0s linear .5s}
+.vm.txtOn .vmTxt{height:var(--h,260px);opacity:1;visibility:visible;transform:translate(-50%,0);
+  transition:height .5s cubic-bezier(.2,.8,.2,1),opacity .3s ease,transform .5s cubic-bezier(.2,.8,.2,1),visibility 0s}
+/* содержимое — своей высоты и проявляется позже рамки: текст не сплющивается, пока она растёт */
+.vmTxtIn{height:var(--h,260px);opacity:0;transition:opacity .3s ease}
+.vm.txtOn .vmTxtIn{opacity:1;transition-delay:.18s}
+.vmTxtScroll{position:relative;height:100%;overflow-y:auto;overscroll-behavior:contain;padding:18px 20px 22px;display:flex;flex-direction:column;
+  scrollbar-width:none;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 22px),transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 22px),transparent 100%)}
+.vmTxtScroll::-webkit-scrollbar{display:none}
+.vmTxtList{display:contents}
+/* фраза — кнопка «прослушать снова»; 5 px сверху и снизу дают промежуток 10 и зону нажатия от 44 px */
+.vmS{flex:none;display:flex;align-items:center;min-height:44px;padding:5px 0;margin:0;border:0;border-radius:14px;background:none;cursor:pointer;
+  text-align:start;font:500 15px/1.5 var(--f);color:var(--ink-2);transition:color .2s,background-color .2s}
+.vmS>span{text-wrap:pretty}
+.vmS.past{color:var(--ink-3)}
+.vmS.task{font-weight:700;color:var(--ink)}
+.vmS.now,.vmS.task.past{padding:10px 12px;margin:5px -12px;background:color-mix(in oklch,var(--gold) 12%,transparent);font:600 16px/1.45 var(--f)}
+.vmS.now{color:var(--ink-3)}
+.vmS.task.now,.vmS.task.past{font-weight:700}
+.vmS.task.past{color:var(--ink)}
+.vmS.now .w.done{color:var(--ink)}
+.vmS.now .w.cur{color:var(--gold-text);text-decoration:underline 2px var(--gold);text-underline-offset:4px}
+div.vmS{cursor:default}
+.vmTxtNote{flex:none;display:flex;align-items:center;gap:6px;margin-top:6px;font:600 12px/1.3 var(--f);color:var(--ink-3)}
+.vmTxtNote svg{flex:none}
+html[data-theme=light] .vmVeil{background:color-mix(in oklch,var(--bg) 40%,transparent)}
+html[data-theme=light] .vmTxt{background:color-mix(in oklch,var(--bg) 72%,transparent);box-shadow:0 24px 50px -24px rgba(60,40,20,.45)}
+html.lite .vmVeil,html.lite .vmTxt{-webkit-backdrop-filter:none;backdrop-filter:none}
+html.lite .vmVeil{background:color-mix(in oklch,var(--bg) 82%,transparent)}
+html.lite .vmTxt{background:var(--surf)}
+html.lite .vmTxtBtn>span{animation:none}
+html.lite .vmTxtBtn svg{transition:none}
+html.lite .vmTxt{height:var(--h,260px);transform:translate(-50%,0);transition:opacity .15s ease,visibility 0s linear .15s}
+html.lite .vm.txtOn .vmTxt{transition:opacity .15s ease,visibility 0s}
+html.lite .vmTxtIn,html.lite .vm.txtOn .vmTxtIn,html.lite .vmVeil{transition:opacity .15s ease;transition-delay:0s}
+@media (prefers-reduced-motion:reduce){
+  .vmTxtBtn>span{animation:none}
+  .vmTxtBtn svg{transition:none}
+  .vmTxt{height:var(--h,260px);transform:translate(-50%,0);transition:opacity .15s ease,visibility 0s linear .15s}
+  .vm.txtOn .vmTxt{transition:opacity .15s ease,visibility 0s}
+  .vmTxtIn,.vm.txtOn .vmTxtIn,.vmVeil{transition:opacity .15s ease;transition-delay:0s}
+}
 
 /* нет доступа к микрофону */
 .vmPermBox{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 32px calc(40px + env(safe-area-inset-bottom,0px));text-align:center}
@@ -1575,7 +1635,20 @@ html.lite .tabItem.sel svg{transform:none}
             <span class="vmWave fast" id="vmWaveSpeak" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
           </span></span></button>
         </div>
-        <div class="vmSubs" id="vmSubs" aria-live="polite"></div>
+        <div class="vmSubsBox">
+          <div class="vmSubs" id="vmSubs" aria-live="polite"></div>
+          <div class="vmTxtWrap off" id="vmTxtWrap">
+            <button class="vmTxtBtn glass" id="vmTxtBtn" type="button" onclick="vmTxtToggle()" aria-expanded="false" aria-controls="vmTxt" data-aria="vmTxtShow">
+              <span aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+            </button>
+            <div class="vmTxt" id="vmTxt" role="region" data-aria="vmTxtRegion">
+              <div class="vmTxtIn"><div class="vmTxtScroll" id="vmTxtScroll">
+                <div class="vmTxtList" id="vmTxtList"></div>
+                <div class="vmTxtNote"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"></path><path d="M4 4v4.5h4.5"></path></svg><span data-i18n="vmTxtHint"></span></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
         <div class="vmBtns">
           <button class="vmSide" type="button" onclick="vmRepeat()"><span class="glass">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"></path><path d="M4 4v4.5h4.5"></path></svg>
@@ -1597,6 +1670,7 @@ html.lite .tabItem.sel svg{transform:none}
           <button class="btnGhost" type="button" onclick="closeVoiceMode()" data-i18n="vmChat"></button>
         </div>
       </div>
+      <div class="vmVeil" onclick="vmTxtClose()" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -2584,6 +2658,23 @@ tr:{"pathOf":"konu {n} / {total}","pathBadgeDone":"Tamamlandı","pathBadgeNow":"
 };
 Object.keys(I18N_EXT14).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT14[code]); });
 
+/* Пакет 8 — голосовой режим: полный текст ответа под стрелкой */
+const I18N_EXT18 = {
+en:{vmTxtShow:"Show the full text",vmTxtHide:"Hide the full text",vmTxtRegion:"Full text of the reply",vmTxtHint:"Tap a phrase to hear it again",vmTxtReplay:"Play again"},
+ru:{vmTxtShow:"Показать весь текст",vmTxtHide:"Скрыть весь текст",vmTxtRegion:"Полный текст ответа",vmTxtHint:"Нажми на фразу, чтобы прослушать её снова",vmTxtReplay:"Прослушать снова"},
+es:{vmTxtShow:"Mostrar todo el texto",vmTxtHide:"Ocultar el texto",vmTxtRegion:"Texto completo de la respuesta",vmTxtHint:"Toca una frase para volver a oírla",vmTxtReplay:"Escuchar de nuevo"},
+fr:{vmTxtShow:"Afficher tout le texte",vmTxtHide:"Masquer le texte",vmTxtRegion:"Texte complet de la réponse",vmTxtHint:"Touche une phrase pour la réécouter",vmTxtReplay:"Réécouter"},
+de:{vmTxtShow:"Ganzen Text zeigen",vmTxtHide:"Text ausblenden",vmTxtRegion:"Vollständiger Text der Antwort",vmTxtHint:"Tippe auf einen Satz, um ihn noch einmal zu hören",vmTxtReplay:"Noch einmal anhören"},
+it:{vmTxtShow:"Mostra tutto il testo",vmTxtHide:"Nascondi il testo",vmTxtRegion:"Testo completo della risposta",vmTxtHint:"Tocca una frase per riascoltarla",vmTxtReplay:"Riascolta"},
+pt:{vmTxtShow:"Mostrar todo o texto",vmTxtHide:"Ocultar o texto",vmTxtRegion:"Texto completo da resposta",vmTxtHint:"Toque numa frase para ouvi-la de novo",vmTxtReplay:"Ouvir de novo"},
+zh:{vmTxtShow:"显示全文",vmTxtHide:"收起全文",vmTxtRegion:"回答全文",vmTxtHint:"点按句子即可重听",vmTxtReplay:"重听"},
+ja:{vmTxtShow:"全文を表示",vmTxtHide:"全文を閉じる",vmTxtRegion:"回答の全文",vmTxtHint:"フレーズをタップするともう一度聞けます",vmTxtReplay:"もう一度聞く"},
+ko:{vmTxtShow:"전체 텍스트 보기",vmTxtHide:"전체 텍스트 닫기",vmTxtRegion:"답변 전체 텍스트",vmTxtHint:"문장을 누르면 다시 들을 수 있어요",vmTxtReplay:"다시 듣기"},
+ar:{vmTxtShow:"عرض النص كاملًا",vmTxtHide:"إخفاء النص",vmTxtRegion:"النص الكامل للرد",vmTxtHint:"اضغط على عبارة لتسمعها مرة أخرى",vmTxtReplay:"استمع مرة أخرى"},
+tr:{vmTxtShow:"Tüm metni göster",vmTxtHide:"Metni gizle",vmTxtRegion:"Yanıtın tam metni",vmTxtHint:"Tekrar dinlemek için bir cümleye dokun",vmTxtReplay:"Tekrar dinle"}
+};
+Object.keys(I18N_EXT18).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT18[code]); });
+
 // приветствие на главной вынесено отдельно — в нём подставляется имя
 const I18N_HELLO = {
   en:"Hi, {name}", ru:"Привет, {name}", es:"Hola, {name}", fr:"Salut, {name}",
@@ -3019,13 +3110,16 @@ function speakableText(text){
    Нарезка по абзацам и предложениям. Без lookbehind в регэкспах:
    старый Safari на нём падает целиком при разборе скрипта.
 */
+// то, что будет озвучено: начало текста не длиннее VOICE_MAX_CHARS, по границе фразы
+function voiceSrc(text){
+  const src = String(text || '');
+  if(src.length <= VOICE_MAX_CHARS) return src;
+  const cut = src.slice(0, VOICE_MAX_CHARS);
+  const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '), cut.lastIndexOf('\n'));
+  return end > VOICE_MAX_CHARS / 2 ? cut.slice(0, end + 1) : cut;
+}
 function voiceChunks(text){
-  let src = String(text || '');
-  if(src.length > VOICE_MAX_CHARS){
-    const cut = src.slice(0, VOICE_MAX_CHARS);
-    const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '), cut.lastIndexOf('\n'));
-    src = end > VOICE_MAX_CHARS / 2 ? cut.slice(0, end + 1) : cut;
-  }
+  const src = voiceSrc(text);
   const pieces = [];
   src.split('\n').forEach(par=>{
     const sent = par.match(/[^.!?…。！？]+(?:[.!?…。！？]+[)"»”'’]*|$)\s*/g) || [];
@@ -3212,7 +3306,43 @@ function waitCtxTime(ctx, when){
 }
 
 /*
+   Повтор с фразы посреди куска. Место по доле текста известно лишь
+   примерно, поэтому рядом с ним (−1 … +0.6 с) ищется пауза: отрезки тише
+   десятой доли громкости. Побеждает самая длинная и близкая — между
+   фразами пауза обычно дольше, чем на запятой. Старт — за 60 мс до конца
+   паузы, чтобы не срезать первый звук. Пауз нет — старт по оценке.
+*/
+function voiceSeekPause(buf, t){
+  const x = buf.getChannelData(0), sr = buf.sampleRate, F = Math.max(1, Math.round(sr * 0.01));
+  const lo = Math.max(0, Math.floor((t - 1) * sr / F)), hi = Math.min(Math.floor(x.length / F) - 1, Math.ceil((t + 0.6) * sr / F));
+  if(hi <= lo) return Math.max(0, Math.min(t, buf.duration - 0.05));
+  const rms = [];
+  let peak = 0;
+  for(let f = lo; f <= hi; f++){
+    let s = 0;
+    for(let i = f * F, e = i + F; i < e; i += 2) s += x[i] * x[i];
+    const r = Math.sqrt(s / (F / 2));
+    rms.push(r);
+    if(r > peak) peak = r;
+  }
+  const thr = peak * 0.1;
+  let best = -1, bestScore = -Infinity;
+  for(let j = 0; j < rms.length; ){
+    if(rms[j] >= thr){ j++; continue; }
+    let k = j;
+    while(k < rms.length && rms[k] < thr) k++;
+    const len = (k - j) * F / sr, mid = (lo + (j + k) / 2) * F / sr;
+    const score = len - Math.abs(mid - t) * 0.35;
+    if(len >= 0.06 && score > bestScore){ bestScore = score; best = (lo + k) * F / sr; }
+    j = k;
+  }
+  const at = best < 0 ? t : best - 0.06;
+  return Math.max(0, Math.min(at, buf.duration - 0.05));
+}
+
+/*
    opts — для голосового режима: rate — скорость (1, 0.8, 0.6);
+   from { chunk, frac } — играть с этого места, а не с начала;
    onChunk(i, текст, начало, длительность) — кусок встал в очередь, по нему
    идут субтитры; onEnd() — ответ дозвучал сам (не остановлен);
    onFallback(текст) — живого голоса нет, читает сам режим; onFail(e) —
@@ -3245,14 +3375,16 @@ async function playVoice(text, btn, lang, opts){
     if(voiceBtn === btn) voiceBtn = null;
     if(o.onEnd) o.onEnd();
   };
-  let next = voiceChunk(chunks[0], voice, rate);
+  // from — начать не с начала: с куска chunk, с доли frac его текста
+  const first = o.from ? Math.min(o.from.chunk, chunks.length - 1) : 0;
+  let next = voiceChunk(chunks[first], voice, rate);
   let endAt = 0;
-  for(let i = 0; i < chunks.length; i++){
+  for(let i = first; i < chunks.length; i++){
     let buf;
     try{ buf = await next; }
     catch(e){
       if(my !== voiceToken) return;
-      if(i === 0){ voiceFail(e, plain, btn, lang, o.onFail, o.onFallback ? fallback : null); return; }
+      if(i === first){ voiceFail(e, plain, btn, lang, o.onFail, o.onFallback ? fallback : null); return; }
       // сбой посреди ответа: уже звучащее доигрывает, остальное — нет
       dlog('voice chunk ' + i + ':', e);
       break;
@@ -3269,10 +3401,12 @@ async function playVoice(text, btn, lang, opts){
       voiceSources = voiceSources.filter(s => s !== src);
       finish();
     };
-    src.start(startAt);
+    const off = i === first && o.from && o.from.frac > 0 ? voiceSeekPause(buf, o.from.frac * buf.duration) : 0;
+    src.start(startAt, off);
     voiceSources.push(src);
-    if(o.onChunk) o.onChunk(i, chunks[i], startAt, buf.duration);
-    endAt = startAt + buf.duration;
+    // начало куска — как если бы он играл целиком: субтитры считают долю от него
+    if(o.onChunk) o.onChunk(i, chunks[i], startAt - off, buf.duration);
+    endAt = startAt + buf.duration - off;
     paintVoiceBtn(btn, 'playing');
     if(i + 1 < chunks.length){
       // опережение ровно на один: следующий просим, когда этот зазвучал
@@ -7188,10 +7322,13 @@ const vm = {
   mic:null, micAn:null, recToken:0, chunks:[], spoke:false, heard:0, quiet:0, keepText:'',
   t0:0, elapsed:0, timer:null,
   ctl:null, text:'', entry:null, userNode:null, reply:'', stopped:false,
-  env:0, raf:0, subsQ:[], subsCur:null, dotsT0:0
+  env:0, raf:0, subsQ:[], subsCur:null, dotsT0:0,
+  txt:null, txtOn:false, txtEnded:false, txtHold:0, txtRaf:0, txtHist:false, txtSkip:0, fbTok:0
 };
 
 function vmSetState(s){
+  // рамка с текстом — часть экрана ответа; ушли с него — закрываем
+  if(s !== 'speak') vmTxtClose();
   vm.state = s;
   const el = $('vm');
   if(el) el.dataset.state = s;
@@ -7238,6 +7375,7 @@ function openVoiceMode(){
 function closeVoiceMode(){
   if(!vm.on) return;
   vm.on = false;
+  vmTxtClose();
   vmStopRec();
   clearInterval(vm.timer);
   stopVoice();
@@ -7517,50 +7655,72 @@ function vmFixText(){
 
 /* ---- 3d · Тренер отвечает ---- */
 function vmSpeak(reply){
-  vm.reply = reply; vm.stopped = false;
+  vm.reply = reply; vm.stopped = false; vm.txtEnded = false;
   vm.subsQ = []; vm.subsCur = null;
   $('vmSubs').innerHTML = '';
+  // полный текст — по тем же кускам, что уйдут в голос; хвост сверх лимита просто дописан
+  const plain = speakableText(reply);
+  vmTxtSet(vmTxtBuild(voiceChunks(plain), plain.slice(voiceSrc(plain).length)), plain);
   // ответ уже пришёл — отменять нечего
   document.querySelector('.vmMine .fix').classList.add('hidden');
   unlockAudio();
-  playVoice(reply, null, settings.native_lang, {
-    rate: vmRate,
+  playVoice(reply, null, settings.native_lang, vmVoiceOpts(null));
+}
+function vmVoiceOpts(from){
+  return {
+    rate: vmRate, from,
     onChunk: (i, text, at, dur)=>{
       if(!vm.on) return;
       if(vm.state !== 'speak') vmSetState('speak');
-      vm.subsQ.push({ text, at, dur, clock:'ctx' });
+      vm.subsQ.push({ i, text, at, dur, clock:'ctx' });
     },
     onEnd: vmSpeechEnded,
     onFallback: vmFallbackSpeak,
     onFail: ()=>{ if(vm.on) vmStartListen(); }
-  });
+  };
 }
 function vmSpeechEnded(){
   if(!vm.on || vm.state !== 'speak') return;
   vmSubsAllDone();
-  // дозвучал — снова слушаем, если человек не вышел и не остановил речь
-  setTimeout(()=>{ if(vm.on && vm.state === 'speak' && !vm.stopped) vmStartListen(); }, 700);
+  vm.txtEnded = true;
+  // дозвучал — снова слушаем, если человек не вышел, не остановил речь и не читает
+  // полный текст: тогда слушать начнём, когда он закроет рамку
+  setTimeout(()=>{ if(vm.on && vm.state === 'speak' && !vm.stopped && !vm.txtOn) vmStartListen(); }, 700);
 }
-// живого голоса нет — голос браузера; границы слов он сообщает сам
-function vmFallbackSpeak(plain){
+/*
+   Живого голоса нет — голос браузера; границы слов он сообщает сам.
+   from — номер символа, с которого читать (повтор фразы); без него —
+   с начала, и полный текст пересобирается под то, что прочтёт браузер.
+*/
+function vmFallbackSpeak(plain, from){
   if(!vm.on) return;
   vmSetState('speak');
   const text = plain.slice(0, 1200);
+  if(from == null){
+    vmTxtSet(vmTxtBuild([text], plain.slice(text.length)), plain);
+    vm.txt.fb = true;
+  }
+  const off = from || 0;
   if(!canSpeak()){
-    vm.subsQ = [{ text, at:0, dur:1, clock:'perf' }];
+    vm.subsQ = [{ i:0, text, at:0, dur:1, clock:'perf' }];
     vmSubsAllDone();
     return;
   }
   const synth = window.speechSynthesis;
   try{ synth.cancel(); }catch(e){}
-  const u = new SpeechSynthesisUtterance(text);
+  const u = new SpeechSynthesisUtterance(text.slice(off));
   u.lang = localeOf(settings.native_lang || 'en');
   const v = pickVoice(u.lang);
   if(v) u.voice = v;
   u.rate = vmRate;
-  vm.subsQ = [{ text, at: performance.now() / 1000, dur: Math.max(1.5, text.length / 14 / vmRate), clock:'perf' }];
-  u.onboundary = e=>{ if(vm.subsCur && vm.subsCur.clock === 'perf') vm.subsCur.char = e.charIndex; };
-  u.onend = ()=>{ if(!voiceFallbackOn) return; voiceFallbackOn = false; vmSpeechEnded(); };
+  const dur = Math.max(1.5, text.length / 14 / vmRate);
+  const q = { i:0, text, at: performance.now() / 1000 - dur * off / (text.length || 1), dur, clock:'perf' };
+  if(off) q.char = off;
+  vm.subsQ = [q];
+  // onend прерванной фразы может прийти уже после старта новой — свой номер у каждой
+  const my = ++vm.fbTok;
+  u.onboundary = e=>{ if(my === vm.fbTok) q.char = off + e.charIndex; };
+  u.onend = ()=>{ if(my !== vm.fbTok || !voiceFallbackOn) return; voiceFallbackOn = false; vmSpeechEnded(); };
   voiceFallbackOn = true;
   voiceFallbackBtn = null;
   synth.speak(u);
@@ -7582,50 +7742,275 @@ function vmCycleSpeed(){
 }
 
 /*
-   Субтитры: показан кусок, который сейчас звучит. У Gemini нет таймкодов
-   слов, поэтому внутри куска слово выбирается по доле пройденного времени,
-   взвешенной длиной слов. Голос браузера сообщает границы слов сам.
+   Субтитры и полный текст идут по одной модели: ответ разбит на фразы,
+   у каждой фразы и каждого слова — доля от начала и конца своего куска
+   голоса. У Gemini нет таймкодов слов, поэтому место внутри куска — это
+   доля пройденного времени: длинные слова звучат дольше. Голос браузера
+   сообщает границы слов сам.
 */
-function vmSubsRender(q){
-  const box = $('vmSubs');
+const VM_SENT_RE = /[^.!?…。！？\n]+(?:[.!?…。！？]+[)"»”'’]*)?/g;
+// мини-задание: «Переведи…» и похожее на языках интерфейса
+const VM_TASK_RE = /переведи|переведите|переклади|перекладіть|как сказать|скажи по-|задани|translate|how would you say|how do you say|your task|traduc|tradui|übersetz|tradu[zç]|翻译|翻訳|번역|ترجم|çevir/i;
+
+function vmTxtBuild(chunks, tail){
+  const sents = [];
+  const add = (str, q)=>{
+    const len = str.length || 1;
+    let m, pend = -1, pendEnd = -1;
+    VM_SENT_RE.lastIndex = 0;
+    while((m = VM_SENT_RE.exec(str))){
+      const raw = m[0].trim();
+      if(!raw) continue;
+      const c0 = m.index + m[0].indexOf(raw.charAt(0)), c1 = c0 + raw.length;
+      // «1.», «2)» и прочие обрывки без слов — в начало следующей фразы
+      if(/^[\d\s.)(\-–—•*#]+$/.test(raw)){ if(pend < 0) pend = c0; pendEnd = c1; continue; }
+      sents.push({ q, c0: pend >= 0 ? pend : c0, c1 });
+      pend = -1;
+    }
+    // обрывок в самом конце — к предыдущей фразе
+    const lastS = sents[sents.length - 1];
+    if(pend >= 0){ if(lastS && lastS.q === q) lastS.c1 = pendEnd; else sents.push({ q, c0: pend, c1: pendEnd }); }
+    sents.filter(s => s.q === q).forEach(s=>{
+      s.text = str.slice(s.c0, s.c1);
+      s.a = s.c0 / len; s.b = s.c1 / len;
+      s.words = [];
+      const re = /\S+/g;
+      let w;
+      while((w = re.exec(s.text))) s.words.push({ t: w[0], a: (s.c0 + w.index) / len, b: (s.c0 + w.index + w[0].length) / len });
+    });
+  };
+  chunks.forEach((c, i) => add(c, i));
+  if(tail && tail.trim()) add(tail, -1);
+  // задание и всё, что внутри незакрытых кавычек после него
+  let open = 0, any = false;
+  sents.forEach(s=>{
+    if(!(open > 0 || VM_TASK_RE.test(s.text))){ open = 0; return; }
+    s.task = any = true;
+    open = Math.max(0, open + (s.text.match(/[«“]/g) || []).length - (s.text.match(/[»”]/g) || []).length);
+  });
+  // явного задания нет — выделяем последний вопрос: на него и отвечать
+  if(!any){
+    const voiced = sents.filter(s => s.q >= 0);
+    const last = voiced[voiced.length - 1];
+    if(last && /[?？]["»”'’)]*$/.test(last.text)) last.task = true;
+  }
+  return { sents, k:-1, w:-1, sub:null, fb:false };
+}
+function vmTxtSet(T, plain){
+  vm.txt = T; T.plain = plain;
+  const list = $('vmTxtList');
+  list.innerHTML = '';
+  T.sents.forEach((s, j)=>{
+    // озвученная фраза — кнопка «прослушать снова»; хвост сверх лимита голоса — просто текст
+    const el = document.createElement(s.q >= 0 ? 'button' : 'div');
+    el.className = 'vmS' + (s.task ? ' task' : '');
+    if(s.q >= 0){
+      el.type = 'button';
+      el.setAttribute('aria-label', t('vmTxtReplay') + ': ' + s.text);
+      el.onclick = ()=>vmTxtReplay(j);
+    }
+    const tx = document.createElement('span');
+    s.words.forEach((w, i)=>{
+      if(i) tx.appendChild(document.createTextNode(' '));
+      w.el = document.createElement('span');
+      w.el.className = 'w';
+      w.el.textContent = w.t;
+      tx.appendChild(w.el);
+    });
+    el.appendChild(tx);
+    s.el = el;
+    list.appendChild(el);
+  });
+  $('vmTxtWrap').classList.toggle('off', T.sents.length < 2);
+  if(T.sents.length < 2) vmTxtClose();
+  cancelAnimationFrame(vm.txtRaf);
+  $('vmTxtScroll').scrollTop = 0;
+}
+
+// p — доля пройденного в куске ci: какая фраза и какое слово сейчас звучат
+function vmTxtAt(ci, p){
+  const T = vm.txt;
+  if(!T) return;
+  let k = -1;
+  for(let j = 0; j < T.sents.length; j++){
+    const s = T.sents[j];
+    if(s.q !== ci) continue;
+    if(k < 0 || s.a <= p) k = j; else break;
+  }
+  if(k < 0) return;
+  if(k !== T.k) vmTxtSetCur(k);
+  const ws = T.sents[k].words;
+  let w = 0;
+  while(w < ws.length && p >= ws[w].b) w++;
+  if(w !== T.w) vmTxtSetWord(w);
+}
+function vmTxtSetCur(k){
+  const T = vm.txt, prev = T.sents[T.k];
+  if(prev) prev.words.forEach(x => x.el.classList.remove('done', 'cur'));
+  T.k = k; T.w = -1;
+  T.sents.forEach((s, j)=>{
+    s.el.classList.toggle('past', j < k);
+    s.el.classList.toggle('now', j === k);
+    if(j === k) s.el.setAttribute('aria-current', 'true'); else s.el.removeAttribute('aria-current');
+  });
+  vmSubsShow(k, 0);
+  vmTxtScroll();
+}
+function vmTxtSetWord(w){
+  const T = vm.txt, s = T.sents[T.k];
+  if(!s) return;
+  T.w = w;
+  s.words.forEach((x, i)=>{ x.el.classList.toggle('done', i < w); x.el.classList.toggle('cur', i === w); });
+  // слово ушло за «…» — субтитры листаются: «… » и дальше с него; вернулось назад — снова с начала
+  if(T.sub && w < s.words.length && w < T.sub.from) vmSubsShow(T.k, 0);
+  if(T.sub && w < s.words.length && w >= T.sub.to) vmSubsShow(T.k, w);
+  const sub = T.sub;
+  if(sub) sub.spans.forEach((sp, i)=>{
+    const wi = sub.from + i;
+    sp.classList.toggle('done', wi < w);
+    sp.classList.toggle('now', wi === w);
+  });
+}
+/*
+   Субтитры: одна фраза, не больше двух строк. Не влезла — слова с конца
+   уходят, пока не влезет « …».
+*/
+function vmSubsShow(k, from){
+  const T = vm.txt, s = T.sents[k], box = $('vmSubs');
   box.innerHTML = '';
-  box.classList.toggle('long', q.text.length > 170);
+  T.sub = null;
+  if(!s) return;
+  const more = text=>{ const m = document.createElement('span'); m.className = 'more'; m.textContent = text; return m; };
   const wrap = document.createElement('div');
-  const total = q.text.length || 1;
-  const re = /\S+/g;
-  let m;
-  q.words = [];
-  while((m = re.exec(q.text))){
+  if(from > 0) wrap.appendChild(more('… '));
+  const spans = [];
+  for(let i = from; i < s.words.length; i++){
+    if(i > from) wrap.appendChild(document.createTextNode(' '));
     const sp = document.createElement('span');
     sp.className = 'w';
-    sp.textContent = m[0];
+    sp.textContent = s.words[i].t;
     wrap.appendChild(sp);
-    wrap.appendChild(document.createTextNode(' '));
-    q.words.push({ sp, a: m.index / total, b: (m.index + m[0].length) / total });
+    spans.push(sp);
   }
   box.appendChild(wrap);
-  vm.subsCur = q;
+  const max = (parseFloat(getComputedStyle(wrap).lineHeight) || 28) * 2 + 1;
+  if(wrap.offsetHeight > max){
+    wrap.appendChild(more(' …'));
+    while(spans.length > 1 && wrap.offsetHeight > max){
+      const sp = spans.pop();
+      if(sp.previousSibling) sp.previousSibling.remove();
+      sp.remove();
+    }
+  }
+  T.sub = { from, to: from + spans.length, spans };
 }
+
 function vmSubsTick(){
   if(vm.state !== 'speak' || !vm.subsQ.length) return;
   const nowCtx = voiceCtx ? voiceCtx.currentTime : 0, nowPerf = performance.now() / 1000;
   let cur = vm.subsQ[0];
   vm.subsQ.forEach(q=>{ if(q.at <= (q.clock === 'perf' ? nowPerf : nowCtx) + 0.05) cur = q; });
-  if(cur !== vm.subsCur) vmSubsRender(cur);
+  vm.subsCur = cur;
   const now = cur.clock === 'perf' ? nowPerf : nowCtx;
   const p = cur.char != null ? cur.char / (cur.text.length || 1) + 0.001 : (now - cur.at) / cur.dur;
-  cur.words.forEach(w=>{
-    const done = p >= w.b;
-    w.sp.classList.toggle('done', done);
-    w.sp.classList.toggle('now', !done && p >= w.a);
-  });
+  vmTxtAt(cur.i, p);
 }
+// дозвучало или остановлено: последняя вставшая в очередь фраза — целиком, все фразы прозвучали
 function vmSubsAllDone(){
   const last = vm.subsQ[vm.subsQ.length - 1];
-  if(last && last !== vm.subsCur) vmSubsRender(last);
-  if(vm.subsCur) vm.subsCur.words.forEach(w=>{ w.sp.classList.add('done'); w.sp.classList.remove('now'); });
   vm.subsQ = [];
+  if(!last || !vm.txt) return;
+  vmTxtAt(last.i, 2);
+  const s = vm.txt.sents[vm.txt.k];
+  if(s){ s.el.classList.remove('now'); s.el.classList.add('past'); s.el.removeAttribute('aria-current'); }
 }
+
+/*
+   Рамка с полным текстом. Открыта — фон под слоем размыт, текст сам
+   прокручивается за голосом: звучащая фраза — на трети высоты. Человек
+   прокрутил сам — 4 с не мешаем. Озвучку открытие и закрытие не трогают.
+   Шаг «назад» в истории — чтобы её закрывал и системный жест «назад».
+*/
+function vmTxtToggle(){ if(vm.txtOn) vmTxtClose(); else vmTxtOpen(); }
+function vmTxtOpen(){
+  const T = vm.txt;
+  if(vm.txtOn || !vm.on || vm.state !== 'speak' || !T || T.sents.length < 2) return;
+  vm.txtOn = true;
+  // 260 px, а на низком экране — сколько влезает до низа
+  const v = $('vm').getBoundingClientRect(), b = $('vmTxtBtn').getBoundingClientRect();
+  const h = Math.round(Math.max(150, Math.min(260, v.bottom - b.bottom - 10 - 16)));
+  $('vmTxt').style.setProperty('--h', h + 'px');
+  $('vm').classList.add('txtOn');
+  vmPaintTxtBtn();
+  vm.txtHold = 0;
+  vmTxtScroll(true);
+  try{ history.pushState({ vmTxt:1 }, ''); vm.txtHist = true; }catch(e){}
+}
+function vmTxtClose(){
+  if(!vm.txtOn) return;
+  vm.txtOn = false;
+  cancelAnimationFrame(vm.txtRaf);
+  $('vm').classList.remove('txtOn');
+  vmPaintTxtBtn();
+  if(vm.txtHist){
+    vm.txtHist = false;
+    vm.txtSkip++;
+    try{ history.back(); }catch(e){ vm.txtSkip--; }
+  }
+  // ответ дозвучал, пока читали, — разговор идёт дальше
+  if(vm.on && vm.state === 'speak' && vm.txtEnded && !vm.stopped)
+    setTimeout(()=>{ if(vm.on && vm.state === 'speak' && vm.txtEnded && !vm.stopped && !vm.txtOn) vmStartListen(); }, 500);
+}
+function vmPaintTxtBtn(){
+  const b = $('vmTxtBtn');
+  if(!b) return;
+  b.setAttribute('aria-expanded', vm.txtOn ? 'true' : 'false');
+  b.setAttribute('aria-label', t(vm.txtOn ? 'vmTxtHide' : 'vmTxtShow'));
+}
+function vmTxtScroll(now){
+  const T = vm.txt, sc = $('vmTxtScroll');
+  if(!vm.txtOn || !T || Date.now() < vm.txtHold) return;
+  const s = T.sents[T.k];
+  const top = s ? Math.max(0, Math.min(sc.scrollHeight - sc.clientHeight, s.el.offsetTop - sc.clientHeight / 3)) : 0;
+  cancelAnimationFrame(vm.txtRaf);
+  if(now || reduceMotion()){ sc.scrollTop = top; return; }
+  const from = sc.scrollTop, t0 = performance.now();
+  const step = ts=>{
+    const p = Math.min(1, Math.max(0, (ts - t0) / 300));
+    sc.scrollTop = from + (top - from) * (1 - Math.pow(1 - p, 3));
+    if(p < 1) vm.txtRaf = requestAnimationFrame(step);
+  };
+  vm.txtRaf = requestAnimationFrame(step);
+}
+// пауза автопрокрутки кончилась — возвращаемся к звучащей фразе
+function vmTxtTick(){
+  if(vm.txtHold && Date.now() >= vm.txtHold){ vm.txtHold = 0; vmTxtScroll(); }
+}
+// нажатие на фразу — голос с неё; звук уже в кэше, в сеть не идём
+function vmTxtReplay(k){
+  const T = vm.txt, s = T && T.sents[k];
+  if(!vm.on || !s || s.q < 0 || !vm.reply) return;
+  vm.stopped = false; vm.txtEnded = false;
+  vm.subsQ = []; vm.subsCur = null;
+  vm.txtHold = 0;
+  vmTxtSetCur(k);
+  vmTxtSetWord(0);
+  stopVoice();
+  if(T.fb){ vmFallbackSpeak(T.plain, s.c0); return; }
+  unlockAudio();
+  playVoice(vm.reply, null, settings.native_lang, vmVoiceOpts({ chunk: s.q, frac: s.a }));
+}
+(function(){
+  const sc = $('vmTxtScroll');
+  if(!sc) return;
+  const hold = ()=>{ vm.txtHold = Date.now() + 4000; cancelAnimationFrame(vm.txtRaf); };
+  ['wheel', 'touchmove', 'keydown'].forEach(ev => sc.addEventListener(ev, hold, { passive:true }));
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && vm.txtOn){ e.preventDefault(); vmTxtClose(); } });
+  window.addEventListener('popstate', ()=>{
+    if(vm.txtSkip){ vm.txtSkip--; return; }
+    if(vm.txtOn){ vm.txtHist = false; vmTxtClose(); }
+  });
+})();
 
 /* ---- анимации: пульсация кругов и точки ожидания ---- */
 function vmSimSpeech(tt){
@@ -7713,6 +8098,7 @@ function vmLoop(){
       if(vm.state === 'think') vmDotsTick(now);
     }
     vmSubsTick();
+    vmTxtTick();
     $('vm').classList.toggle('quiet', vm.state === 'speak' && !voiceSources.length && !voiceFallbackOn);
     vm.raf = requestAnimationFrame(tick);
   };
