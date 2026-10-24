@@ -1,4 +1,4 @@
-const CACHE = 'worddeck-v4';
+const CACHE = 'worddeck-v5';
 
 // Оболочка приложения. Имена файлов должны совпадать с реальными,
 // иначе addAll упадёт целиком и service worker не установится.

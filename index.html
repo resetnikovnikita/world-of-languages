@@ -636,6 +636,7 @@ button.vmRing{cursor:pointer}
 .vmSteps i.ok{background:var(--sage)}
 .vmSteps i.ok::after{content:'';width:9px;height:5px;margin-top:-2px;border-left:2.6px solid var(--bg);border-bottom:2.6px solid var(--bg);transform:rotate(-45deg)}
 .vmSteps i.spin{border:2px solid var(--gold);border-right-color:transparent;animation:vmSpin .8s linear infinite}
+.vmSteps i.wait{border:2px solid var(--ink-3);opacity:.5}
 @keyframes vmSpin{to{transform:rotate(360deg)}}
 
 /* 3d: субтитры подсвечивают слово, которое звучит */
@@ -1562,8 +1563,8 @@ html.lite .tabItem.sel svg{transform:none}
         </div>
         <div class="vmSteps glass">
           <span><i class="ok"></i><span id="vmStepRec"></span></span>
-          <span><i class="ok"></i><span data-i18n="vmStepText"></span></span>
-          <span><i class="spin"></i><span data-i18n="vmStepVoice"></span></span>
+          <span><i class="spin" id="vmS2i"></i><span id="vmS2t"></span></span>
+          <span><i class="wait" id="vmS3i"></i><span data-i18n="vmStepVoice"></span></span>
         </div>
       </div>
 
@@ -2549,6 +2550,23 @@ ar:{ariaExitTrainer:"الخروج من المعلّم",teacherOnline:"متصل",
 tr:{ariaExitTrainer:"Öğretmenden çık",teacherOnline:"çevrimiçi",ariaTeacherLang:"Öğrenilen dil: {lang}, seviye {level}. Değiştir",voiceGo:"Ses",ariaVoiceMode:"Sesli mod",ariaMsgActions:"Yanıt işlemleri",menuSpeak:"Sesli oku",menuStop:"Durdur",menuMoreEx:"Bir örnek daha",menuMoreDetail:"Daha ayrıntılı anlat",echoMoreEx:"Buna bir örnek daha ver",echoMoreDetail:"Daha ayrıntılı anlat, konuyu anlamadım",vmPill:"Sesli mod · {lang}",vmChat:"Sohbet",vmAsk:"Öğretmenin sorusu",vmListening:"Dinliyorum…",vmPaused:"Duraklatıldı",vmCancel:"İptal",vmSend:"Gönder",vmPause:"Duraklat",vmResume:"Devam",vmFix:"Metni düzelt",vmThinking:"Öğretmen düşünüyor",vmStepRec:"Kayıt · {t}",vmStepText:"Metne çevrildi",vmStepVoice:"Sesli yanıt hazırlanıyor",vmRepeat:"Tekrarla",vmReply:"Yanıtla",vmSpeed:"Hız",vmStopSpeech:"Konuşmayı durdur",vmNoNet:"Bağlantı yok, tekrar dene",vmNotHeard:"Duyamadım, tekrar söyle",vmNoSupport:"Sesli mod bu tarayıcıda çalışmıyor — Chrome ya da Safari'yi dene",vmMicTitle:"Mikrofon izni gerekli",vmMicBody:"Bu site için mikrofona izin ver: adres çubuğundaki kilit ya da «Aa» simgesi → Mikrofon → İzin ver. Sonra «Tekrar dene»ye dokun.",vmMicRetry:"Tekrar dene",vmVad:"Konuşmada duraklayınca gönder",vmSpeakNow:"Konuş, dinliyorum"}
 };
 Object.keys(I18N_EXT16).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT16[code]); });
+
+/* Пакет 7 — голосовой режим: расшифровка через Gemini на любом языке */
+const I18N_EXT17 = {
+en:{vmSpeakAny:"Speak in any language — I'll understand",vmHearYou:"I hear you",vmStepTexting:"Transcribing your speech",vmMicBody:"Allow the microphone for this site: tap the icon left of the address (on iPhone — «Aa») → Permissions or Site settings → Microphone → Allow. If that doesn't help, allow the microphone for the browser itself in your phone settings. Then tap «Try again»."},
+ru:{vmSpeakAny:"Говори на любом языке — я пойму",vmHearYou:"Слышу тебя",vmStepTexting:"Расшифровываю речь",vmMicBody:"Разреши микрофон для этого сайта: нажми значок слева от адреса (на iPhone — «Aa») → Разрешения или Настройки сайта → Микрофон → Разрешить. Если не помогло — разреши микрофон самому браузеру в настройках телефона. Потом нажми «Попробовать снова»."},
+es:{vmSpeakAny:"Habla en cualquier idioma, te entenderé",vmHearYou:"Te oigo",vmStepTexting:"Transcribiendo lo que dijiste",vmMicBody:"Permite el micrófono para este sitio: toca el icono a la izquierda de la dirección (en iPhone, «Aa») → Permisos o Configuración del sitio → Micrófono → Permitir. Si no funciona, permite el micrófono al propio navegador en los ajustes del teléfono. Luego toca «Intentar de nuevo»."},
+fr:{vmSpeakAny:"Parle dans n'importe quelle langue, je comprendrai",vmHearYou:"Je t'entends",vmStepTexting:"Je transcris ta voix",vmMicBody:"Autorise le micro pour ce site : touche l'icône à gauche de l'adresse (sur iPhone, « Aa ») → Autorisations ou Réglages du site → Micro → Autoriser. Si ça ne suffit pas, autorise le micro pour le navigateur lui-même dans les réglages du téléphone. Puis touche « Réessayer »."},
+de:{vmSpeakAny:"Sprich in jeder Sprache — ich verstehe dich",vmHearYou:"Ich höre dich",vmStepTexting:"Sprache wird in Text umgewandelt",vmMicBody:"Erlaube das Mikrofon für diese Seite: Tippe auf das Symbol links neben der Adresse (auf dem iPhone „Aa“) → Berechtigungen oder Website-Einstellungen → Mikrofon → Zulassen. Hilft das nicht, erlaube das Mikrofon für den Browser selbst in den Telefoneinstellungen. Dann tippe auf „Noch mal versuchen“."},
+it:{vmSpeakAny:"Parla in qualsiasi lingua, ti capirò",vmHearYou:"Ti sento",vmStepTexting:"Trascrivo la tua voce",vmMicBody:"Consenti il microfono per questo sito: tocca l'icona a sinistra dell'indirizzo (su iPhone «Aa») → Autorizzazioni o Impostazioni sito → Microfono → Consenti. Se non basta, consenti il microfono al browser stesso nelle impostazioni del telefono. Poi tocca «Riprova»."},
+pt:{vmSpeakAny:"Fale em qualquer idioma — eu entendo",vmHearYou:"Estou ouvindo",vmStepTexting:"Transcrevendo sua fala",vmMicBody:"Permita o microfone para este site: toque no ícone à esquerda do endereço (no iPhone, «Aa») → Permissões ou Configurações do site → Microfone → Permitir. Se não resolver, permita o microfone para o próprio navegador nas configurações do celular. Depois toque em «Tentar de novo»."},
+zh:{vmSpeakAny:"用任何语言说都可以，我听得懂",vmHearYou:"我在听",vmStepTexting:"正在把语音转成文字",vmMicBody:"请为此网站允许麦克风：点地址左侧的图标（iPhone 上是「Aa」）→ 权限或网站设置 → 麦克风 → 允许。如果还不行，请在手机设置里给浏览器本身开启麦克风权限。然后点「再试一次」。"},
+ja:{vmSpeakAny:"どの言語で話しても大丈夫、ちゃんと分かります",vmHearYou:"聞こえています",vmStepTexting:"音声を文字にしています",vmMicBody:"このサイトでマイクを許可してください：アドレス左のアイコン（iPhone では「Aa」）→ 権限またはサイトの設定 → マイク → 許可。それでもだめなら、スマホの設定でブラウザ自体にマイクを許可してください。その後「もう一度試す」をタップ。"},
+ko:{vmSpeakAny:"어떤 언어로 말해도 알아들어요",vmHearYou:"잘 들려요",vmStepTexting:"음성을 텍스트로 바꾸는 중",vmMicBody:"이 사이트에 마이크를 허용해 주세요: 주소 왼쪽 아이콘(iPhone은 「Aa」) → 권한 또는 사이트 설정 → 마이크 → 허용. 그래도 안 되면 휴대폰 설정에서 브라우저 자체에 마이크 권한을 주세요. 그다음 「다시 시도」를 누르세요."},
+ar:{vmSpeakAny:"تكلّم بأي لغة — سأفهمك",vmHearYou:"أسمعك",vmStepTexting:"أحوّل كلامك إلى نص",vmMicBody:"اسمح بالميكروفون لهذا الموقع: اضغط الأيقونة بجانب العنوان (في iPhone ‏«Aa») ← الأذونات أو إعدادات الموقع ← الميكروفون ← سماح. إن لم ينجح ذلك، اسمح بالميكروفون للمتصفح نفسه من إعدادات الهاتف. ثم اضغط «حاول مرة أخرى»."},
+tr:{vmSpeakAny:"Hangi dilde konuşursan konuş, anlarım",vmHearYou:"Seni duyuyorum",vmStepTexting:"Konuşman metne çevriliyor",vmMicBody:"Bu site için mikrofona izin ver: adresin solundaki simgeye dokun (iPhone'da «Aa») → İzinler ya da Site ayarları → Mikrofon → İzin ver. Olmazsa telefon ayarlarından tarayıcının kendisine mikrofon izni ver. Sonra «Tekrar dene»ye dokun."}
+};
+Object.keys(I18N_EXT17).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT17[code]); });
 // путь — карусель тем
 const I18N_EXT14 = {
 en:{"pathOf":"topic {n} of {total}","pathBadgeDone":"Done","pathBadgeNow":"Now","pathBadgeMin":"{n} min","pathStateLocked":"locked","pathReview":"Review topic","pathOpensAfter":"Opens after topic {n}","pathLvlOpensAfter":"Opens after {lvl}","pathPrev":"Previous topic","pathNext":"Next topic","pathCarousel":"carousel","pathSlide":"topic","pathCarouselLbl":"Topics of level {lvl}","pathTickLbl":"Topic {n}","pathCardLbl":"Topic {n} of {total}: {title}, {state}"},
@@ -7096,12 +7114,11 @@ async function undoWords(list){
 }
 
 /* ---- кнопки у поля ввода ---- */
-const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 // пустое поле — золотая «Голос», с текстом — круглая «Отправить»
 function paintSendBtn(){
   const empty = !String(($('chatInput') || {}).value || '').trim();
   const v = $('btnVoice'), send = $('btnSend');
-  const useVoice = !!SpeechRec && empty;
+  const useVoice = vmCanRecord && empty;
   if(v) v.classList.toggle('hidden', !useVoice);
   if(send) send.classList.toggle('hidden', useVoice);
 }
@@ -7145,33 +7162,34 @@ function exitTrainer(){
    Голосовой режим Тренера
 
    Слушаю (3b) → отправлено, думает (3c) → отвечает голосом (3d) → снова
-   слушаю. Речь распознаёт Web Speech API на изучаемом языке, промежуточные
-   результаты идут в живую расшифровку. Отвечает тот же живой голос, что
-   в чате (playVoice), с субтитрами. Весь разговор ложится в текстовый чат:
-   реплики, сказанные голосом, помечены input: 'voice'.
+   слушаю. Звук с микрофона пишется сам (WAV, 16 кГц) и расшифровывается
+   Gemini — тем же ключом, что и тренер. Браузерное распознавание (Web
+   Speech API) не годилось: оно слушает ровно один язык, а ученик говорит
+   с тренером и по-русски, и на изучаемом, часто в одной фразе; на Android
+   оно ещё и само выключается через пару секунд. Отвечает тот же живой
+   голос, что в чате (playVoice), с субтитрами. Весь разговор ложится
+   в текстовый чат: реплики, сказанные голосом, помечены input: 'voice'.
    ========================================================================= */
 const VM_RATES = [1, 0.8, 0.6];
 const VM_SILENCE_MS = 1500;     // автоотправка после тишины
-const VM_LH = 32;               // высота строки живой расшифровки
+const VM_MAX_MS = 60e3;         // длиннее минуты — отправляем сами
+const VM_WAV_RATE = 16000;      // для речи хватает, запись выходит втрое легче
+const VM_LOUD = 0.10, VM_QUIET = 0.05;   // уровни 0…1 (как levelOf): голос / тишина
+const VM_LH = 32;               // высота строки в блоке расшифровки
 let vmVad = true, vmRate = 1;
 try{
   vmVad = localStorage.getItem('worddeck_vad') !== '0';
   const r = parseFloat(localStorage.getItem('worddeck_voice_rate'));
   if(VM_RATES.indexOf(r) >= 0) vmRate = r;
 }catch(e){}
+const vmCanRecord = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && (window.AudioContext || window.webkitAudioContext));
 const vm = {
-  on:false, state:'', rec:null, paused:false, sending:false, final:'', interim:'',
-  t0:0, elapsed:0, timer:null, silence:null, restarts:0,
+  on:false, state:'', paused:false, sending:false,
+  mic:null, micAn:null, recToken:0, chunks:[], spoke:false, heard:0, quiet:0, keepText:'',
+  t0:0, elapsed:0, timer:null,
   ctl:null, text:'', entry:null, userNode:null, reply:'', stopped:false,
-  mic:null, micAn:null, bump:0, env:0, raf:0, subsQ:[], subsCur:null, dotsT0:0
+  env:0, raf:0, subsQ:[], subsCur:null, dotsT0:0
 };
-/*
-   Уровень микрофона для кругов: на компьютере — анализатор отдельного
-   потока. На телефоне второй захват микрофона рядом с распознаванием
-   ломает его (Chrome на Android отдаёт «audio-capture»), поэтому круги
-   там дышат от событий распознавания: пришли слова — толчок.
-*/
-const vmMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
 function vmSetState(s){
   vm.state = s;
@@ -7196,7 +7214,7 @@ function vmPaintPause(){
 function vmPaintRate(){ const el = $('vmRateTx'); if(el) el.textContent = vmRate + '×'; }
 
 function openVoiceMode(){
-  if(!SpeechRec){ toast(t('vmNoSupport')); return; }
+  if(!vmCanRecord){ toast(t('vmNoSupport')); return; }
   if(!getKey()){ pushMsg('sys', t('errNoKey')); return; }
   closeAiMenu();
   stopVoice();
@@ -7221,12 +7239,11 @@ function closeVoiceMode(){
   if(!vm.on) return;
   vm.on = false;
   vmStopRec();
-  vmStopMic();
   clearInterval(vm.timer);
-  clearTimeout(vm.silence);
   stopVoice();
   cancelAnimationFrame(vm.raf); vm.raf = 0;
-  vm.subsQ = []; vm.subsCur = null;
+  vm.subsQ = []; vm.subsCur = null; vm.chunks = []; vm.keepText = '';
+  try{ if(navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
   const el = $('vm');
   if(el){ el.hidden = true; el.classList.remove('paused', 'quiet'); }
   paintSendBtn();
@@ -7237,151 +7254,165 @@ function vmStartListen(){
   if(!vm.on) return;
   stopVoice();
   vmSetState('listen');
-  vm.final = ''; vm.interim = ''; vm.paused = false; vm.sending = false; vm.restarts = 0;
-  vm.elapsed = 0; vm.t0 = Date.now(); vm.bump = 0;
+  vm.paused = false; vm.sending = false; vm.keepText = '';
+  vm.chunks = []; vm.spoke = false; vm.heard = 0; vm.quiet = 0;
+  vm.elapsed = 0; vm.t0 = Date.now();
   $('vm').classList.remove('paused');
   vmPaintPause(); vmPaintLive(); vmPaintTimer();
   clearInterval(vm.timer);
   vm.timer = setInterval(vmPaintTimer, 250);
   vmStartRec();
-  vmStartMic();
 }
-function vmStartRec(){
+/*
+   Микрофон → анализатор (круги) и ScriptProcessor (запись и тишина).
+   ScriptProcessor устарел, но работает везде, включая Safari, и не требует
+   отдельного файла, как AudioWorklet. В динамик он не выводит: после него
+   стоит усилитель с нулём, просто чтобы граф работал.
+*/
+async function vmStartRec(){
   vmStopRec();
-  let rec;
-  try{ rec = new SpeechRec(); }catch(e){ toast(t('vmNoSupport')); closeVoiceMode(); return; }
-  rec.lang = localeOf(settings.target_lang || 'en');
-  rec.continuous = true;
-  rec.interimResults = true;
-  rec.maxAlternatives = 1;
-  rec.onresult = e=>{
-    if(rec !== vm.rec) return;
-    let interim = '';
-    for(let i = e.resultIndex; i < e.results.length; i++){
-      const r = e.results[i], tx = String(r[0] && r[0].transcript || '').trim();
-      if(!tx) continue;
-      if(r.isFinal) vm.final = (vm.final ? vm.final + ' ' : '') + tx;
-      else interim += (interim ? ' ' : '') + tx;
-    }
-    vm.interim = interim;
-    vm.bump = 1; vm.restarts = 0;
-    vmPaintLive();
-    vmArmSilence();
+  const my = vm.recToken;
+  const ctx = unlockAudio();
+  if(!ctx){ toast(t('vmNoSupport')); closeVoiceMode(); return; }
+  // iOS: в режиме «только воспроизведение» микрофон молчит
+  try{ if(navigator.audioSession) navigator.audioSession.type = 'play-and-record'; }catch(e){}
+  let stream;
+  try{
+    stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true, autoGainControl:true } });
+  }catch(e){
+    dlog('voice mode mic:', e && e.name, e && e.message);
+    if(my !== vm.recToken || !vm.on) return;
+    if(e && /NotAllowed|Security|NotFound|NotReadable|Abort/.test(e.name || '')) vmToPerm();
+    else toast(t('vmNoSupport'));
+    return;
+  }
+  if(my !== vm.recToken || !vm.on || vm.state !== 'listen'){ stream.getTracks().forEach(tr=>tr.stop()); return; }
+  if(ctx.state === 'suspended'){ try{ await ctx.resume(); }catch(e){} }
+  const src = ctx.createMediaStreamSource(stream);
+  const an = ctx.createAnalyser();
+  an.fftSize = 512;
+  const proc = ctx.createScriptProcessor(4096, 1, 1);
+  const mute = ctx.createGain();
+  mute.gain.value = 0;
+  src.connect(an);
+  src.connect(proc);
+  proc.connect(mute);
+  mute.connect(ctx.destination);
+  proc.onaudioprocess = e=>{
+    if(vm.paused || vm.state !== 'listen' || vm.sending) return;
+    const d = e.inputBuffer.getChannelData(0);
+    vm.chunks.push(new Float32Array(d));
+    let s = 0;
+    for(let i = 0; i < d.length; i++) s += d[i] * d[i];
+    vmVadStep(Math.min(1, Math.sqrt(s / d.length) * 5), d.length / ctx.sampleRate * 1000);
   };
-  rec.onspeechstart = ()=>{ vm.bump = Math.max(vm.bump, 0.6); };
-  rec.onerror = e=>{
-    const code = e && e.error;
-    dlog('voice mode stt:', code);
-    if(rec !== vm.rec) return;
-    if(code === 'not-allowed' || code === 'service-not-allowed' || code === 'audio-capture'){ vmToPerm(); return; }
-    if(code === 'network') toast(t('vmNoNet'));
-  };
-  rec.onend = ()=>{
-    if(rec !== vm.rec) return;
-    vm.rec = null;
-    // Chrome на телефоне сам выключает распознавание после паузы — включаем снова
-    if(!vm.on || vm.state !== 'listen' || vm.paused || vm.sending) return;
-    if(++vm.restarts > 8){ vmTogglePause(); return; }   // долго тишина — на паузу, а не по кругу
-    setTimeout(()=>{ if(vm.on && vm.state === 'listen' && !vm.paused && !vm.rec) vmStartRec(); }, 250);
-  };
-  vm.rec = rec;
-  try{ rec.start(); }catch(e){ dlog('voice mode start:', e); }
+  vm.mic = { stream, src, an, proc, mute, rate: ctx.sampleRate };
+  vm.micAn = an;
 }
 function vmStopRec(){
-  const r = vm.rec;
-  vm.rec = null;
-  if(!r) return;
-  r.onresult = r.onend = r.onerror = r.onspeechstart = null;
-  try{ r.abort(); }catch(e){}
+  vm.recToken++;
+  const m = vm.mic;
+  vm.mic = null; vm.micAn = null;
+  if(!m) return;
+  m.proc.onaudioprocess = null;
+  try{ m.src.disconnect(); m.proc.disconnect(); m.mute.disconnect(); }catch(e){}
+  m.stream.getTracks().forEach(tr=>tr.stop());
 }
-function vmStartMic(){
-  if(vmMobile || vm.mic || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-  navigator.mediaDevices.getUserMedia({ audio:true }).then(stream=>{
-    const ctx = unlockAudio();
-    if(!vm.on || vm.state !== 'listen' || !ctx){ stream.getTracks().forEach(tr=>tr.stop()); return; }
-    vm.mic = stream;
-    const an = ctx.createAnalyser();
-    an.fftSize = 512;
-    ctx.createMediaStreamSource(stream).connect(an);
-    vm.micAn = an;
-  }).catch(e=>dlog('voice mode meter:', e && e.name));
-}
-function vmStopMic(){
-  if(vm.mic){ vm.mic.getTracks().forEach(tr=>tr.stop()); vm.mic = null; }
-  vm.micAn = null;
+/*
+   Тишина — по громкости: голос дольше 150 мс — «начал говорить»; после
+   этого 1,5 с тише порога — отправка (если включена в настройках).
+*/
+function vmVadStep(lvl, ms){
+  if(lvl > VM_LOUD){
+    vm.heard += ms; vm.quiet = 0;
+    if(!vm.spoke && vm.heard > 150){ vm.spoke = true; vmPaintLive(); }
+  }else if(lvl < VM_QUIET) vm.quiet += ms;
+  if((vm.spoke && vmVad && vm.quiet >= VM_SILENCE_MS) || vmElapsed() >= VM_MAX_MS) vmSend();
 }
 function vmToPerm(){
-  vmStopRec(); vmStopMic();
-  clearInterval(vm.timer); clearTimeout(vm.silence);
+  vmStopRec();
+  clearInterval(vm.timer);
   vmSetState('perm');
 }
 
 /*
-   Живая расшифровка — ровно две строки. Текст стоит нижней строкой; когда
-   он переносится, весь блок плавно уезжает вверх на строку: старая строка
-   остаётся сверху в 30 % (маска в стилях), самая старая уходит за край.
+   Блок над кругами: до речи — подсказка, что можно на любом языке; когда
+   голос услышан — «Слышу тебя»; после сбоя — сохранённая расшифровка,
+   её можно отправить ещё раз, ничего не говоря.
 */
 function vmPaintLive(){
   const el = $('vmLive');
   if(!el) return;
-  const text = (vm.final + ' ' + vm.interim).trim();
-  if(!text){
-    el.className = 'vmLiveIn ph';
-    el.textContent = t('vmSpeakNow');
-    el.style.transition = 'none';
-    el.style.transform = 'none';
-    return;
-  }
-  el.className = 'vmLiveIn';
-  el.textContent = text;
-  const caret = document.createElement('span');
-  caret.className = 'caret';
-  el.appendChild(caret);
+  const kept = vm.keepText && !vm.spoke;
+  el.className = 'vmLiveIn' + (kept || vm.spoke ? '' : ' ph');
+  el.textContent = kept ? vm.keepText : t(vm.spoke ? 'vmHearYou' : 'vmSpeakAny');
   const lines = Math.max(1, Math.round(el.scrollHeight / VM_LH));
   el.style.transition = reduceMotion() ? 'none' : 'transform .45s cubic-bezier(.2,.8,.2,1)';
   el.style.transform = 'translateY(' + (-(lines - 1) * VM_LH) + 'px)';
 }
-function vmArmSilence(){
-  clearTimeout(vm.silence);
-  if(!vmVad) return;
-  vm.silence = setTimeout(()=>{
-    if(vm.on && vm.state === 'listen' && !vm.paused && (vm.final + vm.interim).trim()) vmSend();
-  }, VM_SILENCE_MS);
-}
 function vmTogglePause(){
   if(vm.state !== 'listen') return;
   if(vm.paused){
-    vm.paused = false; vm.t0 = Date.now(); vm.restarts = 0;
-    vmStartRec();
+    vm.paused = false; vm.t0 = Date.now(); vm.quiet = 0;
   }else{
     vm.elapsed = vmElapsed(); vm.t0 = 0; vm.paused = true;
-    clearTimeout(vm.silence);
-    vmStopRec();
   }
   $('vm').classList.toggle('paused', vm.paused);
   vmPaintPause(); vmPaintTimer();
 }
-function vmCancel(){
-  vm.final = ''; vm.interim = '';
-  closeVoiceMode();
-}
+function vmCancel(){ closeVoiceMode(); }
 
-/* ---- 3c · отправлено ---- */
-function vmSend(){
+/* ---- 3c · отправлено: расшифровка, потом запрос тренеру ---- */
+// этапы: 1 — расшифровываем, 2 — готовим ответ
+function vmSteps(n){
+  const s2i = $('vmS2i'), s3i = $('vmS3i');
+  s2i.className = n >= 2 ? 'ok' : 'spin';
+  $('vmS2t').textContent = t(n >= 2 ? 'vmStepText' : 'vmStepTexting');
+  s3i.className = n >= 2 ? 'spin' : 'wait';
+}
+async function vmSend(){
   if(!vm.on || vm.state !== 'listen' || vm.sending) return;
-  const text = (vm.final + ' ' + vm.interim).replace(/\s+/g, ' ').trim();
-  if(!text){ toast(t('vmNotHeard')); return; }
   vm.sending = true;
   const took = vmElapsed();
-  clearTimeout(vm.silence); clearInterval(vm.timer);
-  vmStopRec(); vmStopMic();
-  unlockAudio();
-  vm.text = text; vm.reply = ''; vm.stopped = false;
-  $('vmMineTx').textContent = text;
+  clearInterval(vm.timer);
+  const rate = vm.mic ? vm.mic.rate : 48000;
+  const chunks = vm.chunks, spoke = vm.spoke, kept = vm.keepText;
+  vm.chunks = [];
+  vmStopRec();
+  if(!spoke){
+    // ничего не сказано: после сбоя — повтор сохранённого текста, иначе «не расслышал»
+    if(kept){ vmGoThink(took); vmDeliver(kept); return; }
+    toast(t('vmNotHeard'));
+    vmStartListen();
+    return;
+  }
+  vmGoThink(took);
+  let text = '';
+  try{ text = await vmTranscribe(vmWav(chunks, rate)); }
+  catch(e){
+    if(!vm.on || vm.state !== 'think') return;
+    dlog('voice mode stt:', e);
+    toast(t(e && (e.code === 'network' || isNetworkError(e)) ? 'vmNoNet' : friendlyError(e)));
+    vmStartListen();
+    return;
+  }
+  if(!vm.on || vm.state !== 'think') return;     // пока расшифровывали, вышли
+  if(!text){ toast(t('vmNotHeard')); vmStartListen(); return; }
+  vmDeliver(text);
+}
+function vmGoThink(took){
   $('vmStepRec').textContent = t('vmStepRec', { t: vmFmt(took) });
-  document.querySelector('.vmMine .fix').classList.remove('hidden');
+  document.querySelector('.vmMine').classList.add('hidden');
+  vmSteps(1);
   vm.dotsT0 = performance.now();
   vmSetState('think');
+}
+function vmDeliver(text){
+  vm.text = text; vm.reply = ''; vm.stopped = false;
+  $('vmMineTx').textContent = text;
+  document.querySelector('.vmMine').classList.remove('hidden');
+  document.querySelector('.vmMine .fix').classList.remove('hidden');
+  vmSteps(2);
   // реплика — в общий чат, с пометкой, что сказана голосом
   vm.userNode = pushMsg('user', text);
   vm.entry = chatLog[chatLog.length - 1] || null;
@@ -7393,12 +7424,80 @@ function vmSend(){
   vm.ctl = ctl;
   askTrainer(text, false, true, ctl);
 }
-// сбой — обратно в 3b, расшифровка сохраняется
+
+// записанные куски (Float32, частота контекста) → WAV 16 кГц моно в base64
+function vmWav(chunks, rate){
+  const total = chunks.reduce((s, c) => s + c.length, 0);
+  const all = new Float32Array(total);
+  let o = 0;
+  chunks.forEach(c=>{ all.set(c, o); o += c.length; });
+  const ratio = Math.max(1, rate / VM_WAV_RATE), outRate = Math.round(rate / ratio);
+  const n = Math.floor(total / ratio);
+  const buf = new ArrayBuffer(44 + n * 2), dv = new DataView(buf);
+  const str = (p, s)=>{ for(let i = 0; i < s.length; i++) dv.setUint8(p + i, s.charCodeAt(i)); };
+  str(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); str(8, 'WAVE');
+  str(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, outRate, true); dv.setUint32(28, outRate * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+  str(36, 'data'); dv.setUint32(40, n * 2, true);
+  // понижение частоты усреднением — заодно простой фильтр от наложения
+  for(let i = 0; i < n; i++){
+    const a = Math.floor(i * ratio), b = Math.min(total, Math.floor((i + 1) * ratio));
+    let s = 0;
+    for(let j = a; j < b; j++) s += all[j];
+    const v = Math.max(-1, Math.min(1, b > a ? s / (b - a) : 0));
+    dv.setInt16(44 + i * 2, v < 0 ? v * 32768 : v * 32767, true);
+  }
+  const bytes = new Uint8Array(buf);
+  let bin = '';
+  for(let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+/*
+   Расшифровка — текстовой моделью Gemini, звук идёт частью запроса.
+   Языков два: родной и изучаемый, и в одной фразе они смешиваются —
+   каждое слово пишется на том языке, на котором сказано. Модели gemma
+   звук не принимают, их пропускаем; больше двух попыток не тратим.
+*/
+function vmLangName(code){
+  try{ return new Intl.DisplayNames(['en'], { type:'language' }).of(code) || code; }catch(e){ return code; }
+}
+async function vmTranscribe(b64){
+  const key = getKey();
+  if(!key) throw aiError('key', 0, 'no key');
+  await ensureModels(key);
+  const order = modelOrder().filter(m => !/gemma/i.test(m)).slice(0, 2);
+  if(!order.length) throw aiError('nomodel');
+  const nat = vmLangName(settings.native_lang || 'ru'), tgt = vmLangName(settings.target_lang || 'en');
+  const prompt = 'Transcribe this voice message verbatim. The speaker is a ' + nat + ' speaker learning ' + tgt
+    + '. They may speak ' + nat + ', ' + tgt + ', or mix both in one sentence: write every word in the language it was'
+    + ' actually spoken, in that language\'s normal script. Do not translate, do not answer, do not fix grammar or'
+    + ' pronunciation mistakes. Output only the transcript, with no quotes or comments. If there is no intelligible'
+    + ' speech, output nothing.';
+  let last = null;
+  for(const model of order){
+    try{
+      const text = await aiProvider().generate({
+        key, model, system:'', gc:{ temperature:0 },
+        contents:[{ role:'user', parts:[{ inlineData:{ mimeType:'audio/wav', data:b64 } }, { text: prompt }] }]
+      });
+      noteModelOk(model);
+      return String(text || '').replace(/^\s*(transcript(ion)?\s*:)\s*/i, '').replace(/^["«“]+|["»”]+$/g, '').trim();
+    }catch(e){
+      last = (e && e.code) ? e : (isNetworkError(e) ? aiError('network', 0, e.message) : aiError('http', 0, e && e.message));
+      dlog('voice mode stt:', model, last.code, last.detail || '');
+      noteModelFail(model, last);
+      if(last.code === 'key' || last.code === 'network' || last.code === 'region') break;
+    }
+  }
+  throw last || aiError('nomodel');
+}
+// сбой ответа — обратно в 3b; расшифровка сохраняется, её можно отправить ещё раз
 function vmBackToListen(e){
   toast(t(e && (e.code === 'network' || isNetworkError(e)) ? 'vmNoNet' : friendlyError(e)));
   const keep = vm.text;
   vmStartListen();
-  vm.final = keep;
+  vm.keepText = keep;
   vmPaintLive();
 }
 // «Исправить текст»: запрос отменяется, текст уходит в поле ввода чата
@@ -7603,8 +7702,7 @@ function vmLoop(){
     const tt = now / 1000;
     let target = 0;
     if(vm.state === 'listen' && !vm.paused){
-      if(vm.micAn) target = levelOf(vm.micAn);
-      else{ target = vm.bump * (0.5 + 0.5 * Math.abs(Math.sin(tt * 7.1))); vm.bump *= 0.95; }
+      target = levelOf(vm.micAn);
     }else if(vm.state === 'speak'){
       if(voiceSources.length) target = levelOf(voiceAnalyser);
       else if(voiceFallbackOn) target = vmSimSpeech(tt);
