@@ -397,13 +397,6 @@ select.inp{appearance:none;-webkit-appearance:none;background-image:none}
 #railBrand{display:none}
 
 /* ---------- чат: подача Direct ---------- */
-.tHead{display:flex;align-items:center;gap:6px;height:58px;padding:0 8px 0 12px;border-bottom:1px solid var(--line);flex:none}
-.tHead .ava{width:40px;height:40px}
-.tHead .ava img{width:44px;margin-top:3px}
-.tHead .nm{flex:1;padding-inline-start:6px;min-width:0}
-.tHead .nm b{display:block;font:700 16px/1.15 var(--f)}
-.tHead .nm span{display:flex;align-items:center;gap:6px;font:500 12px/1.2 var(--f);color:var(--ink-2);margin-top:3px}
-.tHead .nm span i{width:7px;height:7px;border-radius:99px;background:var(--sage);display:block}
 #chatBox{padding:14px 14px 0;display:flex;flex-direction:column;gap:8px}
 .dateSep{text-align:center;font:600 11.5px/1 var(--f);color:var(--ink-3);padding:6px 0 4px}
 .msg{max-width:min(272px,80%);padding:11px 15px;font:400 14.5px/1.4 var(--f);white-space:pre-wrap;word-wrap:break-word;text-wrap:pretty}
@@ -434,6 +427,217 @@ select.inp{appearance:none;-webkit-appearance:none;background-image:none}
 .propCard .tags span{height:28px;padding:0 10px;border-radius:99px;background:var(--surf-2);display:flex;align-items:center;font:500 12.5px/1 var(--f)}
 .propCard .two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .propCard .two button{min-height:44px;font-size:14px}
+
+/* ---------- Тренер: стеклянный чат на тёплом фоне ----------
+   Экран на весь рост: таб-бар на телефоне уезжает вниз. Стекло собрано
+   из --ink с прозрачностью: в тёмной теме это светлая дымка, в светлой —
+   тёмная, отдельные цвета для тем не нужны. Акцент — всегда --gold. */
+#s-teacher{
+  --tg-glass:rgba(247,239,224,.09);--tg-glass:color-mix(in oklch,var(--ink) 9%,transparent);
+  --tg-line:rgba(247,239,224,.15);--tg-line:color-mix(in oklch,var(--ink) 15%,transparent);
+  --tg-hi:inset 0 1px 0 rgba(255,255,255,.14);
+  background:
+    radial-gradient(60% 40% at 15% 25%,color-mix(in oklch,var(--terra) 48%,transparent),transparent 70%),
+    radial-gradient(55% 35% at 90% 70%,color-mix(in oklch,var(--gold) 33%,transparent),transparent 70%),
+    var(--bg);
+}
+html[data-theme=light] #s-teacher{
+  background:
+    radial-gradient(60% 40% at 15% 25%,color-mix(in oklch,var(--terra) 22%,transparent),transparent 70%),
+    radial-gradient(55% 35% at 90% 70%,color-mix(in oklch,var(--gold) 26%,transparent),transparent 70%),
+    var(--bg);
+}
+#s-teacher .glass{background:var(--tg-glass);border:1px solid var(--tg-line);box-shadow:var(--tg-hi);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+html.lite #s-teacher .glass,html.lite #s-teacher .msgAi,html.lite .aiPanel,html.lite .vmCore{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+
+/* шапка: ✕ и капсула */
+.tgHead{flex:none;display:flex;align-items:center;gap:8px;padding:4px 10px 6px;position:relative;z-index:2}
+.tgX{width:52px;height:52px;border-radius:99px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--ink);padding:0;cursor:pointer}
+.tgCap{flex:1;min-width:0;height:52px;border-radius:999px;display:flex;align-items:center;gap:10px;padding:0 6px 0 5px}
+.tgWho{flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:10px;border:0;background:none;padding:0;color:var(--ink);text-align:start;cursor:pointer}
+.tgAva{width:40px;height:40px;border-radius:99px;background:var(--gold-soft);overflow:hidden;display:flex;justify-content:center;flex:none}
+.tgAva img{width:42px;height:auto;margin-top:3px}
+.tgNm{flex:1;min-width:0}
+.tgNm b{display:block;font:700 15px/1.2 var(--f);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tgNm>span{display:flex;align-items:center;gap:5px;font:500 11.5px/1.3 var(--f);color:var(--ink-2);white-space:nowrap}
+.tgNm>span i{width:6px;height:6px;border-radius:99px;background:var(--sage);display:block;flex:none}
+.tgLang{height:34px;padding:0 11px;border-radius:999px;border:0;flex:none;cursor:pointer;white-space:nowrap;color:var(--ink);
+  background:color-mix(in oklch,var(--ink) 12%,transparent);font:700 12px/1 var(--f)}
+
+/* сообщения */
+#s-teacher #chatBox{padding:12px 14px}
+#s-teacher .msgWrap .ava{display:none}
+#s-teacher .msgWrap:not(.me){flex-direction:column;align-items:flex-start;gap:0}
+#s-teacher .msgAi{position:relative;max-width:min(250px,82%);padding:12px;padding-inline:16px 34px;border-radius:22px 22px 22px 8px;
+  background:var(--surf-2);background:color-mix(in oklch,var(--ink) 10%,transparent);
+  border:1px solid color-mix(in oklch,var(--ink) 12%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  font:400 14.5px/1.42 var(--f)}
+#s-teacher .msgMe{border-radius:22px 22px 8px 22px;background:var(--gold);
+  background:linear-gradient(135deg,color-mix(in oklch,var(--gold) 82%,white),color-mix(in oklch,var(--gold) 88%,var(--gold-ink)));
+  color:var(--gold-ink);box-shadow:0 10px 24px -12px color-mix(in oklch,var(--gold) 70%,transparent)}
+#s-teacher .msgSys{background:var(--tg-glass);border:1px solid var(--tg-line)}
+#s-teacher .msgSys.ok{background:var(--sage-soft)}
+#s-teacher .msgSys.gold{background:var(--gold-soft)}
+
+/* ⌄ в углу ответа и меню действий под ним */
+.aiChev{position:absolute;top:6px;inset-inline-end:6px;width:26px;height:26px;border-radius:99px;border:0;padding:0;background:transparent;
+  color:var(--ink-3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background-color .25s,color .25s}
+.aiChev::after{content:'';position:absolute;inset:-9px}
+.aiChev svg{transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.aiChev.on{background:color-mix(in oklch,var(--ink) 10%,transparent);color:var(--gold-text)}
+.aiChev.on svg{transform:rotate(180deg)}
+.aiChev.playing{color:var(--gold-text)}
+.aiChev.loading{color:var(--gold-text);animation:voicePulse .8s ease-in-out infinite alternate}
+.aiMenu{display:grid;grid-template-rows:0fr;margin-top:-8px;transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1),margin-top .38s cubic-bezier(.2,.8,.2,1)}
+.aiMenu>div{overflow:hidden;min-height:0}
+.aiMenu.open{grid-template-rows:1fr;margin-top:2px}
+.aiPanel{width:220px;padding:4px;margin:2px 0 4px;border-radius:18px;display:flex;flex-direction:column;visibility:hidden;
+  background:var(--surf);background:color-mix(in oklch,var(--surf) 72%,transparent);border:1px solid color-mix(in oklch,var(--ink) 12%,transparent);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 14px 28px -16px rgba(0,0,0,.8);
+  opacity:0;transform:translateY(-8px) scale(.92);transform-origin:top left;
+  transition:opacity .25s ease,transform .32s cubic-bezier(.3,1.4,.5,1),visibility 0s linear .38s}
+html[dir=rtl] .aiPanel{transform-origin:top right}
+.aiMenu.open .aiPanel{visibility:visible;opacity:1;transform:none;transition:opacity .25s ease,transform .32s cubic-bezier(.3,1.4,.5,1),visibility 0s}
+.aiPanel button{height:40px;padding:0 12px;border-radius:14px;border:0;background:none;display:flex;align-items:center;gap:10px;
+  font:600 13.5px/1 var(--f);color:var(--ink);cursor:pointer;text-align:start;opacity:0;transform:translateY(-8px);
+  transition:opacity .24s ease,transform .3s cubic-bezier(.3,1.4,.5,1),background-color .15s}
+.aiPanel button+button{border-top:1px solid color-mix(in oklch,var(--ink) 7%,transparent)}
+.aiMenu.open .aiPanel button{opacity:1;transform:none}
+.aiMenu.open .aiPanel button:nth-child(1){transition-delay:.05s,.05s,0s}
+.aiMenu.open .aiPanel button:nth-child(2){transition-delay:.10s,.10s,0s}
+.aiMenu.open .aiPanel button:nth-child(3){transition-delay:.15s,.15s,0s}
+.aiPanel button:hover{background:color-mix(in oklch,var(--ink) 8%,transparent)}
+.aiPanel svg{flex:none;color:var(--gold-text)}
+
+/* поле ввода */
+#s-teacher .chatDock{padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+#s-teacher .chatDock .chips{display:none}
+#s-teacher .inputPill{height:56px;border-radius:999px;gap:8px;padding:0 7px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 16px 30px -18px rgba(0,0,0,.8)}
+#s-teacher .inputPill .plus{width:42px;height:42px;background:color-mix(in oklch,var(--ink) 12%,transparent);color:var(--ink)}
+#s-teacher .inputPill input::placeholder{color:var(--ink-2)}
+#s-teacher .inputPill .send{width:42px;height:42px;background:var(--gold);color:var(--gold-ink)}
+.voiceGo{height:42px;padding:0 14px 0 12px;border-radius:999px;border:0;background:var(--gold);color:var(--gold-ink);display:flex;align-items:center;gap:7px;
+  flex:none;cursor:pointer;font:800 13px/1 var(--f);box-shadow:0 8px 20px -8px color-mix(in oklch,var(--gold) 70%,transparent)}
+
+/* таб-бар уезжает вниз, пока открыт Тренер */
+#tabbar{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+#tabbar.away{transform:translateY(calc(100% + 30px + env(safe-area-inset-bottom,0px)));pointer-events:none}
+
+/* ---------- голосовой режим ---------- */
+.vm{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;color:var(--ink);padding-top:var(--topInset,0px);
+  background:
+    radial-gradient(70% 45% at 50% 62%,color-mix(in oklch,var(--gold) 32%,transparent),transparent 70%),
+    radial-gradient(60% 40% at 10% 10%,color-mix(in oklch,var(--terra) 42%,transparent),transparent 70%),
+    var(--bg);
+  animation:screenIn .25s ease}
+.vm[hidden]{display:none}
+.vm[data-state=think]{background:
+    radial-gradient(70% 45% at 50% 55%,color-mix(in oklch,var(--gold) 24%,transparent),transparent 70%),
+    radial-gradient(60% 40% at 10% 10%,color-mix(in oklch,var(--terra) 42%,transparent),transparent 70%),
+    var(--bg)}
+.vm[data-state=speak]{background:
+    radial-gradient(80% 50% at 50% 38%,color-mix(in oklch,var(--gold) 36%,transparent),transparent 70%),
+    radial-gradient(60% 40% at 90% 90%,color-mix(in oklch,var(--terra) 38%,transparent),transparent 70%),
+    var(--bg)}
+.vmTop{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 12px}
+.vmRound{width:48px;height:48px;border-radius:99px;display:flex;align-items:center;justify-content:center;color:var(--ink);padding:0;cursor:pointer;flex:none}
+.vmPill{height:34px;padding:0 13px;border-radius:999px;display:flex;align-items:center;gap:7px;font:700 12px/1 var(--f);min-width:0;white-space:nowrap}
+.vmPill>span{overflow:hidden;text-overflow:ellipsis}
+.vmPill i{width:7px;height:7px;border-radius:99px;background:var(--terra);display:block;flex:none}
+.vm[data-state=think] .vmPill i{background:var(--gold)}
+.vm[data-state=speak] .vmPill i{background:var(--sage)}
+.vm[data-state=perm] .vmPill i{background:var(--ink-3)}
+.vmPane{display:none;flex:1;min-height:0;flex-direction:column}
+.vm[data-state=listen] .vmListen,.vm[data-state=think] .vmThink,.vm[data-state=speak] .vmSpeak,.vm[data-state=perm] .vmPerm{display:flex}
+.vmTask{flex:none;padding:22px 26px 0;text-align:center}
+.vmTask .k{font:600 12px/1 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.vmTask .q{font:500 15px/1.4 var(--f);color:var(--ink-2);margin-top:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.vmMid{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+
+/* живая расшифровка: ровно две строки, старая — 30 % непрозрачности */
+.vmLive{align-self:stretch;margin:-26px 28px 26px;position:relative;height:64px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.3) 0,rgba(0,0,0,.3) 42%,#000 58%,#000 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.3) 0,rgba(0,0,0,.3) 42%,#000 58%,#000 100%)}
+.vmLiveIn{position:absolute;left:0;right:0;top:32px;font:600 24px/32px var(--f);letter-spacing:-.015em;text-align:center;color:var(--ink);will-change:transform}
+.vmLiveIn.ph{color:var(--ink-3)}
+.vmLiveIn .caret{display:inline-block;width:2px;height:24px;background:var(--gold);margin-inline-start:3px;vertical-align:-4px}
+
+/* круги: внешний, средний, стеклянный центр */
+.vmRing{border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;will-change:transform;padding:0;background:none;color:inherit}
+.vmRing.o{width:210px;height:210px;border:1px solid color-mix(in oklch,var(--gold) 16%,transparent)}
+.vmRing.i{width:168px;height:168px;border:1px solid color-mix(in oklch,var(--gold) 30%,transparent);background:color-mix(in oklch,var(--gold) 6%,transparent)}
+.vmRing.dash{width:168px;height:168px;border:1px dashed color-mix(in oklch,var(--gold) 40%,transparent)}
+button.vmRing{cursor:pointer}
+.vmCore{width:126px;height:126px;border-radius:50%;display:flex;align-items:center;justify-content:center;gap:4px;flex:none;will-change:transform;
+  background:color-mix(in oklch,var(--ink) 10%,transparent);border:1px solid var(--tg-line);box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.vmCore.think{width:130px;height:130px}
+.vmSpeak .vmRing.o{width:200px;height:200px;border-color:color-mix(in oklch,var(--gold) 20%,transparent)}
+.vmSpeak .vmRing.i{width:166px;height:166px;border:1.5px solid color-mix(in oklch,var(--gold) 40%,transparent);background:none}
+.vmSpeak .vmCore{width:134px;height:134px}
+
+/* золотая волна: 5 px, радиус 9, промежуток 4 */
+.vmWave{display:flex;align-items:center;gap:4px;height:60px}
+.vmWave i{width:5px;border-radius:9px;background:var(--gold);display:block;animation:vmWave .45s ease-in-out infinite alternate}
+.vmWave.fast i{animation-duration:.38s}
+@keyframes vmWave{0%{transform:scaleY(.3)}100%{transform:scaleY(1)}}
+.vmWave i:nth-child(2){animation-delay:.12s}.vmWave i:nth-child(3){animation-delay:.24s}.vmWave i:nth-child(4){animation-delay:.36s}
+.vmWave i:nth-child(5){animation-delay:.48s}.vmWave i:nth-child(6){animation-delay:.6s}.vmWave i:nth-child(7){animation-delay:.72s}.vmWave i:nth-child(8){animation-delay:.84s}
+#vmWaveListen i:nth-child(1){height:14px}#vmWaveListen i:nth-child(2){height:30px}#vmWaveListen i:nth-child(3){height:46px}#vmWaveListen i:nth-child(4){height:26px}
+#vmWaveListen i:nth-child(5){height:38px}#vmWaveListen i:nth-child(6){height:18px}#vmWaveListen i:nth-child(7){height:10px}
+#vmWaveSpeak i:nth-child(1){height:12px}#vmWaveSpeak i:nth-child(2){height:26px}#vmWaveSpeak i:nth-child(3){height:44px}#vmWaveSpeak i:nth-child(4){height:22px}
+#vmWaveSpeak i:nth-child(5){height:36px}#vmWaveSpeak i:nth-child(6){height:16px}#vmWaveSpeak i:nth-child(7){height:28px}#vmWaveSpeak i:nth-child(8){height:10px}
+.vm.paused #vmWaveListen i,.vm.quiet #vmWaveSpeak i{animation-play-state:paused}
+
+.vmStatus{font:700 15px/1 var(--f)}
+.vmStatus .tm{color:var(--ink-3);font-weight:600}
+.vmStatus.big{font-size:16px}
+.vmBtns{flex:none;display:flex;justify-content:center;align-items:flex-start;gap:30px;padding:0 0 calc(40px + env(safe-area-inset-bottom,0px))}
+.vmSide{display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:none;padding:0;margin-top:13px;cursor:pointer;
+  font:600 11px/1 var(--f);color:var(--ink-2);min-width:64px}
+.vmSide>span{width:54px;height:54px;border-radius:99px;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.vmSide .rate{font:800 14px/1 var(--f)}
+.vmSide .icPlay,.vm.paused .vmSide .icPause{display:none}
+.vm.paused .vmSide .icPlay{display:block}
+.vmMain{width:80px;height:80px;border-radius:99px;border:0;background:var(--gold);color:var(--gold-ink);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex:none;box-shadow:0 0 0 8px color-mix(in oklch,var(--gold) 16%,transparent),0 16px 30px -10px color-mix(in oklch,var(--gold) 60%,transparent)}
+
+/* 3c: расшифровка, точки ожидания, этапы */
+.vmMine{flex:none;padding:56px 16px 0;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.vmMine .bub{max-width:280px;padding:12px 16px;border-radius:22px 22px 8px 22px;color:var(--gold-ink);font:600 15px/1.4 var(--f);
+  background:var(--gold);background:linear-gradient(135deg,color-mix(in oklch,var(--gold) 82%,white),color-mix(in oklch,var(--gold) 88%,var(--gold-ink)));
+  box-shadow:0 10px 24px -12px color-mix(in oklch,var(--gold) 70%,transparent);overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
+.vmMine .fix{display:flex;align-items:center;gap:5px;min-height:44px;padding:0 2px;border:0;background:none;cursor:pointer;font:600 11.5px/1 var(--f);color:var(--ink-2)}
+.vmDots{position:relative;width:60px;height:60px;display:block}
+.vmDots i{position:absolute;left:25px;top:25px;width:10px;height:10px;border-radius:99px;background:var(--ink);display:block;will-change:transform}
+.vmDots i:nth-child(1){transform:translateX(-16px)}.vmDots i:nth-child(3){transform:translateX(16px)}
+.vmSteps{flex:none;margin:0 16px calc(40px + env(safe-area-inset-bottom,0px));padding:14px 16px;border-radius:22px;display:flex;flex-direction:column;gap:11px;
+  font:600 13.5px/1.2 var(--f)}
+.vmSteps>span{display:flex;align-items:center;gap:10px}
+.vmSteps i{width:22px;height:22px;border-radius:99px;flex:none;display:flex;align-items:center;justify-content:center}
+.vmSteps i.ok{background:var(--sage)}
+.vmSteps i.ok::after{content:'';width:9px;height:5px;margin-top:-2px;border-left:2.6px solid var(--bg);border-bottom:2.6px solid var(--bg);transform:rotate(-45deg)}
+.vmSteps i.spin{border:2px solid var(--gold);border-right-color:transparent;animation:vmSpin .8s linear infinite}
+@keyframes vmSpin{to{transform:rotate(360deg)}}
+
+/* 3d: субтитры подсвечивают слово, которое звучит */
+.vmSpeakTop{flex:none;display:flex;justify-content:center;padding-top:26px}
+.vmSubs{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:0 26px;text-align:center;overflow:hidden;
+  font:600 21px/1.42 var(--f);letter-spacing:-.01em;text-wrap:balance;color:var(--ink-3)}
+.vmSubs.long{font-size:17px}
+.vmSubs>div{max-height:100%}
+.vmSubs .w.done{color:var(--ink)}
+.vmSubs .w.now{color:var(--gold-text);text-decoration:underline 2px var(--gold);text-underline-offset:5px}
+
+/* нет доступа к микрофону */
+.vmPermBox{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 32px calc(40px + env(safe-area-inset-bottom,0px));text-align:center}
+.vmCore.perm{width:96px;height:96px;color:var(--ink-2);margin-bottom:6px}
+.vmPermBox b{font:800 20px/1.2 var(--f)}
+.vmPermBox p{margin:0 0 8px;font:500 14px/1.5 var(--f);color:var(--ink-2);max-width:320px}
+.vmPermBox .btnGold,.vmPermBox .btnGhost{width:100%;max-width:300px}
+.vmPermBox .btnGhost{margin-top:0}
 .chatDock{flex:none;position:relative;z-index:1;padding:10px 12px calc(114px + env(safe-area-inset-bottom,0px));background:transparent}
 .chatDock .chips{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
 .chatDock .chips::-webkit-scrollbar{display:none}
@@ -795,7 +999,7 @@ html[dir=rtl] .toggle.on i{transform:translateX(-20px)}
 #toasts{position:absolute;left:0;right:0;bottom:calc(26px + env(safe-area-inset-bottom,0px));z-index:40;
   display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
 #toasts.tabs{bottom:calc(116px + env(safe-area-inset-bottom,0px))}
-#toasts.chat{bottom:calc(214px + env(safe-area-inset-bottom,0px))}
+#toasts.chat{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .toast{
   max-width:min(100%,460px);min-height:52px;padding:10px 16px;border-radius:18px;font:600 14px/1.3 var(--f);
   background:var(--ink);color:var(--bg);display:flex;align-items:center;gap:12px;text-align:start;
@@ -831,7 +1035,6 @@ html[dir=rtl] .toggle.on i{transform:translateX(-20px)}
 .spkBtn.big svg{width:22px;height:22px}
 .spkBtn.playing{background:var(--gold);color:var(--gold-ink);box-shadow:0 0 0 4px var(--gold-soft)}
 /* живой голос тренера: кнопка у ответа, автоозвучка в шапке, «Послушать» в настройках */
-.msgWrap .voiceBtn{margin-bottom:2px}
 @keyframes voicePulse{from{opacity:1}to{opacity:.38}}
 .spkBtn.loading,.voicePrev.loading{animation:voicePulse .8s ease-in-out infinite alternate}
 html.lite .spkBtn.loading,html.lite .voicePrev.loading{opacity:.55}
@@ -999,8 +1202,9 @@ html.lite .tabItem.sel svg{transform:none}
   #sheet .grip{display:none}
   #toasts{left:var(--railW)}
   #toasts.tabs{bottom:100px}
-  #toasts.chat{bottom:150px}
+  #toasts.chat{bottom:90px}
   .msg{max-width:min(620px,72%)}
+  #s-teacher .msgAi{max-width:min(560px,72%)}
   #tourTip{max-width:440px}
   .avGrid{grid-template-columns:repeat(10,1fr)}
   .medals{grid-template-columns:repeat(8,minmax(0,1fr))}
@@ -1256,35 +1460,125 @@ html.lite .tabItem.sel svg{transform:none}
 
   <!-- ============================ ТРЕНЕР ============================ -->
   <section class="screen" id="s-teacher">
-    <div class="tHead">
-      <span class="ava" style="--tint:var(--gold-soft)"><img src="assets/beaver-teacher.png" alt=""></span>
-      <span class="nm">
-        <b data-i18n="teacherTitle"></b>
-        <span><i></i><span data-i18n="teacherStatus"></span></span>
-      </span>
-      <button class="iconBtn voiceAutoBtn" id="voiceAutoBtn" onclick="toggleVoiceAuto()" data-aria="ariaVoiceAuto" aria-pressed="false">
-        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3l4 3.5v-12l-4 3.5H4z"></path><path d="M15.3 9.2a4 4 0 0 1 0 5.6"></path><path d="M18 6.5a7.5 7.5 0 0 1 0 11"></path></svg>
+    <!-- шапка: ✕ выход и стеклянная капсула; свайп вниз по шапке — тоже выход -->
+    <div class="tgHead" id="tgHead">
+      <button class="tgX glass" type="button" onclick="exitTrainer()" data-aria="ariaExitTrainer">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
       </button>
-      <button class="iconBtn" onclick="openTrainerInfo()" data-aria="ariaTrainerInfo">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 11v5.5"></path><path d="M12 7.6v.1"></path></svg>
-      </button>
+      <div class="tgCap glass">
+        <button class="tgWho" type="button" onclick="openTrainerInfo()" data-aria="ariaTrainerInfo">
+          <span class="tgAva"><img src="assets/beaver-teacher.png" alt=""></span>
+          <span class="tgNm"><b data-i18n="teacherTitle"></b><span><i aria-hidden="true"></i><span data-i18n="teacherOnline"></span></span></span>
+        </button>
+        <button class="tgLang" id="tgLang" type="button" onclick="openLangSheet()" aria-haspopup="dialog"></button>
+      </div>
     </div>
 
     <div class="scroll" id="chatBox" role="log" aria-live="polite" aria-relevant="additions text" data-aria="ariaChatLog"></div>
 
     <div class="chatDock">
       <div class="chips" id="teacherChips"></div>
-      <div class="inputPill">
-        <button class="plus" onclick="openChatPlus()" data-aria="ariaChatPlus">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      <div class="inputPill glass">
+        <button class="plus" type="button" onclick="openChatPlus()" data-aria="ariaChatPlus">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
         </button>
         <input id="chatInput" placeholder="…" data-aria="chatPh" onkeydown="if(event.key==='Enter')sendChat()" oninput="paintSendBtn()">
-        <button class="iconBtn mic hidden" id="btnMic" onclick="toggleDictation()" data-aria="ariaMic">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3.5" width="6" height="11" rx="3"></rect><path d="M6 11.5a6 6 0 0 0 12 0M12 17.5v3"></path></svg>
+        <button class="voiceGo hidden" id="btnVoice" type="button" onclick="openVoiceMode()" data-aria="ariaVoiceMode">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"></path></svg>
+          <span data-i18n="voiceGo"></span>
         </button>
-        <button class="send" id="btnSend" onclick="sendChat()" data-aria="ariaSend">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V6"></path><path d="M6 12l6-6 6 6"></path></svg>
+        <button class="send" id="btnSend" type="button" onclick="sendChat()" data-aria="ariaSend">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6"></path><path d="M6 12l6-6 6 6"></path></svg>
         </button>
+      </div>
+    </div>
+
+    <!-- голосовой режим: слушаю → думает → отвечает → снова слушаю -->
+    <div class="vm" id="vm" data-state="listen" hidden>
+      <div class="vmTop">
+        <button class="vmRound glass" type="button" onclick="exitTrainer()" data-aria="ariaExitTrainer">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+        <span class="vmPill glass"><i aria-hidden="true"></i><span id="vmPillTx"></span></span>
+        <button class="vmRound glass" type="button" onclick="closeVoiceMode()" data-aria="vmChat">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H10l-4 3.5v-3.5a2 2 0 0 1-1.5-2z"></path></svg>
+        </button>
+      </div>
+
+      <!-- 3b · слушаю -->
+      <div class="vmPane vmListen">
+        <div class="vmTask"><div class="k" data-i18n="vmAsk"></div><div class="q" id="vmQ"></div></div>
+        <div class="vmMid">
+          <div class="vmLive" aria-live="polite"><div class="vmLiveIn" id="vmLive"></div></div>
+          <span class="vmRing o" data-ring="listen-o"><span class="vmRing i" data-ring="listen-i"><span class="vmCore">
+            <span class="vmWave" id="vmWaveListen" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </span></span></span>
+          <div class="vmStatus"><span id="vmStatusTx"></span> <span class="tm" id="vmTimer">0:00</span></div>
+        </div>
+        <div class="vmBtns">
+          <button class="vmSide" type="button" onclick="vmCancel()"><span class="glass">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"></path></svg>
+          </span><small data-i18n="vmCancel"></small></button>
+          <button class="vmMain" type="button" onclick="vmSend()" data-aria="vmSend">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+          </button>
+          <button class="vmSide" type="button" id="vmPauseBtn" onclick="vmTogglePause()"><span class="glass">
+            <svg class="icPause" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><rect x="6.5" y="5" width="4" height="14" rx="1.3"></rect><rect x="13.5" y="5" width="4" height="14" rx="1.3"></rect></svg>
+            <svg class="icPlay" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"></path></svg>
+          </span><small id="vmPauseTx"></small></button>
+        </div>
+      </div>
+
+      <!-- 3c · отправлено, Учитель думает -->
+      <div class="vmPane vmThink">
+        <div class="vmMine">
+          <div class="bub" id="vmMineTx"></div>
+          <button class="fix" type="button" onclick="vmFixText()">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"></path></svg>
+            <span data-i18n="vmFix"></span>
+          </button>
+        </div>
+        <div class="vmMid">
+          <span class="vmRing dash" data-ring="think-o"><span class="vmCore think">
+            <span class="vmDots" id="vmDots" role="img" data-aria="vmThinking"><i></i><i></i><i></i></span>
+          </span></span>
+          <div class="vmStatus big" data-i18n="vmThinking"></div>
+        </div>
+        <div class="vmSteps glass">
+          <span><i class="ok"></i><span id="vmStepRec"></span></span>
+          <span><i class="ok"></i><span data-i18n="vmStepText"></span></span>
+          <span><i class="spin"></i><span data-i18n="vmStepVoice"></span></span>
+        </div>
+      </div>
+
+      <!-- 3d · Учитель отвечает -->
+      <div class="vmPane vmSpeak">
+        <div class="vmSpeakTop">
+          <button class="vmRing o" type="button" data-ring="speak-o" onclick="vmStopSpeech()" data-aria="vmStopSpeech"><span class="vmRing i" data-ring="speak-i"><span class="vmCore">
+            <span class="vmWave fast" id="vmWaveSpeak" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </span></span></button>
+        </div>
+        <div class="vmSubs" id="vmSubs" aria-live="polite"></div>
+        <div class="vmBtns">
+          <button class="vmSide" type="button" onclick="vmRepeat()"><span class="glass">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"></path><path d="M4 4v4.5h4.5"></path></svg>
+          </span><small data-i18n="vmRepeat"></small></button>
+          <button class="vmMain" type="button" onclick="vmReply()" data-aria="vmReply">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"></path></svg>
+          </button>
+          <button class="vmSide" type="button" onclick="vmCycleSpeed()"><span class="glass rate" id="vmRateTx">1×</span><small data-i18n="vmSpeed"></small></button>
+        </div>
+      </div>
+
+      <!-- нет доступа к микрофону -->
+      <div class="vmPane vmPerm">
+        <div class="vmPermBox">
+          <span class="vmCore perm"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3.5" width="6" height="11" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"></path><path d="M4 4l16 16"></path></svg></span>
+          <b data-i18n="vmMicTitle"></b>
+          <p data-i18n="vmMicBody"></p>
+          <button class="btnGold" type="button" onclick="vmStartListen()" data-i18n="vmMicRetry"></button>
+          <button class="btnGhost" type="button" onclick="closeVoiceMode()" data-i18n="vmChat"></button>
+        </div>
       </div>
     </div>
   </section>
@@ -2222,6 +2516,23 @@ ar:{voiceTitle:"صوت المعلّم",voiceAuto:"قراءة الردود بصو
 tr:{voiceTitle:"Öğretmenin sesi",voiceAuto:"Yanıtları otomatik sesli oku",voicePick:"Ses",voicePreview:"Dinle",voiceSample:"Merhaba! Ben öğretmeninim — bugün birlikte birkaç yeni kelime öğrenelim.",voiceNote:"Canlı ses Gemini anahtarınla çalışır ve onun limitlerinden düşer.",voiceOn:"açık",voiceOff:"kapalı",voiceFallback:"Canlı ses şu an kullanılamıyor — tarayıcı sesiyle okuyorum",voiceNoModel:"Anahtarın ses modellerine erişim vermiyor — tarayıcı sesiyle okuyorum",ariaVoicePlay:"Yanıtı dinle",ariaVoiceStop:"Durdur",ariaVoiceAuto:"Yanıtları otomatik okuma"}
 };
 Object.keys(I18N_EXT15).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT15[code]); });
+
+/* Пакет 6 — Тренер на весь экран: стеклянный чат, меню ответа, голосовой режим */
+const I18N_EXT16 = {
+en:{ariaExitTrainer:"Leave the tutor",teacherOnline:"online",ariaTeacherLang:"Learning {lang}, level {level}. Change",voiceGo:"Voice",ariaVoiceMode:"Voice mode",ariaMsgActions:"Reply actions",menuSpeak:"Read aloud",menuStop:"Stop",menuMoreEx:"Another example",menuMoreDetail:"Explain in more detail",echoMoreEx:"Give me another example of this",echoMoreDetail:"Explain in more detail, I didn't get it",vmPill:"Voice mode · {lang}",vmChat:"Chat",vmAsk:"Tutor's question",vmListening:"Listening…",vmPaused:"Paused",vmCancel:"Cancel",vmSend:"Send",vmPause:"Pause",vmResume:"Resume",vmFix:"Edit text",vmThinking:"The tutor is thinking",vmStepRec:"Recording · {t}",vmStepText:"Transcribed to text",vmStepVoice:"Preparing a voice reply",vmRepeat:"Repeat",vmReply:"Reply",vmSpeed:"Speed",vmStopSpeech:"Stop speaking",vmNoNet:"No connection, try again",vmNotHeard:"Didn't catch that, say it again",vmNoSupport:"Voice mode doesn't work in this browser — try Chrome or Safari",vmMicTitle:"Microphone access needed",vmMicBody:"Allow the microphone for this site: the lock or «Aa» icon in the address bar → Microphone → Allow. Then tap «Try again».",vmMicRetry:"Try again",vmVad:"Send after a pause in speech",vmSpeakNow:"Speak — I'm listening"},
+ru:{ariaExitTrainer:"Выйти из Тренера",teacherOnline:"онлайн",ariaTeacherLang:"Язык обучения: {lang}, уровень {level}. Изменить",voiceGo:"Голос",ariaVoiceMode:"Голосовой режим",ariaMsgActions:"Действия с ответом",menuSpeak:"Озвучить",menuStop:"Остановить",menuMoreEx:"Ещё пример",menuMoreDetail:"Написать подробнее",echoMoreEx:"Дай ещё пример к этому",echoMoreDetail:"Объясни подробнее, я не понял тему",vmPill:"Голосовой режим · {lang}",vmChat:"Чат",vmAsk:"Вопрос Учителя",vmListening:"Слушаю…",vmPaused:"На паузе",vmCancel:"Отмена",vmSend:"Отправить",vmPause:"Пауза",vmResume:"Дальше",vmFix:"Исправить текст",vmThinking:"Учитель думает",vmStepRec:"Запись · {t}",vmStepText:"Расшифровано в текст",vmStepVoice:"Готовлю голосовой ответ",vmRepeat:"Повторить",vmReply:"Ответить",vmSpeed:"Скорость",vmStopSpeech:"Остановить речь",vmNoNet:"Нет связи, попробуй ещё раз",vmNotHeard:"Не расслышал, повтори",vmNoSupport:"Голосовой режим не работает в этом браузере — попробуй Chrome или Safari",vmMicTitle:"Нужен доступ к микрофону",vmMicBody:"Разреши микрофон для этого сайта: значок замка или «Aa» в адресной строке → Микрофон → Разрешить. Потом нажми «Попробовать снова».",vmMicRetry:"Попробовать снова",vmVad:"Отправлять после паузы в речи",vmSpeakNow:"Говори — я слушаю"},
+es:{ariaExitTrainer:"Salir del profesor",teacherOnline:"en línea",ariaTeacherLang:"Idioma que estudias: {lang}, nivel {level}. Cambiar",voiceGo:"Voz",ariaVoiceMode:"Modo de voz",ariaMsgActions:"Acciones con la respuesta",menuSpeak:"Leer en voz alta",menuStop:"Detener",menuMoreEx:"Otro ejemplo",menuMoreDetail:"Explicar con más detalle",echoMoreEx:"Dame otro ejemplo de esto",echoMoreDetail:"Explícalo con más detalle, no lo entendí",vmPill:"Modo de voz · {lang}",vmChat:"Chat",vmAsk:"Pregunta del profesor",vmListening:"Te escucho…",vmPaused:"En pausa",vmCancel:"Cancelar",vmSend:"Enviar",vmPause:"Pausa",vmResume:"Seguir",vmFix:"Corregir texto",vmThinking:"El profesor está pensando",vmStepRec:"Grabación · {t}",vmStepText:"Transcrito a texto",vmStepVoice:"Preparando la respuesta de voz",vmRepeat:"Repetir",vmReply:"Responder",vmSpeed:"Velocidad",vmStopSpeech:"Detener la voz",vmNoNet:"Sin conexión, inténtalo de nuevo",vmNotHeard:"No te he oído bien, repítelo",vmNoSupport:"El modo de voz no funciona en este navegador: prueba Chrome o Safari",vmMicTitle:"Necesito acceso al micrófono",vmMicBody:"Permite el micrófono para este sitio: el candado o «Aa» en la barra de direcciones → Micrófono → Permitir. Luego toca «Intentar de nuevo».",vmMicRetry:"Intentar de nuevo",vmVad:"Enviar tras una pausa al hablar",vmSpeakNow:"Habla, te escucho"},
+fr:{ariaExitTrainer:"Quitter le coach",teacherOnline:"en ligne",ariaTeacherLang:"Langue étudiée : {lang}, niveau {level}. Modifier",voiceGo:"Voix",ariaVoiceMode:"Mode vocal",ariaMsgActions:"Actions sur la réponse",menuSpeak:"Lire à voix haute",menuStop:"Arrêter",menuMoreEx:"Un autre exemple",menuMoreDetail:"Expliquer plus en détail",echoMoreEx:"Donne-moi un autre exemple",echoMoreDetail:"Explique plus en détail, je n'ai pas compris",vmPill:"Mode vocal · {lang}",vmChat:"Chat",vmAsk:"Question du coach",vmListening:"J'écoute…",vmPaused:"En pause",vmCancel:"Annuler",vmSend:"Envoyer",vmPause:"Pause",vmResume:"Reprendre",vmFix:"Corriger le texte",vmThinking:"Le coach réfléchit",vmStepRec:"Enregistrement · {t}",vmStepText:"Transcrit en texte",vmStepVoice:"Je prépare la réponse vocale",vmRepeat:"Répéter",vmReply:"Répondre",vmSpeed:"Vitesse",vmStopSpeech:"Arrêter la voix",vmNoNet:"Pas de connexion, réessaie",vmNotHeard:"Je n'ai pas bien entendu, répète",vmNoSupport:"Le mode vocal ne marche pas dans ce navigateur — essaie Chrome ou Safari",vmMicTitle:"Accès au micro nécessaire",vmMicBody:"Autorise le micro pour ce site : le cadenas ou « Aa » dans la barre d'adresse → Micro → Autoriser. Puis touche « Réessayer ».",vmMicRetry:"Réessayer",vmVad:"Envoyer après une pause dans la parole",vmSpeakNow:"Parle, j'écoute"},
+de:{ariaExitTrainer:"Trainer verlassen",teacherOnline:"online",ariaTeacherLang:"Lernsprache: {lang}, Niveau {level}. Ändern",voiceGo:"Stimme",ariaVoiceMode:"Sprachmodus",ariaMsgActions:"Aktionen zur Antwort",menuSpeak:"Vorlesen",menuStop:"Stoppen",menuMoreEx:"Noch ein Beispiel",menuMoreDetail:"Ausführlicher erklären",echoMoreEx:"Gib mir noch ein Beispiel dazu",echoMoreDetail:"Erklär das ausführlicher, ich hab's nicht verstanden",vmPill:"Sprachmodus · {lang}",vmChat:"Chat",vmAsk:"Frage des Trainers",vmListening:"Ich höre zu…",vmPaused:"Pausiert",vmCancel:"Abbrechen",vmSend:"Senden",vmPause:"Pause",vmResume:"Weiter",vmFix:"Text korrigieren",vmThinking:"Der Trainer denkt nach",vmStepRec:"Aufnahme · {t}",vmStepText:"In Text umgewandelt",vmStepVoice:"Sprachantwort wird vorbereitet",vmRepeat:"Wiederholen",vmReply:"Antworten",vmSpeed:"Tempo",vmStopSpeech:"Sprechen stoppen",vmNoNet:"Keine Verbindung, versuch es noch mal",vmNotHeard:"Nicht verstanden, sag es noch mal",vmNoSupport:"Der Sprachmodus funktioniert in diesem Browser nicht — versuch Chrome oder Safari",vmMicTitle:"Mikrofonzugriff nötig",vmMicBody:"Erlaube das Mikrofon für diese Seite: Schloss- oder „Aa“-Symbol in der Adressleiste → Mikrofon → Zulassen. Dann tippe auf „Noch mal versuchen“.",vmMicRetry:"Noch mal versuchen",vmVad:"Nach einer Sprechpause senden",vmSpeakNow:"Sprich — ich höre zu"},
+it:{ariaExitTrainer:"Esci dall'insegnante",teacherOnline:"online",ariaTeacherLang:"Lingua di studio: {lang}, livello {level}. Cambia",voiceGo:"Voce",ariaVoiceMode:"Modalità vocale",ariaMsgActions:"Azioni sulla risposta",menuSpeak:"Leggi ad alta voce",menuStop:"Ferma",menuMoreEx:"Un altro esempio",menuMoreDetail:"Spiega più nel dettaglio",echoMoreEx:"Dammi un altro esempio",echoMoreDetail:"Spiegamelo meglio, non ho capito",vmPill:"Modalità vocale · {lang}",vmChat:"Chat",vmAsk:"Domanda dell'insegnante",vmListening:"Ti ascolto…",vmPaused:"In pausa",vmCancel:"Annulla",vmSend:"Invia",vmPause:"Pausa",vmResume:"Riprendi",vmFix:"Correggi il testo",vmThinking:"L'insegnante sta pensando",vmStepRec:"Registrazione · {t}",vmStepText:"Trascritto in testo",vmStepVoice:"Preparo la risposta vocale",vmRepeat:"Ripeti",vmReply:"Rispondi",vmSpeed:"Velocità",vmStopSpeech:"Ferma la voce",vmNoNet:"Nessuna connessione, riprova",vmNotHeard:"Non ho sentito bene, ripeti",vmNoSupport:"La modalità vocale non funziona in questo browser: prova Chrome o Safari",vmMicTitle:"Serve l'accesso al microfono",vmMicBody:"Consenti il microfono per questo sito: il lucchetto o «Aa» nella barra degli indirizzi → Microfono → Consenti. Poi tocca «Riprova».",vmMicRetry:"Riprova",vmVad:"Invia dopo una pausa nel parlato",vmSpeakNow:"Parla, ti ascolto"},
+pt:{ariaExitTrainer:"Sair do treinador",teacherOnline:"online",ariaTeacherLang:"Idioma de estudo: {lang}, nível {level}. Alterar",voiceGo:"Voz",ariaVoiceMode:"Modo de voz",ariaMsgActions:"Ações da resposta",menuSpeak:"Ouvir",menuStop:"Parar",menuMoreEx:"Outro exemplo",menuMoreDetail:"Explicar com mais detalhes",echoMoreEx:"Me dá outro exemplo disso",echoMoreDetail:"Explica com mais detalhes, não entendi",vmPill:"Modo de voz · {lang}",vmChat:"Chat",vmAsk:"Pergunta do treinador",vmListening:"Ouvindo…",vmPaused:"Pausado",vmCancel:"Cancelar",vmSend:"Enviar",vmPause:"Pausar",vmResume:"Continuar",vmFix:"Corrigir texto",vmThinking:"O treinador está pensando",vmStepRec:"Gravação · {t}",vmStepText:"Transcrito em texto",vmStepVoice:"Preparando a resposta em voz",vmRepeat:"Repetir",vmReply:"Responder",vmSpeed:"Velocidade",vmStopSpeech:"Parar a fala",vmNoNet:"Sem conexão, tente de novo",vmNotHeard:"Não entendi, repita",vmNoSupport:"O modo de voz não funciona neste navegador — tente o Chrome ou o Safari",vmMicTitle:"Precisa de acesso ao microfone",vmMicBody:"Permita o microfone para este site: o cadeado ou «Aa» na barra de endereço → Microfone → Permitir. Depois toque em «Tentar de novo».",vmMicRetry:"Tentar de novo",vmVad:"Enviar após uma pausa na fala",vmSpeakNow:"Fale, estou ouvindo"},
+zh:{ariaExitTrainer:"离开老师页面",teacherOnline:"在线",ariaTeacherLang:"学习语言：{lang}，水平 {level}。更改",voiceGo:"语音",ariaVoiceMode:"语音模式",ariaMsgActions:"回复操作",menuSpeak:"朗读",menuStop:"停止",menuMoreEx:"再举一个例子",menuMoreDetail:"讲得更详细些",echoMoreEx:"再给我举一个例子",echoMoreDetail:"讲得更详细些，我没听懂",vmPill:"语音模式 · {lang}",vmChat:"聊天",vmAsk:"老师的问题",vmListening:"正在听…",vmPaused:"已暂停",vmCancel:"取消",vmSend:"发送",vmPause:"暂停",vmResume:"继续",vmFix:"修改文字",vmThinking:"老师在思考",vmStepRec:"录音 · {t}",vmStepText:"已转成文字",vmStepVoice:"正在准备语音回复",vmRepeat:"重听",vmReply:"回答",vmSpeed:"语速",vmStopSpeech:"停止朗读",vmNoNet:"没有网络，请再试一次",vmNotHeard:"没听清，请再说一遍",vmNoSupport:"此浏览器不支持语音模式，请试试 Chrome 或 Safari",vmMicTitle:"需要麦克风权限",vmMicBody:"请为此网站允许麦克风：点地址栏里的锁形或「Aa」图标 → 麦克风 → 允许。然后点「再试一次」。",vmMicRetry:"再试一次",vmVad:"说话停顿后自动发送",vmSpeakNow:"说吧，我在听"},
+ja:{ariaExitTrainer:"先生の画面を閉じる",teacherOnline:"オンライン",ariaTeacherLang:"学習言語：{lang}、レベル {level}。変更",voiceGo:"音声",ariaVoiceMode:"音声モード",ariaMsgActions:"返信の操作",menuSpeak:"読み上げる",menuStop:"停止",menuMoreEx:"別の例",menuMoreDetail:"もっと詳しく",echoMoreEx:"これの例をもう一つください",echoMoreDetail:"もっと詳しく説明して。よく分からなかった",vmPill:"音声モード · {lang}",vmChat:"チャット",vmAsk:"先生の質問",vmListening:"聞いています…",vmPaused:"一時停止中",vmCancel:"キャンセル",vmSend:"送信",vmPause:"一時停止",vmResume:"再開",vmFix:"テキストを直す",vmThinking:"先生が考えています",vmStepRec:"録音 · {t}",vmStepText:"テキストに変換しました",vmStepVoice:"音声の返事を準備中",vmRepeat:"もう一度",vmReply:"答える",vmSpeed:"速さ",vmStopSpeech:"読み上げを止める",vmNoNet:"接続がありません。もう一度試してください",vmNotHeard:"聞き取れませんでした。もう一度どうぞ",vmNoSupport:"このブラウザでは音声モードが使えません。Chrome か Safari を試してください",vmMicTitle:"マイクへのアクセスが必要です",vmMicBody:"このサイトでマイクを許可してください：アドレスバーの鍵または「Aa」アイコン → マイク → 許可。その後「もう一度試す」をタップ。",vmMicRetry:"もう一度試す",vmVad:"話し終えて間があいたら送信",vmSpeakNow:"どうぞ、聞いています"},
+ko:{ariaExitTrainer:"선생님 화면 나가기",teacherOnline:"온라인",ariaTeacherLang:"학습 언어: {lang}, 레벨 {level}. 변경",voiceGo:"음성",ariaVoiceMode:"음성 모드",ariaMsgActions:"답변 작업",menuSpeak:"읽어 주기",menuStop:"정지",menuMoreEx:"예시 하나 더",menuMoreDetail:"더 자세히 설명",echoMoreEx:"이것의 예시를 하나 더 주세요",echoMoreDetail:"더 자세히 설명해 주세요, 이해하지 못했어요",vmPill:"음성 모드 · {lang}",vmChat:"채팅",vmAsk:"선생님의 질문",vmListening:"듣고 있어요…",vmPaused:"일시정지됨",vmCancel:"취소",vmSend:"보내기",vmPause:"일시정지",vmResume:"계속",vmFix:"텍스트 고치기",vmThinking:"선생님이 생각 중이에요",vmStepRec:"녹음 · {t}",vmStepText:"텍스트로 변환됨",vmStepVoice:"음성 답변 준비 중",vmRepeat:"다시 듣기",vmReply:"대답하기",vmSpeed:"속도",vmStopSpeech:"말하기 멈추기",vmNoNet:"연결이 없어요, 다시 시도해 주세요",vmNotHeard:"잘 못 들었어요, 다시 말해 주세요",vmNoSupport:"이 브라우저에서는 음성 모드가 안 돼요 — Chrome이나 Safari를 써 보세요",vmMicTitle:"마이크 권한이 필요해요",vmMicBody:"이 사이트에 마이크를 허용해 주세요: 주소창의 자물쇠 또는 「Aa」 아이콘 → 마이크 → 허용. 그다음 「다시 시도」를 누르세요.",vmMicRetry:"다시 시도",vmVad:"말을 멈추면 자동으로 보내기",vmSpeakNow:"말해 보세요, 듣고 있어요"},
+ar:{ariaExitTrainer:"الخروج من المعلّم",teacherOnline:"متصل",ariaTeacherLang:"لغة التعلّم: {lang}، المستوى {level}. تغيير",voiceGo:"صوت",ariaVoiceMode:"الوضع الصوتي",ariaMsgActions:"إجراءات الرد",menuSpeak:"قراءة بصوت عالٍ",menuStop:"إيقاف",menuMoreEx:"مثال آخر",menuMoreDetail:"شرح أكثر تفصيلًا",echoMoreEx:"أعطني مثالًا آخر على هذا",echoMoreDetail:"اشرح بتفصيل أكثر، لم أفهم",vmPill:"الوضع الصوتي · {lang}",vmChat:"المحادثة",vmAsk:"سؤال المعلّم",vmListening:"أستمع…",vmPaused:"متوقف مؤقتًا",vmCancel:"إلغاء",vmSend:"إرسال",vmPause:"إيقاف مؤقت",vmResume:"متابعة",vmFix:"تصحيح النص",vmThinking:"المعلّم يفكّر",vmStepRec:"التسجيل · {t}",vmStepText:"تم التحويل إلى نص",vmStepVoice:"أجهّز الرد الصوتي",vmRepeat:"إعادة",vmReply:"الرد",vmSpeed:"السرعة",vmStopSpeech:"إيقاف الكلام",vmNoNet:"لا يوجد اتصال، حاول مرة أخرى",vmNotHeard:"لم أسمع جيدًا، كرّر",vmNoSupport:"الوضع الصوتي لا يعمل في هذا المتصفح — جرّب Chrome أو Safari",vmMicTitle:"يلزم الوصول إلى الميكروفون",vmMicBody:"اسمح بالميكروفون لهذا الموقع: أيقونة القفل أو «Aa» في شريط العنوان ← الميكروفون ← سماح. ثم اضغط «حاول مرة أخرى».",vmMicRetry:"حاول مرة أخرى",vmVad:"الإرسال بعد توقف في الكلام",vmSpeakNow:"تكلّم، أنا أستمع"},
+tr:{ariaExitTrainer:"Öğretmenden çık",teacherOnline:"çevrimiçi",ariaTeacherLang:"Öğrenilen dil: {lang}, seviye {level}. Değiştir",voiceGo:"Ses",ariaVoiceMode:"Sesli mod",ariaMsgActions:"Yanıt işlemleri",menuSpeak:"Sesli oku",menuStop:"Durdur",menuMoreEx:"Bir örnek daha",menuMoreDetail:"Daha ayrıntılı anlat",echoMoreEx:"Buna bir örnek daha ver",echoMoreDetail:"Daha ayrıntılı anlat, konuyu anlamadım",vmPill:"Sesli mod · {lang}",vmChat:"Sohbet",vmAsk:"Öğretmenin sorusu",vmListening:"Dinliyorum…",vmPaused:"Duraklatıldı",vmCancel:"İptal",vmSend:"Gönder",vmPause:"Duraklat",vmResume:"Devam",vmFix:"Metni düzelt",vmThinking:"Öğretmen düşünüyor",vmStepRec:"Kayıt · {t}",vmStepText:"Metne çevrildi",vmStepVoice:"Sesli yanıt hazırlanıyor",vmRepeat:"Tekrarla",vmReply:"Yanıtla",vmSpeed:"Hız",vmStopSpeech:"Konuşmayı durdur",vmNoNet:"Bağlantı yok, tekrar dene",vmNotHeard:"Duyamadım, tekrar söyle",vmNoSupport:"Sesli mod bu tarayıcıda çalışmıyor — Chrome ya da Safari'yi dene",vmMicTitle:"Mikrofon izni gerekli",vmMicBody:"Bu site için mikrofona izin ver: adres çubuğundaki kilit ya da «Aa» simgesi → Mikrofon → İzin ver. Sonra «Tekrar dene»ye dokun.",vmMicRetry:"Tekrar dene",vmVad:"Konuşmada duraklayınca gönder",vmSpeakNow:"Konuş, dinliyorum"}
+};
+Object.keys(I18N_EXT16).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT16[code]); });
 // путь — карусель тем
 const I18N_EXT14 = {
 en:{"pathOf":"topic {n} of {total}","pathBadgeDone":"Done","pathBadgeNow":"Now","pathBadgeMin":"{n} min","pathStateLocked":"locked","pathReview":"Review topic","pathOpensAfter":"Opens after topic {n}","pathLvlOpensAfter":"Opens after {lvl}","pathPrev":"Previous topic","pathNext":"Next topic","pathCarousel":"carousel","pathSlide":"topic","pathCarouselLbl":"Topics of level {lvl}","pathTickLbl":"Topic {n}","pathCardLbl":"Topic {n} of {total}: {title}, {state}"},
@@ -2710,19 +3021,90 @@ function voiceChunks(text){
 
 // кэш «голос|кусок» → AudioBuffer: повторное прослушивание не ходит в сеть
 const voiceCache = new Map();
-function voiceChunk(text, voice){
-  const key = voice + '|' + text;
+// rate < 1 — тот же звук, растянутый на устройстве: в сеть второй раз не ходим
+function voiceChunk(text, voice, rate){
+  const r = rate || 1;
+  const key = voice + '|' + r + '|' + text;
   if(voiceCache.has(key)){
     const b = voiceCache.get(key);
     voiceCache.delete(key); voiceCache.set(key, b);
     return Promise.resolve(b);
   }
-  return ttsSynthesize(text, voice).then(r=>{
-    const buf = pcmToBuffer(r.data, r.rate);
-    voiceCache.set(key, buf);
+  const base = r === 1
+    ? ttsSynthesize(text, voice).then(res => pcmToBuffer(res.data, res.rate))
+    : voiceChunk(text, voice, 1);
+  return base.then(buf=>{
+    const out = r === 1 ? buf : stretchBuffer(buf, r);
+    voiceCache.set(key, out);
     while(voiceCache.size > VOICE_CACHE_MAX) voiceCache.delete(voiceCache.keys().next().value);
-    return buf;
+    return out;
   });
+}
+
+/*
+   Замедление без «пьяного» голоса. playbackRate у Web Audio тянет и высоту
+   тона: на 0.6× тренер басит. Поэтому звук растягивается по времени
+   методом WSOLA: окна по 32 мс накладываются внахлёст, и каждое следующее
+   сдвигается в пределах ±8 мс туда, где оно лучше всего совпадает по форме
+   с продолжением предыдущего, — тогда стыков не слышно. Корреляция
+   считается по каждому третьему отсчёту: на 20 с речи это десятки мс.
+*/
+function stretchPcm(x, rate){
+  const N = 768, H = N >> 1, Ha = H * rate, TOL = 192, STEP = 3;
+  const win = new Float32Array(N);
+  for(let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+  const outLen = Math.ceil(x.length / rate) + N;
+  const y = new Float32Array(outLen), norm = new Float32Array(outLen);
+  let prev = 0, last = 0;
+  for(let k = 0, outPos = 0; outPos + N < outLen; k++, outPos += H){
+    const nominal = Math.round(k * Ha);
+    let best = nominal;
+    const nat = prev + H;
+    if(k > 0 && nat + H <= x.length){
+      let bestC = -Infinity;
+      for(let d = -TOL; d <= TOL; d += STEP){
+        const p = nominal + d;
+        if(p < 0 || p + N > x.length) continue;
+        let c = 0;
+        for(let i = 0; i < H; i += STEP) c += x[p + i] * x[nat + i];
+        if(c > bestC){ bestC = c; best = p; }
+      }
+    }
+    if(best < 0 || best + N > x.length) break;
+    for(let i = 0; i < N; i++){ y[outPos + i] += x[best + i] * win[i]; norm[outPos + i] += win[i]; }
+    prev = best; last = outPos + N;
+  }
+  for(let i = 0; i < last; i++) if(norm[i] > 1e-3) y[i] /= norm[i];
+  return y.subarray(0, Math.max(1, last));
+}
+function stretchBuffer(buf, rate){
+  const y = stretchPcm(buf.getChannelData(0), rate);
+  const out = voiceCtx.createBuffer(1, y.length, buf.sampleRate);
+  out.getChannelData(0).set(y);
+  return out;
+}
+
+// весь живой голос идёт через анализатор: по нему пульсируют круги
+let voiceAnalyser = null;
+function voiceOut(ctx){
+  if(!voiceAnalyser || voiceAnalyser.context !== ctx){
+    try{
+      voiceAnalyser = ctx.createAnalyser();
+      voiceAnalyser.fftSize = 512;
+      voiceAnalyser.connect(ctx.destination);
+    }catch(e){ voiceAnalyser = null; return ctx.destination; }
+  }
+  return voiceAnalyser;
+}
+// громкость 0…1 по среднеквадратичному уровню; речь редко выше 0.25 RMS
+let rmsBuf = null;
+function levelOf(an){
+  if(!an) return 0;
+  if(!rmsBuf || rmsBuf.length !== an.fftSize) rmsBuf = new Float32Array(an.fftSize);
+  an.getFloatTimeDomainData(rmsBuf);
+  let s = 0;
+  for(let i = 0; i < rmsBuf.length; i++) s += rmsBuf[i] * rmsBuf[i];
+  return Math.min(1, Math.sqrt(s / rmsBuf.length) * 5);
 }
 
 /*
@@ -2776,15 +3158,18 @@ function voiceFallback(plain, btn, lang, why){
   speak(plain, lang || settings.native_lang, btn);
 }
 
-function voiceFail(e, plain, btn, lang){
+function voiceFail(e, plain, btn, lang, onFail, fallback){
   dlog('voice:', e);
   if(e && (e.code === 'network' || e.code === 'timeout' || e.code === 'busy' || isNetworkError(e))){
     paintVoiceBtn(btn, ''); voiceBtn = null;
     toast(t(friendlyError(e)));
+    if(onFail) onFail(e);
     return;
   }
   // key / quota / notfound / region / nomodel и прочее — голос браузера
-  voiceFallback(plain, btn, lang, ttsCandidates.length ? 'voiceFallback' : 'voiceNoModel');
+  const why = ttsCandidates.length ? 'voiceFallback' : 'voiceNoModel';
+  if(fallback) fallback(why);
+  else voiceFallback(plain, btn, lang, why);
 }
 
 function waitCtxTime(ctx, when){
@@ -2792,32 +3177,48 @@ function waitCtxTime(ctx, when){
   return ms > 0 ? new Promise(res => setTimeout(res, ms)) : Promise.resolve();
 }
 
-async function playVoice(text, btn, lang){
+/*
+   opts — для голосового режима: rate — скорость (1, 0.8, 0.6);
+   onChunk(i, текст, начало, длительность) — кусок встал в очередь, по нему
+   идут субтитры; onEnd() — ответ дозвучал сам (не остановлен);
+   onFallback(текст) — живого голоса нет, читает сам режим; onFail(e) —
+   сбой сети. Кнопка в чате вызывает без opts.
+*/
+async function playVoice(text, btn, lang, opts){
+  const o = opts || {};
   stopVoice();
   const my = voiceToken;
   const plain = speakableText(text);
   const chunks = voiceChunks(plain);
-  if(!chunks.length) return;
+  if(!chunks.length){ if(o.onEnd) o.onEnd(); return; }
   voiceBtn = btn;
-  if(!ttsCandidates.length){ voiceFallback(plain, btn, lang, 'voiceNoModel'); return; }
+  const fallback = why=>{
+    if(!o.onFallback){ voiceFallback(plain, btn, lang, why); return; }
+    paintVoiceBtn(btn, ''); voiceBtn = null;
+    if(!voiceToasted[why]){ voiceToasted[why] = true; toast(t(why)); }
+    o.onFallback(plain);
+  };
+  if(!ttsCandidates.length){ fallback('voiceNoModel'); return; }
   const ctx = unlockAudio();
-  if(!ctx){ voiceFallback(plain, btn, lang, 'voiceFallback'); return; }
+  if(!ctx){ fallback('voiceFallback'); return; }
   paintVoiceBtn(btn, 'loading');
-  const voice = voiceName;
-  let queued = false;
+  const voice = voiceName, rate = o.rate || 1;
+  let queued = false, ended = false;
   const finish = ()=>{
-    if(my !== voiceToken || !queued || voiceSources.length) return;
+    if(my !== voiceToken || !queued || voiceSources.length || ended) return;
+    ended = true;
     paintVoiceBtn(btn, '');
     if(voiceBtn === btn) voiceBtn = null;
+    if(o.onEnd) o.onEnd();
   };
-  let next = voiceChunk(chunks[0], voice);
+  let next = voiceChunk(chunks[0], voice, rate);
   let endAt = 0;
   for(let i = 0; i < chunks.length; i++){
     let buf;
     try{ buf = await next; }
     catch(e){
       if(my !== voiceToken) return;
-      if(i === 0){ voiceFail(e, plain, btn, lang); return; }
+      if(i === 0){ voiceFail(e, plain, btn, lang, o.onFail, o.onFallback ? fallback : null); return; }
       // сбой посреди ответа: уже звучащее доигрывает, остальное — нет
       dlog('voice chunk ' + i + ':', e);
       break;
@@ -2827,7 +3228,7 @@ async function playVoice(text, btn, lang){
     if(my !== voiceToken) return;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    src.connect(ctx.destination);
+    src.connect(voiceOut(ctx));
     // следующий кусок встаёт ровно в конец предыдущего — без паузы
     const startAt = Math.max(ctx.currentTime + 0.02, endAt);
     src.onended = ()=>{
@@ -2836,32 +3237,109 @@ async function playVoice(text, btn, lang){
     };
     src.start(startAt);
     voiceSources.push(src);
+    if(o.onChunk) o.onChunk(i, chunks[i], startAt, buf.duration);
     endAt = startAt + buf.duration;
     paintVoiceBtn(btn, 'playing');
     if(i + 1 < chunks.length){
       // опережение ровно на один: следующий просим, когда этот зазвучал
       await waitCtxTime(ctx, startAt);
       if(my !== voiceToken) return;
-      next = voiceChunk(chunks[i + 1], voice);
+      next = voiceChunk(chunks[i + 1], voice, rate);
     }
   }
   queued = true;
   finish();
 }
 
-// кнопка «Прослушать» у ответа тренера
-function voiceBtnFor(text){
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.className = 'spkBtn voiceBtn';
-  b.innerHTML = SPK_SVG;
-  b.setAttribute('aria-label', t('ariaVoicePlay'));
-  b.onclick = e=>{
-    e.stopPropagation();
-    unlockAudio();
-    toggleVoice(b, text, settings.native_lang);
+/*
+   ⌄ в углу ответа тренера и меню под пузырём: озвучить, ещё пример,
+   подробнее. Открыто только одно меню; закрывается повторным нажатием,
+   нажатием мимо или выбором пункта. Шеврон же показывает, что ответ
+   звучит (классы loading/playing ставит плеер).
+*/
+const AI_MENU_ICONS = {
+  speak: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 9.5h3l4.5-4v13l-4.5-4h-3z"></path><path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"></path></svg>',
+  more: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h10M5 17h7"></path></svg>',
+  detail: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16z"></path><path d="M14 7l3 3"></path></svg>'
+};
+let aiMenuOpen = null;
+function closeAiMenu(){
+  if(!aiMenuOpen) return;
+  aiMenuOpen.menu.classList.remove('open');
+  aiMenuOpen.ch.classList.remove('on');
+  aiMenuOpen.ch.setAttribute('aria-expanded', 'false');
+  aiMenuOpen = null;
+}
+function aiActions(node, bubble, text){
+  const ch = document.createElement('button');
+  ch.type = 'button';
+  ch.className = 'aiChev';
+  ch.setAttribute('aria-label', t('ariaMsgActions'));
+  ch.setAttribute('aria-expanded', 'false');
+  ch.setAttribute('aria-haspopup', 'menu');
+  ch.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>';
+  bubble.appendChild(ch);
+  const menu = document.createElement('div');
+  menu.className = 'aiMenu';
+  menu.innerHTML = '<div><div class="aiPanel" role="menu"></div></div>';
+  node.appendChild(menu);
+  const panel = menu.querySelector('.aiPanel');
+  // автоозвучка: всегда играет с начала, даже если ответ уже звучал
+  node._speak = ()=>{ unlockAudio(); playVoice(text, ch, settings.native_lang); };
+  const items = [
+    ['speak', ()=>{ unlockAudio(); toggleVoice(ch, text, settings.native_lang); }],
+    ['more', ()=>askAbout('more', text)],
+    ['detail', ()=>askAbout('detail', text)]
+  ];
+  const build = ()=>{
+    panel.innerHTML = '';
+    const busy = ch.classList.contains('playing') || ch.classList.contains('loading');
+    items.forEach(([k, fn])=>{
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'menuitem');
+      b.innerHTML = AI_MENU_ICONS[k] + '<span></span>';
+      b.querySelector('span').textContent = t(k === 'speak' ? (busy ? 'menuStop' : 'menuSpeak') : k === 'more' ? 'menuMoreEx' : 'menuMoreDetail');
+      b.onclick = e=>{ e.stopPropagation(); closeAiMenu(); fn(); };
+      panel.appendChild(b);
+    });
   };
-  return b;
+  ch.onclick = e=>{
+    e.stopPropagation();
+    if(aiMenuOpen && aiMenuOpen.menu === menu){ closeAiMenu(); return; }
+    closeAiMenu();
+    build();
+    menu.classList.add('open');
+    ch.classList.add('on');
+    ch.setAttribute('aria-expanded', 'true');
+    aiMenuOpen = { menu, ch };
+    // меню у последнего ответа уходит под поле ввода — подкручиваем чат
+    setTimeout(()=>{
+      const box = $('chatBox');
+      if(!box || aiMenuOpen === null || aiMenuOpen.menu !== menu) return;
+      const r = menu.getBoundingClientRect(), br = box.getBoundingClientRect();
+      if(r.bottom > br.bottom) box.scrollBy({ top: r.bottom - br.bottom + 8, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    }, 380);
+  };
+}
+document.addEventListener('click', e=>{
+  if(aiMenuOpen && !aiMenuOpen.menu.contains(e.target) && !aiMenuOpen.ch.contains(e.target)) closeAiMenu();
+}, true);
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeAiMenu(); });
+
+// «ещё пример» и «подробнее»: в чате — короткая реплика, тренеру — точный запрос
+function askAbout(kind, text){
+  unlockAudio();
+  stopVoice();
+  const ex = speakableText(text).slice(0, 600);
+  pushMsg('user', t(kind === 'more' ? 'echoMoreEx' : 'echoMoreDetail'));
+  askTrainer(kind === 'more'
+    ? 'Give me one more example for this part of your earlier message, in the same format: "' + ex + '"'
+    : 'I did not understand this. Explain it again in more detail and more simply, step by step: "' + ex + '"', false, true);
+}
+
+function reduceMotion(){
+  return isLite() || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
 
 /* ---- автоозвучка и настройки ---- */
@@ -2900,6 +3378,25 @@ function openVoiceSheet(){
     tg.onclick = ()=>{ setVoiceAuto(!voiceAuto); paintTg(); };
     paintTg();
     box.appendChild(tg);
+
+    // голосовой режим: отправка сама после ~1,5 с тишины
+    const vd = document.createElement('button');
+    vd.type = 'button';
+    vd.className = 'toggleRow';
+    vd.style.cssText = 'margin:10px 0 0;width:100%';
+    vd.innerHTML = '<b></b><span class="toggle"><i></i></span>';
+    vd.querySelector('b').textContent = t('vmVad');
+    const paintVd = ()=>{
+      vd.querySelector('.toggle').classList.toggle('on', vmVad);
+      vd.setAttribute('aria-pressed', vmVad ? 'true' : 'false');
+    };
+    vd.onclick = ()=>{
+      vmVad = !vmVad;
+      try{ localStorage.setItem('worddeck_vad', vmVad ? '1' : '0'); }catch(e){}
+      paintVd();
+    };
+    paintVd();
+    box.appendChild(vd);
 
     const lb = document.createElement('div');
     lb.className = 'eyebrow';
@@ -3313,14 +3810,17 @@ function isDesktop(){ return !!(desktopMq && desktopMq.matches); }
 let currentScreen = '';
 function show(id){
   // ушли с тренера (вкладкой, вложенным экраном, «назад») — голос замолкает
-  if(currentScreen === 's-teacher' && id !== 's-teacher') stopVoice();
+  if(currentScreen === 's-teacher' && id !== 's-teacher'){ closeVoiceMode(); closeAiMenu(); stopVoice(); }
   currentScreen = id;
   SCREENS.forEach(s=>{ const el = $(s); if(el) el.classList.toggle('on', s === id); });
   const tabbed = TABBED.indexOf(id) >= 0 || (isDesktop() && SUBS.indexOf(id) >= 0);
   $('tabbar').classList.toggle('on', tabbed);
+  // Тренер на телефоне — на весь экран: таб-бар уезжает вниз и возвращается
+  const fullTrainer = id === 's-teacher' && !isDesktop();
+  $('tabbar').classList.toggle('away', fullTrainer);
   const ts = $('toasts');
   if(ts){
-    ts.classList.toggle('tabs', tabbed && !isDesktop());
+    ts.classList.toggle('tabs', tabbed && !isDesktop() && !fullTrainer);
     // у тренера внизу поле ввода — тост встаёт над ним
     ts.classList.toggle('chat', id === 's-teacher');
   }
@@ -3360,6 +3860,8 @@ function renderScreen(name){
 function switchTab(name){
   // на телефоне Друзей и Рангов нет в таб-баре — это вложенные экраны профиля
   if((name === 'friends' || name === 'ranks') && !isDesktop()){ openScreen(name); return; }
+  // ✕ у Тренера возвращает туда, откуда пришли
+  if(name === 'teacher' && currentTab !== 'teacher') teacherFrom = currentTab || 'home';
   navStack = [];
   currentTab = name;
   show('s-' + name);
@@ -6490,8 +6992,8 @@ function appendMsg(role, text, silent, actions, at){
     b.className = 'msg msgAi';
     b.innerHTML = richText(text);      // текст экранируется внутри richText
     node.appendChild(b);
-    // «Прослушать» — только у готовых ответов: живой пузырь стриминга пустой
-    if(text) node.appendChild(voiceBtnFor(text));
+    // меню ⌄ — только у готовых ответов: живой пузырь стриминга пустой
+    if(text) aiActions(node, b, text);
   }
   box.appendChild(node);
   box.scrollTop = box.scrollHeight;
@@ -6552,35 +7054,533 @@ async function undoWords(list){
 
 /* ---- кнопки у поля ввода ---- */
 const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-let dictation = null;
+// пустое поле — золотая «Голос», с текстом — круглая «Отправить»
 function paintSendBtn(){
   const empty = !String(($('chatInput') || {}).value || '').trim();
-  const mic = $('btnMic'), send = $('btnSend');
-  const useMic = !!SpeechRec && empty && !dictation;
-  if(mic) mic.classList.toggle('hidden', !SpeechRec || (!empty && !dictation));
-  if(send) send.classList.toggle('hidden', useMic);
+  const v = $('btnVoice'), send = $('btnSend');
+  const useVoice = !!SpeechRec && empty;
+  if(v) v.classList.toggle('hidden', !useVoice);
+  if(send) send.classList.toggle('hidden', useVoice);
 }
-// диктовка: говоришь — текст появляется в поле, отправляешь сам
-function toggleDictation(){
-  if(!SpeechRec) return;
-  if(dictation){ try{ dictation.stop(); }catch(e){} return; }
-  stopVoice();          // микрофон не должен слышать голос тренера
-  const rec = new SpeechRec();
-  rec.lang = localeOf(settings.target_lang || 'en');
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
-  rec.onresult = e=>{
-    const said = Array.from(e.results).map(r => r[0] && r[0].transcript || '').join(' ').trim();
-    const inp = $('chatInput');
-    if(said) inp.value = (inp.value ? inp.value + ' ' : '') + said;
-    paintSendBtn();
+
+/* ---- выход из Тренера: ✕ или свайп вниз по шапке ---- */
+let teacherFrom = 'home';
+function exitTrainer(){
+  closeVoiceMode();
+  switchTab(teacherFrom && teacherFrom !== 'teacher' ? teacherFrom : 'home');
+}
+(function(){
+  const head = $('tgHead'), scr = $('s-teacher');
+  if(!head || !scr) return;
+  let y0 = null, x0 = 0, dy = 0;
+  head.addEventListener('touchstart', e=>{
+    if(e.touches.length !== 1){ y0 = null; return; }
+    y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0;
+  }, { passive:true });
+  head.addEventListener('touchmove', e=>{
+    if(y0 === null) return;
+    const p = e.touches[0];
+    dy = p.clientY - y0;
+    if(Math.abs(p.clientX - x0) > Math.abs(dy)){ dy = 0; return; }
+    if(dy > 0 && !reduceMotion()){
+      scr.style.transition = 'none';
+      scr.style.transform = 'translateY(' + Math.min(dy * 0.5, 160) + 'px)';
+    }
+  }, { passive:true });
+  const end = ()=>{
+    if(y0 === null) return;
+    y0 = null;
+    scr.style.transition = ''; scr.style.transform = '';
+    if(dy > 90) exitTrainer();
+    dy = 0;
   };
-  rec.onerror = e=>{ dlog('dictation:', e && e.error); };
-  rec.onend = ()=>{ dictation = null; $('btnMic').classList.remove('rec'); paintSendBtn(); };
-  try{ rec.start(); dictation = rec; $('btnMic').classList.add('rec'); }
-  catch(e){ dlog('dictation start:', e); }
+  head.addEventListener('touchend', end);
+  head.addEventListener('touchcancel', ()=>{ dy = 0; end(); });
+})();
+
+/* =========================================================================
+   Голосовой режим Тренера
+
+   Слушаю (3b) → отправлено, думает (3c) → отвечает голосом (3d) → снова
+   слушаю. Речь распознаёт Web Speech API на изучаемом языке, промежуточные
+   результаты идут в живую расшифровку. Отвечает тот же живой голос, что
+   в чате (playVoice), с субтитрами. Весь разговор ложится в текстовый чат:
+   реплики, сказанные голосом, помечены input: 'voice'.
+   ========================================================================= */
+const VM_RATES = [1, 0.8, 0.6];
+const VM_SILENCE_MS = 1500;     // автоотправка после тишины
+const VM_LH = 32;               // высота строки живой расшифровки
+let vmVad = true, vmRate = 1;
+try{
+  vmVad = localStorage.getItem('worddeck_vad') !== '0';
+  const r = parseFloat(localStorage.getItem('worddeck_voice_rate'));
+  if(VM_RATES.indexOf(r) >= 0) vmRate = r;
+}catch(e){}
+const vm = {
+  on:false, state:'', rec:null, paused:false, sending:false, final:'', interim:'',
+  t0:0, elapsed:0, timer:null, silence:null, restarts:0,
+  ctl:null, text:'', entry:null, userNode:null, reply:'', stopped:false,
+  mic:null, micAn:null, bump:0, env:0, raf:0, subsQ:[], subsCur:null, dotsT0:0
+};
+/*
+   Уровень микрофона для кругов: на компьютере — анализатор отдельного
+   потока. На телефоне второй захват микрофона рядом с распознаванием
+   ломает его (Chrome на Android отдаёт «audio-capture»), поэтому круги
+   там дышат от событий распознавания: пришли слова — толчок.
+*/
+const vmMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+function vmSetState(s){
+  vm.state = s;
+  const el = $('vm');
+  if(el) el.dataset.state = s;
+  vmPaintPill();
+}
+function vmPaintPill(){
+  const p = $('vmPillTx');
+  if(p) p.textContent = t('vmPill', { lang: String(settings.target_lang || '').toUpperCase() });
+}
+function vmFmt(ms){
+  const s = Math.max(0, Math.round(ms / 1000));
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+function vmElapsed(){ return vm.elapsed + (vm.paused || !vm.t0 ? 0 : Date.now() - vm.t0); }
+function vmPaintTimer(){ const el = $('vmTimer'); if(el) el.textContent = vmFmt(vmElapsed()); }
+function vmPaintPause(){
+  $('vmStatusTx').textContent = t(vm.paused ? 'vmPaused' : 'vmListening');
+  $('vmPauseTx').textContent = t(vm.paused ? 'vmResume' : 'vmPause');
+}
+function vmPaintRate(){ const el = $('vmRateTx'); if(el) el.textContent = vmRate + '×'; }
+
+function openVoiceMode(){
+  if(!SpeechRec){ toast(t('vmNoSupport')); return; }
+  if(!getKey()){ pushMsg('sys', t('errNoKey')); return; }
+  closeAiMenu();
+  stopVoice();
+  unlockAudio();
+  vm.on = true; vm.reply = '';
+  const el = $('vm');
+  el.hidden = false;
+  // над расшифровкой — последний вопрос тренера, чтобы было видно, на что отвечаешь
+  let q = '';
+  for(let i = chatLog.length - 1; i >= 0; i--) if(chatLog[i].role === 'model'){ q = speakableText(chatLog[i].text); break; }
+  $('vmQ').textContent = q.length > 220 ? q.slice(0, 220).replace(/\s+\S*$/, '') + '…' : q;
+  el.querySelector('.vmTask').classList.toggle('hidden', !q);
+  // круги и точки — из исходного положения: при reduced-motion цикл их не трогает
+  el.querySelectorAll('[data-ring], [data-ring] > span, .vmDots i').forEach(n=>{ n.style.transform = ''; n.style.borderColor = ''; });
+  vm.env = 0;
+  vmPaintRate();
+  vmStartListen();
+  vmLoop();
+}
+// назад в текстовый чат; запрос, если он уже ушёл, дозавершится в чате
+function closeVoiceMode(){
+  if(!vm.on) return;
+  vm.on = false;
+  vmStopRec();
+  vmStopMic();
+  clearInterval(vm.timer);
+  clearTimeout(vm.silence);
+  stopVoice();
+  cancelAnimationFrame(vm.raf); vm.raf = 0;
+  vm.subsQ = []; vm.subsCur = null;
+  const el = $('vm');
+  if(el){ el.hidden = true; el.classList.remove('paused', 'quiet'); }
   paintSendBtn();
 }
+
+/* ---- 3b · слушаю ---- */
+function vmStartListen(){
+  if(!vm.on) return;
+  stopVoice();
+  vmSetState('listen');
+  vm.final = ''; vm.interim = ''; vm.paused = false; vm.sending = false; vm.restarts = 0;
+  vm.elapsed = 0; vm.t0 = Date.now(); vm.bump = 0;
+  $('vm').classList.remove('paused');
+  vmPaintPause(); vmPaintLive(); vmPaintTimer();
+  clearInterval(vm.timer);
+  vm.timer = setInterval(vmPaintTimer, 250);
+  vmStartRec();
+  vmStartMic();
+}
+function vmStartRec(){
+  vmStopRec();
+  let rec;
+  try{ rec = new SpeechRec(); }catch(e){ toast(t('vmNoSupport')); closeVoiceMode(); return; }
+  rec.lang = localeOf(settings.target_lang || 'en');
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  rec.onresult = e=>{
+    if(rec !== vm.rec) return;
+    let interim = '';
+    for(let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i], tx = String(r[0] && r[0].transcript || '').trim();
+      if(!tx) continue;
+      if(r.isFinal) vm.final = (vm.final ? vm.final + ' ' : '') + tx;
+      else interim += (interim ? ' ' : '') + tx;
+    }
+    vm.interim = interim;
+    vm.bump = 1; vm.restarts = 0;
+    vmPaintLive();
+    vmArmSilence();
+  };
+  rec.onspeechstart = ()=>{ vm.bump = Math.max(vm.bump, 0.6); };
+  rec.onerror = e=>{
+    const code = e && e.error;
+    dlog('voice mode stt:', code);
+    if(rec !== vm.rec) return;
+    if(code === 'not-allowed' || code === 'service-not-allowed' || code === 'audio-capture'){ vmToPerm(); return; }
+    if(code === 'network') toast(t('vmNoNet'));
+  };
+  rec.onend = ()=>{
+    if(rec !== vm.rec) return;
+    vm.rec = null;
+    // Chrome на телефоне сам выключает распознавание после паузы — включаем снова
+    if(!vm.on || vm.state !== 'listen' || vm.paused || vm.sending) return;
+    if(++vm.restarts > 8){ vmTogglePause(); return; }   // долго тишина — на паузу, а не по кругу
+    setTimeout(()=>{ if(vm.on && vm.state === 'listen' && !vm.paused && !vm.rec) vmStartRec(); }, 250);
+  };
+  vm.rec = rec;
+  try{ rec.start(); }catch(e){ dlog('voice mode start:', e); }
+}
+function vmStopRec(){
+  const r = vm.rec;
+  vm.rec = null;
+  if(!r) return;
+  r.onresult = r.onend = r.onerror = r.onspeechstart = null;
+  try{ r.abort(); }catch(e){}
+}
+function vmStartMic(){
+  if(vmMobile || vm.mic || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+  navigator.mediaDevices.getUserMedia({ audio:true }).then(stream=>{
+    const ctx = unlockAudio();
+    if(!vm.on || vm.state !== 'listen' || !ctx){ stream.getTracks().forEach(tr=>tr.stop()); return; }
+    vm.mic = stream;
+    const an = ctx.createAnalyser();
+    an.fftSize = 512;
+    ctx.createMediaStreamSource(stream).connect(an);
+    vm.micAn = an;
+  }).catch(e=>dlog('voice mode meter:', e && e.name));
+}
+function vmStopMic(){
+  if(vm.mic){ vm.mic.getTracks().forEach(tr=>tr.stop()); vm.mic = null; }
+  vm.micAn = null;
+}
+function vmToPerm(){
+  vmStopRec(); vmStopMic();
+  clearInterval(vm.timer); clearTimeout(vm.silence);
+  vmSetState('perm');
+}
+
+/*
+   Живая расшифровка — ровно две строки. Текст стоит нижней строкой; когда
+   он переносится, весь блок плавно уезжает вверх на строку: старая строка
+   остаётся сверху в 30 % (маска в стилях), самая старая уходит за край.
+*/
+function vmPaintLive(){
+  const el = $('vmLive');
+  if(!el) return;
+  const text = (vm.final + ' ' + vm.interim).trim();
+  if(!text){
+    el.className = 'vmLiveIn ph';
+    el.textContent = t('vmSpeakNow');
+    el.style.transition = 'none';
+    el.style.transform = 'none';
+    return;
+  }
+  el.className = 'vmLiveIn';
+  el.textContent = text;
+  const caret = document.createElement('span');
+  caret.className = 'caret';
+  el.appendChild(caret);
+  const lines = Math.max(1, Math.round(el.scrollHeight / VM_LH));
+  el.style.transition = reduceMotion() ? 'none' : 'transform .45s cubic-bezier(.2,.8,.2,1)';
+  el.style.transform = 'translateY(' + (-(lines - 1) * VM_LH) + 'px)';
+}
+function vmArmSilence(){
+  clearTimeout(vm.silence);
+  if(!vmVad) return;
+  vm.silence = setTimeout(()=>{
+    if(vm.on && vm.state === 'listen' && !vm.paused && (vm.final + vm.interim).trim()) vmSend();
+  }, VM_SILENCE_MS);
+}
+function vmTogglePause(){
+  if(vm.state !== 'listen') return;
+  if(vm.paused){
+    vm.paused = false; vm.t0 = Date.now(); vm.restarts = 0;
+    vmStartRec();
+  }else{
+    vm.elapsed = vmElapsed(); vm.t0 = 0; vm.paused = true;
+    clearTimeout(vm.silence);
+    vmStopRec();
+  }
+  $('vm').classList.toggle('paused', vm.paused);
+  vmPaintPause(); vmPaintTimer();
+}
+function vmCancel(){
+  vm.final = ''; vm.interim = '';
+  closeVoiceMode();
+}
+
+/* ---- 3c · отправлено ---- */
+function vmSend(){
+  if(!vm.on || vm.state !== 'listen' || vm.sending) return;
+  const text = (vm.final + ' ' + vm.interim).replace(/\s+/g, ' ').trim();
+  if(!text){ toast(t('vmNotHeard')); return; }
+  vm.sending = true;
+  const took = vmElapsed();
+  clearTimeout(vm.silence); clearInterval(vm.timer);
+  vmStopRec(); vmStopMic();
+  unlockAudio();
+  vm.text = text; vm.reply = ''; vm.stopped = false;
+  $('vmMineTx').textContent = text;
+  $('vmStepRec').textContent = t('vmStepRec', { t: vmFmt(took) });
+  document.querySelector('.vmMine .fix').classList.remove('hidden');
+  vm.dotsT0 = performance.now();
+  vmSetState('think');
+  // реплика — в общий чат, с пометкой, что сказана голосом
+  vm.userNode = pushMsg('user', text);
+  vm.entry = chatLog[chatLog.length - 1] || null;
+  if(vm.entry && vm.entry.role === 'user' && vm.entry.text === text){ vm.entry.input = 'voice'; saveChat(); }
+  else vm.entry = null;
+  const ctl = { cancelled:false };
+  ctl.onAnswer = reply=>{ if(vm.ctl === ctl && vm.on) vmSpeak(reply); };
+  ctl.onError = e=>{ if(vm.ctl === ctl && vm.on) vmBackToListen(e); };
+  vm.ctl = ctl;
+  askTrainer(text, false, true, ctl);
+}
+// сбой — обратно в 3b, расшифровка сохраняется
+function vmBackToListen(e){
+  toast(t(e && (e.code === 'network' || isNetworkError(e)) ? 'vmNoNet' : friendlyError(e)));
+  const keep = vm.text;
+  vmStartListen();
+  vm.final = keep;
+  vmPaintLive();
+}
+// «Исправить текст»: запрос отменяется, текст уходит в поле ввода чата
+function vmFixText(){
+  if(vm.ctl) vm.ctl.cancelled = true;
+  vm.ctl = null;
+  if(vm.userNode && vm.userNode.parentNode) vm.userNode.remove();
+  const i = vm.entry ? chatLog.indexOf(vm.entry) : -1;
+  if(i >= 0){ chatLog.splice(i, 1); saveChat(); }
+  const text = vm.text;
+  closeVoiceMode();
+  const inp = $('chatInput');
+  inp.value = text;
+  paintSendBtn();
+  try{ inp.focus(); inp.setSelectionRange(text.length, text.length); }catch(e){}
+}
+
+/* ---- 3d · Тренер отвечает ---- */
+function vmSpeak(reply){
+  vm.reply = reply; vm.stopped = false;
+  vm.subsQ = []; vm.subsCur = null;
+  $('vmSubs').innerHTML = '';
+  // ответ уже пришёл — отменять нечего
+  document.querySelector('.vmMine .fix').classList.add('hidden');
+  unlockAudio();
+  playVoice(reply, null, settings.native_lang, {
+    rate: vmRate,
+    onChunk: (i, text, at, dur)=>{
+      if(!vm.on) return;
+      if(vm.state !== 'speak') vmSetState('speak');
+      vm.subsQ.push({ text, at, dur, clock:'ctx' });
+    },
+    onEnd: vmSpeechEnded,
+    onFallback: vmFallbackSpeak,
+    onFail: ()=>{ if(vm.on) vmStartListen(); }
+  });
+}
+function vmSpeechEnded(){
+  if(!vm.on || vm.state !== 'speak') return;
+  vmSubsAllDone();
+  // дозвучал — снова слушаем, если человек не вышел и не остановил речь
+  setTimeout(()=>{ if(vm.on && vm.state === 'speak' && !vm.stopped) vmStartListen(); }, 700);
+}
+// живого голоса нет — голос браузера; границы слов он сообщает сам
+function vmFallbackSpeak(plain){
+  if(!vm.on) return;
+  vmSetState('speak');
+  const text = plain.slice(0, 1200);
+  if(!canSpeak()){
+    vm.subsQ = [{ text, at:0, dur:1, clock:'perf' }];
+    vmSubsAllDone();
+    return;
+  }
+  const synth = window.speechSynthesis;
+  try{ synth.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = localeOf(settings.native_lang || 'en');
+  const v = pickVoice(u.lang);
+  if(v) u.voice = v;
+  u.rate = vmRate;
+  vm.subsQ = [{ text, at: performance.now() / 1000, dur: Math.max(1.5, text.length / 14 / vmRate), clock:'perf' }];
+  u.onboundary = e=>{ if(vm.subsCur && vm.subsCur.clock === 'perf') vm.subsCur.char = e.charIndex; };
+  u.onend = ()=>{ if(!voiceFallbackOn) return; voiceFallbackOn = false; vmSpeechEnded(); };
+  voiceFallbackOn = true;
+  voiceFallbackBtn = null;
+  synth.speak(u);
+}
+function vmStopSpeech(){
+  if(vm.state !== 'speak') return;
+  vm.stopped = true;
+  stopVoice();
+  vmSubsAllDone();
+}
+function vmRepeat(){ if(vm.reply){ stopVoice(); vmSpeak(vm.reply); } }
+function vmReply(){ vm.stopped = true; vmStartListen(); }
+function vmCycleSpeed(){
+  vmRate = VM_RATES[(VM_RATES.indexOf(vmRate) + 1) % VM_RATES.length];
+  try{ localStorage.setItem('worddeck_voice_rate', String(vmRate)); }catch(e){}
+  vmPaintRate();
+  // звучащий ответ — заново на новой скорости; звук уже в кэше, сеть не нужна
+  if(vm.state === 'speak' && vm.reply && !vm.stopped) vmRepeat();
+}
+
+/*
+   Субтитры: показан кусок, который сейчас звучит. У Gemini нет таймкодов
+   слов, поэтому внутри куска слово выбирается по доле пройденного времени,
+   взвешенной длиной слов. Голос браузера сообщает границы слов сам.
+*/
+function vmSubsRender(q){
+  const box = $('vmSubs');
+  box.innerHTML = '';
+  box.classList.toggle('long', q.text.length > 170);
+  const wrap = document.createElement('div');
+  const total = q.text.length || 1;
+  const re = /\S+/g;
+  let m;
+  q.words = [];
+  while((m = re.exec(q.text))){
+    const sp = document.createElement('span');
+    sp.className = 'w';
+    sp.textContent = m[0];
+    wrap.appendChild(sp);
+    wrap.appendChild(document.createTextNode(' '));
+    q.words.push({ sp, a: m.index / total, b: (m.index + m[0].length) / total });
+  }
+  box.appendChild(wrap);
+  vm.subsCur = q;
+}
+function vmSubsTick(){
+  if(vm.state !== 'speak' || !vm.subsQ.length) return;
+  const nowCtx = voiceCtx ? voiceCtx.currentTime : 0, nowPerf = performance.now() / 1000;
+  let cur = vm.subsQ[0];
+  vm.subsQ.forEach(q=>{ if(q.at <= (q.clock === 'perf' ? nowPerf : nowCtx) + 0.05) cur = q; });
+  if(cur !== vm.subsCur) vmSubsRender(cur);
+  const now = cur.clock === 'perf' ? nowPerf : nowCtx;
+  const p = cur.char != null ? cur.char / (cur.text.length || 1) + 0.001 : (now - cur.at) / cur.dur;
+  cur.words.forEach(w=>{
+    const done = p >= w.b;
+    w.sp.classList.toggle('done', done);
+    w.sp.classList.toggle('now', !done && p >= w.a);
+  });
+}
+function vmSubsAllDone(){
+  const last = vm.subsQ[vm.subsQ.length - 1];
+  if(last && last !== vm.subsCur) vmSubsRender(last);
+  if(vm.subsCur) vm.subsCur.words.forEach(w=>{ w.sp.classList.add('done'); w.sp.classList.remove('now'); });
+  vm.subsQ = [];
+}
+
+/* ---- анимации: пульсация кругов и точки ожидания ---- */
+function vmSimSpeech(tt){
+  const syl = Math.abs(Math.sin(tt * 7.1)) * (0.55 + 0.45 * Math.sin(tt * 1.9));
+  const stress = Math.exp(-((tt % 1.17) / 0.11)) * 0.75;
+  const gate = ((tt * 0.33) % 1) > 0.82 ? 0.08 : 1;
+  return Math.min(1, Math.max(0, (syl * 0.6 + stress) * gate));
+}
+function vmRingColor(p){ return 'color-mix(in oklch, var(--gold) ' + p.toFixed(1) + '%, transparent)'; }
+/*
+   Круги масштабируются, а не утолщаются. Они вложены, поэтому средний
+   компенсирует масштаб внешнего, а стеклянный центр — масштаб среднего:
+   центр остаётся на месте и своего размера.
+*/
+function vmPulse(v){
+  const k = vm.state;
+  const o = document.querySelector('[data-ring="' + k + '-o"]');
+  if(!o) return;
+  const i = document.querySelector('[data-ring="' + k + '-i"]');
+  const so = 1 + v * 0.16;
+  o.style.transform = 'scale(' + so.toFixed(4) + ')';
+  o.style.borderColor = vmRingColor((k === 'think' ? 40 : k === 'speak' ? 20 : 16) + v * 40);
+  if(i){
+    const si = 1 + v * 0.09;
+    i.style.transform = 'scale(' + (si / so).toFixed(4) + ')';
+    i.style.borderColor = vmRingColor((k === 'speak' ? 40 : 30) + v * 40);
+    if(i.firstElementChild) i.firstElementChild.style.transform = 'scale(' + (1 / si).toFixed(4) + ')';
+  }else if(o.firstElementChild) o.firstElementChild.style.transform = 'scale(' + (1 / so).toFixed(4) + ')';
+}
+const vmEase = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+/*
+   Три точки, цикл ~5.4 с: три прыжка по очереди → сборка в круг
+   (−90°, 30°, 150°) → три оборота, точки догоняют друг друга → обратно в ряд.
+*/
+function vmDotsTick(now){
+  const dots = $('vmDots');
+  if(!dots) return;
+  const cl = x => Math.max(0, Math.min(1, x));
+  const R = 17, G = 16, TAU = Math.PI * 2, BOUNCE = 0.6, TURN = 0.8, MORPH = 0.6;
+  const B = BOUNCE * 3, S = TURN * 3, L = B + MORPH + S + MORPH;
+  const tt = ((now - vm.dotsT0) / 1000) % L;
+  const row = i => [(i - 1) * G, 0];
+  const circ = (i, a) => { const th = -Math.PI / 2 + i * TAU / 3 + a; return [R * Math.cos(th), R * Math.sin(th)]; };
+  const lerp = (a, b, p) => [a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p];
+  Array.prototype.forEach.call(dots.children, (el, i)=>{
+    let x, y, sc = 1;
+    if(tt < B){
+      [x, y] = row(i);
+      const lt = (tt % BOUNCE) - i * 0.1;
+      const k = lt > 0 && lt < 0.36 ? Math.sin(Math.PI * lt / 0.36) : 0;
+      y -= k * 12; sc = 1 + k * 0.1;
+    }else if(tt < B + MORPH){
+      [x, y] = lerp(row(i), circ(i, 0), vmEase(cl((tt - B - i * 0.05) / (MORPH - 0.1))));
+    }else if(tt < B + MORPH + S){
+      const lt = tt - B - MORPH, k = Math.floor(lt / TURN);
+      [x, y] = circ(i, (k + vmEase(cl(((lt % TURN) - i * 0.1) / 0.55))) * TAU);
+    }else{
+      [x, y] = lerp(circ(i, 0), row(i), vmEase(cl((tt - B - MORPH - S - i * 0.05) / (MORPH - 0.1))));
+    }
+    el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) scale(' + sc.toFixed(3) + ')';
+  });
+}
+/*
+   Один цикл на кадр, пока открыт режим. Огибающая громкости: быстрая атака
+   0.45, плавный спад 0.08. При reduced-motion и в облегчённом режиме круги
+   и точки стоят, а субтитры всё равно идут.
+*/
+function vmLoop(){
+  if(vm.raf) return;
+  const still = reduceMotion();
+  const tick = now=>{
+    vm.raf = 0;
+    if(!vm.on) return;
+    const tt = now / 1000;
+    let target = 0;
+    if(vm.state === 'listen' && !vm.paused){
+      if(vm.micAn) target = levelOf(vm.micAn);
+      else{ target = vm.bump * (0.5 + 0.5 * Math.abs(Math.sin(tt * 7.1))); vm.bump *= 0.95; }
+    }else if(vm.state === 'speak'){
+      if(voiceSources.length) target = levelOf(voiceAnalyser);
+      else if(voiceFallbackOn) target = vmSimSpeech(tt);
+    }
+    vm.env += (target - vm.env) * (target > vm.env ? 0.45 : 0.08);
+    if(!still){
+      vmPulse(vm.state === 'think' ? 0.2 + 0.2 * Math.sin(tt * 2.2) : vm.env);
+      if(vm.state === 'think') vmDotsTick(now);
+    }
+    vmSubsTick();
+    $('vm').classList.toggle('quiet', vm.state === 'speak' && !voiceSources.length && !voiceFallbackOn);
+    vm.raf = requestAnimationFrame(tick);
+  };
+  vm.raf = requestAnimationFrame(tick);
+}
+// свернули приложение посреди записи — запись на паузу
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden && vm.on && vm.state === 'listen' && !vm.paused) vmTogglePause();
+});
 
 function openChatPlus(){
   openSheet(t('chatPlusTitle'), box=>{
@@ -6639,6 +7639,14 @@ function resetChat(){
 }
 
 function renderTeacherHeader(){
+  // чип «EN · A2» в капсуле шапки — открывает выбор языка
+  const lg = $('tgLang');
+  if(lg){
+    lg.textContent = String(settings.target_lang || '—').toUpperCase() + ' · ' + settings.level;
+    lg.setAttribute('aria-label', t('ariaTeacherLang', {
+      lang: settings.target_lang ? langLabel(settings.target_lang) : '—', level: settings.level }));
+  }
+  vmPaintPill();
   const chips = $('teacherChips');
   if(!chips) return;
   chips.innerHTML = '';
@@ -6866,7 +7874,12 @@ function retryTrainer(){ if(lastTrainerCall) askTrainer(lastTrainerCall.userText
    ответить блоком PLAN_REQUEST: служебные запросы приложения (урок дня,
    тест) просьбой поменять план не бывают, даже если модель решит иначе.
 */
-async function askTrainer(userText, echo, fromUser){
+/*
+   ctl — необязательный пульт голосового режима: { cancelled, onAnswer(текст),
+   onError(e) }. cancelled = true («Исправить текст») — ответ выбрасывается,
+   в чат и историю он не попадает.
+*/
+async function askTrainer(userText, echo, fromUser, ctl){
   if(!getKey()){ pushMsg('sys', t('errNoKey')); return; }
   const byUser = fromUser === undefined ? echo !== false : !!fromUser;
   lastTrainerCall = { userText, echo, fromUser: byUser };
@@ -6914,6 +7927,12 @@ async function askTrainer(userText, echo, fromUser){
       }
     });
     clearTimeout(paintTimer);
+    if(ctl && ctl.cancelled){
+      if(typing.parentNode) typing.remove();
+      if(live){ live.remove(); live = null; }
+      $('btnSend').disabled = false;
+      return;
+    }
 
     /*
        В историю — только чистые реплики. Системный промт уходит отдельным
@@ -6929,11 +7948,9 @@ async function askTrainer(userText, echo, fromUser){
 
     const parsed = parseTrainerBlocks(answer);
     const answerNode = pushMsg('model', parsed.clean);
-    // автоозвучка — через кнопку ответа, чтобы она показала состояние
-    if(voiceAuto && currentScreen === 's-teacher' && !document.hidden){
-      const vb = answerNode && answerNode.querySelector('.voiceBtn');
-      if(vb) vb.click();
-    }
+    // голосовой режим озвучивает сам; иначе — автоозвучка через ⌄ ответа
+    if(ctl && ctl.onAnswer) ctl.onAnswer(parsed.clean);
+    else if(voiceAuto && currentScreen === 's-teacher' && !document.hidden && answerNode && answerNode._speak) answerNode._speak();
     await addChatXp(5);
 
     bumpLessonState();
@@ -6970,8 +7987,11 @@ async function askTrainer(userText, echo, fromUser){
     if(typing.parentNode) typing.remove();
     if(live) live.remove();
     dlog('trainer:', e);
-    // понятная причина и «Повторить»; в сохранённую переписку не попадает
-    pushMsg('sysAction', t(friendlyError(e)), true, [{ label: t('retry'), fn: retryTrainer }]);
+    if(!(ctl && ctl.cancelled)){
+      // понятная причина и «Повторить»; в сохранённую переписку не попадает
+      pushMsg('sysAction', t(friendlyError(e)), true, [{ label: t('retry'), fn: retryTrainer }]);
+      if(ctl && ctl.onError) ctl.onError(e);
+    }
   }
   $('btnSend').disabled = false;
 }
