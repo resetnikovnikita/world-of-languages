@@ -3,6 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<script>
+/* viewport-fit=cover нужен только iPhone: страница заходит под вырез и
+   полоску «домой» и сама отступает от них через safe-area. Chrome на
+   Android от него перестаёт красить панель жестов внизу по теме браузера
+   (тёмная тема — тёмная полоса, светлая — светлая), как на всех прочих
+   сайтах, и оставляет там свою светлую подложку; она же мелькала на пол
+   экрана, пока выезжала клавиатура. Поэтому на Android его убираем. */
+(function(){
+  if(!/Android/i.test(navigator.userAgent)) return;
+  const m = document.querySelector('meta[name=viewport]');
+  if(m) m.setAttribute('content', m.getAttribute('content').replace(/,\s*viewport-fit=cover/, ''));
+})();
+</script>
 <title>WordDeck — изучение языков</title>
 <meta name="theme-color" content="#1B1815">
 <link rel="manifest" href="manifest.json">
@@ -489,9 +502,10 @@ html.lite #s-teacher .glass,html.lite #s-teacher .msgAi,html.lite .aiPanel,html.
 .aiChev.on svg{transform:rotate(180deg)}
 .aiChev.playing{color:var(--gold-text)}
 .aiChev.loading{color:var(--gold-text);animation:voicePulse .8s ease-in-out infinite alternate}
-.aiMenu{display:grid;grid-template-rows:0fr;margin-top:-8px;transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1),margin-top .38s cubic-bezier(.2,.8,.2,1)}
+/* свёрнутое меню не занимает места: промежуток между сообщениями — только gap чата */
+.aiMenu{display:grid;grid-template-rows:0fr;margin-top:0;transition:grid-template-rows .38s cubic-bezier(.2,.8,.2,1),margin-top .38s cubic-bezier(.2,.8,.2,1)}
 .aiMenu>div{overflow:hidden;min-height:0}
-.aiMenu.open{grid-template-rows:1fr;margin-top:2px}
+.aiMenu.open{grid-template-rows:1fr;margin-top:8px}
 .aiPanel{width:220px;padding:4px;margin:2px 0 4px;border-radius:18px;display:flex;flex-direction:column;visibility:hidden;
   background:var(--surf);background:color-mix(in oklch,var(--surf) 72%,transparent);border:1px solid color-mix(in oklch,var(--ink) 12%,transparent);
   -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 14px 28px -16px rgba(0,0,0,.8);
@@ -511,7 +525,9 @@ html[dir=rtl] .aiPanel{transform-origin:top right}
 .aiPanel svg{flex:none;color:var(--gold-text)}
 
 /* поле ввода */
-#s-teacher .chatDock{padding:8px 10px calc(10px + env(safe-area-inset-bottom,0px))}
+/* клавиатура у Тренера ложится поверх страницы (vkOverlay): поле ввода
+   поднимается над ней само, на высоту keyboard-inset-height */
+#s-teacher .chatDock{padding:8px 10px calc(10px + max(env(safe-area-inset-bottom,0px),env(keyboard-inset-height,0px)))}
 #s-teacher .chatDock .chips{display:none}
 #s-teacher .inputPill{height:56px;border-radius:999px;gap:8px;padding:0 7px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 16px 30px -18px rgba(0,0,0,.8)}
@@ -3818,6 +3834,7 @@ function show(id){
   // Тренер на телефоне — на весь экран: таб-бар уезжает вниз и возвращается
   const fullTrainer = id === 's-teacher' && !isDesktop();
   $('tabbar').classList.toggle('away', fullTrainer);
+  vkOverlay(id === 's-teacher');
   const ts = $('toasts');
   if(ts){
     ts.classList.toggle('tabs', tabbed && !isDesktop() && !fullTrainer);
@@ -3827,6 +3844,30 @@ function show(id){
   paintMiniPlayer();
 }
 if(desktopMq && desktopMq.addEventListener) desktopMq.addEventListener('change', ()=>{ if(currentScreen) show(currentScreen); });
+
+/*
+   Клавиатура у Тренера. Обычно Chrome на Android сначала сжимает страницу
+   под будущую клавиатуру, и пока та выезжает, в освободившейся половине
+   экрана видна светлая подложка самого браузера. С overlaysContent
+   клавиатура ложится поверх страницы, страница не сжимается, а поле ввода
+   поднимается на env(keyboard-inset-height) (см. стили .chatDock).
+   Только на экране Тренера и не под шторкой: в остальных местах вёрстка
+   не рассчитана на клавиатуру поверх. Safari этого API не знает — там
+   всё как раньше.
+*/
+function vkOverlay(on){
+  const vk = navigator.virtualKeyboard;
+  if(!vk) return;
+  try{ vk.overlaysContent = !!on; }catch(e){}
+}
+if(navigator.virtualKeyboard){
+  // клавиатура выехала — последние реплики остаются над полем ввода
+  navigator.virtualKeyboard.addEventListener('geometrychange', ()=>{
+    if(currentScreen !== 's-teacher') return;
+    const box = $('chatBox');
+    if(box) requestAnimationFrame(()=>{ box.scrollTop = box.scrollHeight; });
+  });
+}
 
 function markTab(name){
   document.querySelectorAll('.tabItem').forEach(el=>{
@@ -4091,6 +4132,7 @@ function sheetKeydown(e){
 
 function openSheet(title, buildBody){
   const sh = $('sheet');
+  vkOverlay(false);          // в шторке клавиатура сжимает страницу, как обычно
   sh.classList.remove('celebrate');
   sh.style.removeProperty('--tint');
   $('sheetTitle').textContent = title;
@@ -4110,6 +4152,7 @@ function openSheet(title, buildBody){
 function closeSheet(){
   if(!$('sheetWrap').classList.contains('on')) return;
   $('sheetWrap').classList.remove('on');
+  vkOverlay(currentScreen === 's-teacher');
   document.removeEventListener('keydown', sheetKeydown, true);
   if(sheetReturnFocus && document.contains(sheetReturnFocus)){
     try{ sheetReturnFocus.focus({ preventScroll:true }); }catch(e){}
