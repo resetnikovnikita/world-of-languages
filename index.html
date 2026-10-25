@@ -136,6 +136,8 @@ html.noGrain #app::after{display:none}
 .screen{position:absolute;inset:0;z-index:1;display:none;flex-direction:column;padding-top:var(--topInset,0px)}
 .screen.on{display:flex}
 #app{--topInset:env(safe-area-inset-top,0px)}
+/* в рамке телефона — пустое поле сверху, как под чёлкой: фон экрана идёт до края, содержимое ниже */
+@media (min-width:760px) and (max-width:899px) and (min-height:900px){ #app{--topInset:50px} }
 /* полосы прокрутки не показываем: на десктопе светлая полоса резала
    колонку и залезала на элементы, а колесо и тачпад работают и без неё */
 .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
