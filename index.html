@@ -130,20 +130,11 @@ html.noGrain #app::after{display:none}
 @media (min-width:760px) and (max-width:899px) and (min-height:900px){
   #shell{padding:28px;background:var(--bg-2)}
   #app{width:390px;height:844px;border-radius:44px;border:1px solid var(--line-2);box-shadow:var(--shadow)}
-  #shell #statusbar{display:flex}
 }
-#statusbar{
-  display:none;position:relative;z-index:2;flex:none;
-  justify-content:space-between;align-items:center;height:50px;padding:0 28px 0 32px;
-  font:600 15px/1 var(--f);color:var(--ink);
-}
-#statusbar .sbBatt{width:17px;height:10px;border:1.5px solid currentColor;border-radius:3px;opacity:.8}
-#statusbar .sbWifi{width:16px;height:10px;border-radius:2px;background:currentColor;opacity:.8}
 
 /* ---------- экраны ---------- */
 .screen{position:absolute;inset:0;z-index:1;display:none;flex-direction:column;padding-top:var(--topInset,0px)}
 .screen.on{display:flex}
-@media (min-width:760px) and (max-width:899px) and (min-height:900px){ .screen{top:50px} }
 #app{--topInset:env(safe-area-inset-top,0px)}
 /* полосы прокрутки не показываем: на десктопе светлая полоса резала
    колонку и залезала на элементы, а колесо и тачпад работают и без неё */
@@ -1230,7 +1221,6 @@ html.lite .tabItem.sel svg{transform:none}
   #app{--railW:256px;--content:880px}
   #shell{padding:0;background:var(--bg);align-items:stretch}
   #app{width:100%;height:100dvh;border:0;border-radius:0;box-shadow:none}
-  #statusbar{display:none!important}
   .screen{top:0;left:var(--railW);padding-top:0;
     padding-left:max(0px,calc((100% - var(--railW) - var(--content)) / 2));
     padding-right:max(0px,calc((100% - var(--railW) - var(--content)) / 2))}
@@ -1296,11 +1286,6 @@ html.lite .tabItem.sel svg{transform:none}
 </head>
 <body>
 <div id="shell"><div id="app">
-
-  <div id="statusbar">
-    <span>9:41</span>
-    <span style="display:flex;gap:6px;align-items:center"><i class="sbBatt"></i><i class="sbWifi"></i></span>
-  </div>
 
   <!-- ===================== ВЫБОР УСТРОЙСТВА ===================== -->
   <section class="screen" id="s-device">
