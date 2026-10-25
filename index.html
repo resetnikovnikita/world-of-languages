@@ -640,8 +640,9 @@ button.vmRing{cursor:pointer}
 @keyframes vmSpin{to{transform:rotate(360deg)}}
 
 /* 3d: субтитры — одно предложение, в нём подсвечено слово, которое звучит.
-   Под ними стрелка: рамка с полным ответом (караоке), фон позади размыт.
-   Субтитры, стрелка и рамка стоят над слоем размытия (z-index 4 > 3). */
+   На экране записи (3b) под вопросом тренера — стрелка: рамка с его
+   сообщением целиком, фон позади размыт. Стрелка и рамка стоят над слоем
+   размытия (z-index 4 > 3). */
 .vmSpeakTop{flex:none;display:flex;justify-content:center;padding-top:26px}
 .vmSpeak .vmBtns{margin-top:auto}
 .vmSubsBox{flex:none;position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:24px}
@@ -650,6 +651,7 @@ button.vmRing{cursor:pointer}
 .vmSubs>div{text-wrap:balance;max-width:100%}
 .vmSubs .w.done{color:var(--ink)}
 .vmSubs .w.now{color:var(--gold-text);text-decoration:underline 2px var(--gold);text-underline-offset:5px}
+.vmTxtSlot{flex:none;position:relative;z-index:4;display:flex;justify-content:center;margin-top:10px}
 .vmTxtWrap{position:relative;display:flex;justify-content:center}
 .vmTxtWrap.off{visibility:hidden}
 .vmTxtBtn{width:44px;height:44px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer}
@@ -1579,6 +1581,19 @@ html.lite .tabItem.sel svg{transform:none}
       <!-- 3b · слушаю -->
       <div class="vmPane vmListen">
         <div class="vmTask"><div class="k" data-i18n="vmAsk"></div><div class="q" id="vmQ"></div></div>
+        <!-- стрелка: последнее сообщение тренера целиком, пока идёт запись -->
+        <div class="vmTxtSlot">
+          <div class="vmTxtWrap off" id="vmTxtWrap">
+            <button class="vmTxtBtn glass" id="vmTxtBtn" type="button" onclick="vmTxtToggle()" aria-expanded="false" aria-controls="vmTxt" data-aria="vmTxtShow">
+              <span aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+            </button>
+            <div class="vmTxt" id="vmTxt" role="region" data-aria="vmTxtRegion">
+              <div class="vmTxtIn"><div class="vmTxtScroll" id="vmTxtScroll">
+                <div class="vmTxtList" id="vmTxtList"></div>
+              </div></div>
+            </div>
+          </div>
+        </div>
         <div class="vmMid">
           <div class="vmLive" aria-live="polite"><div class="vmLiveIn" id="vmLive"></div></div>
           <span class="vmRing o" data-ring="listen-o"><span class="vmRing i" data-ring="listen-i"><span class="vmCore">
@@ -1631,17 +1646,6 @@ html.lite .tabItem.sel svg{transform:none}
         </div>
         <div class="vmSubsBox">
           <div class="vmSubs" id="vmSubs" aria-live="polite"></div>
-          <div class="vmTxtWrap off" id="vmTxtWrap">
-            <button class="vmTxtBtn glass" id="vmTxtBtn" type="button" onclick="vmTxtToggle()" aria-expanded="false" aria-controls="vmTxt" data-aria="vmTxtShow">
-              <span aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span>
-            </button>
-            <div class="vmTxt" id="vmTxt" role="region" data-aria="vmTxtRegion">
-              <div class="vmTxtIn"><div class="vmTxtScroll" id="vmTxtScroll">
-                <div class="vmTxtList" id="vmTxtList"></div>
-                <div class="vmTxtNote"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"></path><path d="M4 4v4.5h4.5"></path></svg><span data-i18n="vmTxtHint"></span></div>
-              </div></div>
-            </div>
-          </div>
         </div>
         <div class="vmBtns">
           <button class="vmSide" type="button" onclick="vmRepeat()"><span class="glass">
@@ -2668,6 +2672,23 @@ ar:{vmTxtShow:"عرض النص كاملًا",vmTxtHide:"إخفاء النص",vmT
 tr:{vmTxtShow:"Tüm metni göster",vmTxtHide:"Metni gizle",vmTxtRegion:"Yanıtın tam metni",vmTxtHint:"Tekrar dinlemek için bir cümleye dokun",vmTxtReplay:"Tekrar dinle"}
 };
 Object.keys(I18N_EXT18).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT18[code]); });
+
+/* Пакет 9 — голосовой режим: запись до нажатия ↑, автоотправка — только после долгой тишины */
+const I18N_EXT19 = {
+en:{vmVad:"Auto-send after 12 s of silence"},
+ru:{vmVad:"Автоотправка после 12 с тишины"},
+es:{vmVad:"Enviar solo tras 12 s de silencio"},
+fr:{vmVad:"Envoyer tout seul après 12 s de silence"},
+de:{vmVad:"Nach 12 s Stille automatisch senden"},
+it:{vmVad:"Invia da solo dopo 12 s di silenzio"},
+pt:{vmVad:"Enviar sozinho após 12 s de silêncio"},
+zh:{vmVad:"静音 12 秒后自动发送"},
+ja:{vmVad:"12 秒黙ったら自動で送信"},
+ko:{vmVad:"12초 동안 조용하면 자동으로 보내기"},
+ar:{vmVad:"الإرسال تلقائيًا بعد 12 ثانية من الصمت"},
+tr:{vmVad:"12 sn sessizlikten sonra kendiliğinden gönder"}
+};
+Object.keys(I18N_EXT19).forEach(code => { I18N[code] = Object.assign({}, I18N[code] || {}, I18N_EXT19[code]); });
 
 // приветствие на главной вынесено отдельно — в нём подставляется имя
 const I18N_HELLO = {
@@ -7299,14 +7320,19 @@ function exitTrainer(){
    в текстовый чат: реплики, сказанные голосом, помечены input: 'voice'.
    ========================================================================= */
 const VM_RATES = [1, 0.8, 0.6];
-const VM_SILENCE_MS = 1500;     // автоотправка после тишины
-const VM_MAX_MS = 60e3;         // длиннее минуты — отправляем сами
+/*
+   Запись идёт, пока человек сам не нажмёт ↑: паузы на подумать — часть
+   ответа, и 1,5 с тишины обрывали фразу на полуслове. Автоотправка —
+   по желанию в настройках, и только после долгой тишины.
+*/
+const VM_SILENCE_MS = 12e3;     // автоотправка после тишины, если включена
+const VM_MAX_MS = 180e3;        // длиннее трёх минут — отправляем сами
 const VM_WAV_RATE = 16000;      // для речи хватает, запись выходит втрое легче
 const VM_LOUD = 0.10, VM_QUIET = 0.05;   // уровни 0…1 (как levelOf): голос / тишина
 const VM_LH = 32;               // высота строки в блоке расшифровки
-let vmVad = true, vmRate = 1;
+let vmVad = false, vmRate = 1;
 try{
-  vmVad = localStorage.getItem('worddeck_vad') !== '0';
+  vmVad = localStorage.getItem('worddeck_vad') === '1';
   const r = parseFloat(localStorage.getItem('worddeck_voice_rate'));
   if(VM_RATES.indexOf(r) >= 0) vmRate = r;
 }catch(e){}
@@ -7321,8 +7347,8 @@ const vm = {
 };
 
 function vmSetState(s){
-  // рамка с текстом — часть экрана ответа; ушли с него — закрываем
-  if(s !== 'speak') vmTxtClose();
+  // рамка с текстом — часть экрана записи; ушли с него — закрываем
+  if(s !== 'listen') vmTxtClose();
   vm.state = s;
   const el = $('vm');
   if(el) el.dataset.state = s;
@@ -7353,11 +7379,6 @@ function openVoiceMode(){
   vm.on = true; vm.reply = '';
   const el = $('vm');
   el.hidden = false;
-  // над расшифровкой — последний вопрос тренера, чтобы было видно, на что отвечаешь
-  let q = '';
-  for(let i = chatLog.length - 1; i >= 0; i--) if(chatLog[i].role === 'model'){ q = speakableText(chatLog[i].text); break; }
-  $('vmQ').textContent = q.length > 220 ? q.slice(0, 220).replace(/\s+\S*$/, '') + '…' : q;
-  el.querySelector('.vmTask').classList.toggle('hidden', !q);
   // круги и точки — из исходного положения: при reduced-motion цикл их не трогает
   el.querySelectorAll('[data-ring], [data-ring] > span, .vmDots i').forEach(n=>{ n.style.transform = ''; n.style.borderColor = ''; });
   vm.env = 0;
@@ -7390,10 +7411,26 @@ function vmStartListen(){
   vm.chunks = []; vm.spoke = false; vm.heard = 0; vm.quiet = 0;
   vm.elapsed = 0; vm.t0 = Date.now();
   $('vm').classList.remove('paused');
+  vmPaintTask();
   vmPaintPause(); vmPaintLive(); vmPaintTimer();
   clearInterval(vm.timer);
   vm.timer = setInterval(vmPaintTimer, 250);
   vmStartRec();
+}
+/*
+   Над кругами — последнее сообщение тренера: на что сейчас отвечать.
+   Обновляется на каждом круге записи — после ответа тренера это уже его
+   новая реплика. Начало видно сразу, стрелка ▾ раскрывает его целиком
+   (рамка vmTxt); запись при этом идёт. Фразы здесь не озвучиваются —
+   иначе микрофон записал бы голос тренера.
+*/
+function vmPaintTask(){
+  let q = '';
+  for(let i = chatLog.length - 1; i >= 0; i--) if(chatLog[i].role === 'model'){ q = speakableText(chatLog[i].text); break; }
+  $('vmQ').textContent = q.length > 220 ? q.slice(0, 220).replace(/\s+\S*$/, '') + '…' : q;
+  document.querySelector('#vm .vmTask').classList.toggle('hidden', !q);
+  if(q) vmTxtSet(vmTxtBuild([], q), q);
+  else $('vmTxtWrap').classList.add('off');
 }
 /*
    Микрофон → анализатор (круги) и ScriptProcessor (запись и тишина).
@@ -7452,7 +7489,7 @@ function vmStopRec(){
 }
 /*
    Тишина — по громкости: голос дольше 150 мс — «начал говорить»; после
-   этого 1,5 с тише порога — отправка (если включена в настройках).
+   этого 12 с тише порога — отправка (если включена в настройках).
 */
 function vmVadStep(lvl, ms){
   if(lvl > VM_LOUD){
@@ -7920,19 +7957,20 @@ function vmSubsAllDone(){
 }
 
 /*
-   Рамка с полным текстом. Открыта — фон под слоем размыт, текст сам
-   прокручивается за голосом: звучащая фраза — на трети высоты. Человек
-   прокрутил сам — 4 с не мешаем. Озвучку открытие и закрытие не трогают.
+   Рамка с полным текстом — на экране записи: последнее сообщение тренера
+   целиком. Открыта — фон под слоем размыт, запись идёт дальше. Если в
+   рамке есть звучащая фраза, она держится на трети высоты; человек
+   прокрутил сам — 4 с не мешаем.
    Шаг «назад» в истории — чтобы её закрывал и системный жест «назад».
 */
 function vmTxtToggle(){ if(vm.txtOn) vmTxtClose(); else vmTxtOpen(); }
 function vmTxtOpen(){
   const T = vm.txt;
-  if(vm.txtOn || !vm.on || vm.state !== 'speak' || !T || T.sents.length < 2) return;
+  if(vm.txtOn || !vm.on || vm.state !== 'listen' || !T || T.sents.length < 2) return;
   vm.txtOn = true;
-  // 260 px, а на низком экране — сколько влезает до низа
+  // до 420 px, а на низком экране — сколько влезает до низа
   const v = $('vm').getBoundingClientRect(), b = $('vmTxtBtn').getBoundingClientRect();
-  const h = Math.round(Math.max(150, Math.min(260, v.bottom - b.bottom - 10 - 16)));
+  const h = Math.round(Math.max(150, Math.min(420, v.bottom - b.bottom - 10 - 16)));
   $('vmTxt').style.setProperty('--h', h + 'px');
   $('vm').classList.add('txtOn');
   vmPaintTxtBtn();
